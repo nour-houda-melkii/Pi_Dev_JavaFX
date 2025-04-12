@@ -19,7 +19,52 @@ public class CategoryServices {
         }
     }
 
+    /**
+     * Check if a category with the given name already exists
+     * @param name The category name to check
+     * @return true if the category name already exists, false otherwise
+     * @throws SQLException if a database error occurs
+     */
+    public boolean categoryNameExists(String name) throws SQLException {
+        String query = "SELECT COUNT(*) FROM category WHERE name = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, name);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if a category with the given name already exists, excluding the current category
+     * @param name The category name to check
+     * @param categoryId The ID of the current category to exclude from the check
+     * @return true if another category with the same name exists, false otherwise
+     * @throws SQLException if a database error occurs
+     */
+    public boolean categoryNameExistsExcludingCurrent(String name, int categoryId) throws SQLException {
+        String query = "SELECT COUNT(*) FROM category WHERE name = ? AND id != ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, name);
+            ps.setInt(2, categoryId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
     public int insert(Category category) throws SQLException {
+        // Check if category with the same name already exists
+        if (categoryNameExists(category.getName())) {
+            throw new SQLException("A category with this name already exists");
+        }
+
         String query = "INSERT INTO category (name, description) VALUES (?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, category.getName());
@@ -38,6 +83,11 @@ public class CategoryServices {
     }
 
     public void update(Category category) throws SQLException {
+        // Check if another category with the same name already exists
+        if (categoryNameExistsExcludingCurrent(category.getName(), category.getId())) {
+            throw new SQLException("Another category with this name already exists");
+        }
+
         String query = "UPDATE category SET name = ?, description = ? WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, category.getName());
@@ -48,6 +98,7 @@ public class CategoryServices {
         }
     }
 
+    // Rest of your original methods remain unchanged
     public void delete(Category category) throws SQLException {
         String query = "DELETE FROM category WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {

@@ -15,7 +15,7 @@ public class AIDescriptionService {
     private static final Logger LOGGER = Logger.getLogger(AIDescriptionService.class.getName());
 
     // API configuration
-    private static final String API_KEY = "";
+    private static final String API_KEY = "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";
     private static final String API_URL = "https://api.openai.com/v1/chat/completions";
 
     // Flag to control whether we attempt online API calls

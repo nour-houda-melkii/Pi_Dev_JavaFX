@@ -19,7 +19,52 @@ public class ProduitServices {
         }
     }
 
+    /**
+     * Check if a product with the given name already exists
+     * @param name The product name to check
+     * @return true if the product name already exists, false otherwise
+     * @throws SQLException if a database error occurs
+     */
+    public boolean productNameExists(String name) throws SQLException {
+        String query = "SELECT COUNT(*) FROM produit WHERE name = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, name);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Check if a product with the given name already exists, excluding the current product
+     * @param name The product name to check
+     * @param productId The ID of the current product to exclude from the check
+     * @return true if another product with the same name exists, false otherwise
+     * @throws SQLException if a database error occurs
+     */
+    public boolean productNameExistsExcludingCurrent(String name, int productId) throws SQLException {
+        String query = "SELECT COUNT(*) FROM produit WHERE name = ? AND id != ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, name);
+            ps.setInt(2, productId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
     public int insert(Produit produit) throws SQLException {
+        // Check if product with the same name already exists
+        if (productNameExists(produit.getName())) {
+            throw new SQLException("A product with this name already exists");
+        }
+
         String query = "INSERT INTO produit (category_id, name, description, price, image, quantity) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, produit.getCategoryId());
@@ -42,6 +87,11 @@ public class ProduitServices {
     }
 
     public void update(Produit produit) throws SQLException {
+        // Check if another product with the same name already exists
+        if (productNameExistsExcludingCurrent(produit.getName(), produit.getId())) {
+            throw new SQLException("Another product with this name already exists");
+        }
+
         String query = "UPDATE produit SET category_id = ?, name = ?, description = ?, price = ?, image = ?, quantity = ? WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, produit.getCategoryId());
@@ -56,6 +106,7 @@ public class ProduitServices {
         }
     }
 
+    // Rest of your original methods remain unchanged
     public void delete(Produit produit) throws SQLException {
         String query = "DELETE FROM produit WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {

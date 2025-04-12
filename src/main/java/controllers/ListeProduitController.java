@@ -189,19 +189,27 @@ public class ListeProduitController {
     }
 
     @FXML
-    void ajouterProduit(ActionEvent event) throws SQLException {
+    void ajouterProduit(ActionEvent event) {
         if (!validateFields()) return;
 
         Produit produit = new Produit();
         populateProductFromFields(produit);
 
-        int newId = produitService.insert(produit);
-        produit.setId(newId);
+        try {
+            int newId = produitService.insert(produit);
+            produit.setId(newId);
 
-        productsTable.getItems().add(produit);
-        clearFields();
+            productsTable.getItems().add(produit);
+            clearFields();
 
-        showSuccessAlert("Success", "Product added successfully!");
+            showSuccessAlert("Success", "Product added successfully!");
+        } catch (SQLException e) {
+            if (e.getMessage().contains("already exists")) {
+                showAlert(Alert.AlertType.ERROR, "Duplicate Error", e.getMessage());
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Database Error", "Failed to add product: " + e.getMessage());
+            }
+        }
     }
 
     @FXML
@@ -224,7 +232,11 @@ public class ListeProduitController {
             loadProducts(); // Refresh the table
             showSuccessAlert("Success", "Product updated successfully!");
         } catch (SQLException e) {
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to update: " + e.getMessage());
+            if (e.getMessage().contains("already exists")) {
+                showAlert(Alert.AlertType.ERROR, "Duplicate Error", e.getMessage());
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Database Error", "Failed to update product: " + e.getMessage());
+            }
         }
     }
 

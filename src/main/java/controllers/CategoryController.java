@@ -125,7 +125,11 @@ public class CategoryController {
             clearFields();
             showSuccessAlert("Category Added", "Category has been successfully added!");
         } catch (SQLException e) {
-            showAlert("Database Error", "Failed to add category: " + e.getMessage());
+            if (e.getMessage().contains("already exists")) {
+                showAlert("Duplicate Error", e.getMessage());
+            } else {
+                showAlert("Database Error", "Failed to add category: " + e.getMessage());
+            }
         }
     }
 
@@ -153,10 +157,13 @@ public class CategoryController {
             clearFields();
             showSuccessAlert("Category Updated", "Category has been successfully updated!");
         } catch (SQLException e) {
-            showAlert("Database Error", "Failed to update category: " + e.getMessage());
+            if (e.getMessage().contains("already exists")) {
+                showAlert("Duplicate Error", e.getMessage());
+            } else {
+                showAlert("Database Error", "Failed to update category: " + e.getMessage());
+            }
         }
     }
-
     @FXML
     private void deleteCategory() {
         Category selected = categoryTable.getSelectionModel().getSelectedItem();
