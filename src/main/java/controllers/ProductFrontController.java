@@ -165,10 +165,10 @@ public class ProductFrontController {
         card.setPrefWidth(200);
         card.setPrefHeight(350);
         card.setStyle("-fx-background-color: white; " +
-                "-fx-border-color: #e0e0e0; " +
+                "-fx-border-color: #f0f0f0; " +
                 "-fx-border-radius: 8; " +
                 "-fx-background-radius: 8; " +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);");
+                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 3, 0, 0, 1);");
 
         // Product Image
         ImageView imageView = new ImageView();
@@ -184,11 +184,11 @@ public class ProductFrontController {
 
         // Product Details
         Label nameLabel = new Label(product.getName());
-        nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-padding: 0 10 0 10;");
+        nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333; -fx-padding: 0 10 0 10;");
         nameLabel.setWrapText(true);
 
         Label priceLabel = new Label(String.format("$%.2f", product.getPrice()));
-        priceLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #16a085; -fx-padding: 0 10 5 10;");
+        priceLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #33ccff; -fx-padding: 0 10 5 10;");
 
         Label descLabel = new Label(product.getDescription());
         descLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #7f8c8d; -fx-padding: 0 10 0 10;");
@@ -201,7 +201,7 @@ public class ProductFrontController {
 
         // Add to Cart Button
         Button addToCartButton = new Button("Add to Cart");
-        addToCartButton.setStyle("-fx-background-color: #27ae60; -fx-text-fill: white; -fx-background-radius: 4;");
+        addToCartButton.setStyle("-fx-background-color: #33ccff; -fx-text-fill: white; -fx-background-radius: 20;");
         addToCartButton.setOnAction(e -> {
             addToCart(product);
             showAlert("Shopping Cart", "Product '" + product.getName() + "' added to cart!");
@@ -213,7 +213,7 @@ public class ProductFrontController {
 
         // Favorite Button
         Button favoriteButton = new Button("♥");
-        favoriteButton.setStyle("-fx-background-color: " + (isFavorite(product) ? "#e74c3c" : "#ecf0f1") +
+        favoriteButton.setStyle("-fx-background-color: " + (isFavorite(product) ? "#ff3366" : "#f0f0f0") +
                 "; -fx-text-fill: white; -fx-background-radius: 20; -fx-min-width: 40px; -fx-min-height: 40px; -fx-font-size: 18px;");
         favoriteButton.setOnAction(e -> {
             toggleFavorite(product);

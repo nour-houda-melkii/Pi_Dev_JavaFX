@@ -182,6 +182,7 @@ public class CategoryController {
         }
     }
 
+    @FXML
     private void clearFields() {
         nameField.clear();
         descriptionField.clear();

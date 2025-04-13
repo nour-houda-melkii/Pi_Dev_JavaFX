@@ -6,12 +6,20 @@
   <component name="ChangeListManager">
     <list default="true" id="67f812a0-6c1d-4f08-bb79-468f0bf5180a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Services/AIDescriptionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Services/AIDescriptionService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Services/CategoryServices.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Services/CategoryServices.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Services/ProduitServices.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Services/ProduitServices.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/CategoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ListeProduitController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ListeProduitController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/images/Photographer Shows Incredible Landscapes And Animal Pics Seen During His Travels Around The Globe.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/images/Photographer Shows Incredible Landscapes And Animal Pics Seen During His Travels Around The Globe.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ProductFrontController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ProductFrontController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/ListProduit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/ListProduit.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/admin_dashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/admin_dashboard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/category.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/category.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/data_history_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data_history_view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/product_client.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/product_client.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/ListProduit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ListProduit.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/admin_dashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/admin_dashboard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/category.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/category.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/CategoryController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/CategoryController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ProductFrontController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ProductFrontController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/data_history_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/data_history_view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/product_client.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/product_client.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,8 +29,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="FxmlFile" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -66,7 +74,7 @@
     &quot;Notification.DoNotAsk-Vcs Important Messages&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Origin&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;gestion__produit&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/nourm/OneDrive/Bureau/krayett zahy/gestion_produit&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -155,7 +163,12 @@
       <workItem from="1744461346252" duration="544000" />
       <workItem from="1744464910961" duration="29000" />
       <workItem from="1744465598595" duration="1111000" />
-      <workItem from="1744481337190" duration="945000" />
+      <workItem from="1744481337190" duration="1669000" />
+      <workItem from="1744483880415" duration="933000" />
+      <workItem from="1744488319782" duration="387000" />
+      <workItem from="1744540172619" duration="2735000" />
+      <workItem from="1744547237823" duration="3357000" />
+      <workItem from="1744553809131" duration="1802000" />
     </task>
     <servers />
   </component>

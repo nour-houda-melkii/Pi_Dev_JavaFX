@@ -1,55 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controllers.DataHistoryController"
-            prefHeight="600.0" prefWidth="800.0">
+<BorderPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #f5f7fa;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.DataHistoryController">
+
+    <!-- Top Section - Header and Filter -->
     <top>
-        <VBox spacing="10">
+        <VBox spacing="10" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
             <padding>
-                <Insets top="15" right="15" bottom="10" left="15"/>
+                <Insets bottom="15" left="20" right="20" top="15" />
             </padding>
-            <HBox spacing="10" alignment="CENTER_LEFT">
-                <Label fx:id="titleLabel" text="Data History" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-                <Region HBox.hgrow="ALWAYS"/>
-                <Label text="Filter by:" />
-                <ComboBox fx:id="filterComboBox" prefWidth="150"/>
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Label fx:id="titleLabel" alignment="TOP_CENTER" prefHeight="32.0" prefWidth="634.0" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Data History" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e;" text="Filter by:" />
+                <ComboBox fx:id="filterComboBox" prefHeight="26.0" prefWidth="94.0" style="-fx-background-radius: 5;" />
             </HBox>
-            <Separator/>
+            <Separator style="-fx-padding: 5 0 0 0;" />
         </VBox>
     </top>
 
+    <!-- Center Section - Split View -->
     <center>
-        <SplitPane dividerPositions="0.4" VBox.vgrow="ALWAYS">
-            <VBox spacing="5">
-                <padding>
-                    <Insets top="5" right="5" bottom="5" left="5"/>
-                </padding>
-                <Label text="History Entries" style="-fx-font-weight: bold;"/>
-                <ListView fx:id="historyListView" VBox.vgrow="ALWAYS"/>
-            </VBox>
+        <SplitPane dividerPositions="0.35" style="-fx-background-color: transparent;">
+            <items>
+                <!-- Left Panel - History List -->
+                <VBox style="-fx-background-color: white; -fx-border-radius: 5; -fx-background-radius: 5; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 0);">
+                    <padding>
+                        <Insets bottom="10" left="10" right="10" top="10" />
+                    </padding>
+                    <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-padding: 0 0 10 5;" text="History Entries" />
+                    <ListView fx:id="historyListView" style="-fx-background-color: transparent; -fx-border-color: #e0e0e0; -fx-border-radius: 5; -fx-background-radius: 5;" />
+                </VBox>
 
-            <VBox spacing="5">
-                <padding>
-                    <Insets top="5" right="5" bottom="5" left="5"/>
-                </padding>
-                <Label text="Entry Details" style="-fx-font-weight: bold;"/>
-                <TextArea fx:id="detailsTextArea" VBox.vgrow="ALWAYS" wrapText="true" editable="false"/>
-            </VBox>
+                <!-- Right Panel - Details -->
+                <VBox style="-fx-background-color: white; -fx-border-radius: 5; -fx-background-radius: 5; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 0);">
+                    <padding>
+                        <Insets bottom="10" left="10" right="10" top="10" />
+                    </padding>
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Entry Details" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label fx:id="entryDateLabel" style="-fx-font-size: 13px; -fx-text-fill: #7f8c8d;" />
+                    </HBox>
+                    <TextArea fx:id="detailsTextArea" editable="false" style="-fx-background-color: #f9f9f9; -fx-border-color: #e0e0e0; -fx-border-radius: 5; -fx-background-radius: 5; -fx-font-family: monospace; -fx-font-size: 13px;" wrapText="true" />
+                </VBox>
+            </items>
         </SplitPane>
     </center>
 
+    <!-- Bottom Section - Action Buttons -->
     <bottom>
-        <HBox alignment="CENTER_RIGHT" spacing="10">
-            <padding>
-                <Insets top="10" right="15" bottom="15" left="15"/>
-            </padding>
-            <Button fx:id="exportPdfButton" text="Export to PDF" prefWidth="120"/>
-            <Button fx:id="closeButton" text="Close" prefWidth="100"/>
+        <HBox alignment="CENTER_RIGHT" spacing="15" style="-fx-background-color: white; -fx-padding: 15; -fx-border-color: #f0f0f0; -fx-border-width: 1 0 0 0;">
+            <Button fx:id="exportPdfButton" alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="34.0" prefWidth="123.0" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20;" text="Export to PDF" />
+            <Button fx:id="closeButton" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20;" text="Close" />
         </HBox>
     </bottom>
 </BorderPane>
