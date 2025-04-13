@@ -23,6 +23,7 @@ import javafx.collections.FXCollections;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -46,6 +47,9 @@ public class ProductFrontController {
     @FXML
     private Label favoritesCountLabel;
 
+    @FXML
+    private ImageView logoImageView; // Add this line to reference the logo ImageView
+
     // Lists to keep track of cart and favorites
     private List<Produit> cartProducts = new ArrayList<>();
     private List<Produit> favoriteProducts = new ArrayList<>();
@@ -66,9 +70,36 @@ public class ProductFrontController {
         // Add listener for sorting
         sortComboBox.setOnAction(event -> applySortingAndFiltering());
 
+        // Load the SahaTech logo
+        loadLogo();
+
         setupSearchListener();
         loadProductsInCardView();
         updateCounters();
+    }
+
+    private void loadLogo() {
+        try {
+            // Try to load the logo from the resources folder
+            URL logoUrl = getClass().getResource("/images/sahatech_logo.png");
+            if (logoUrl != null) {
+                Image logoImage = new Image(logoUrl.toString());
+
+                // Find the ImageView in the scene and set the image
+                // This assumes the ImageView is accessible after FXML loading
+                ImageView logoImageView = (ImageView) productContainer.getScene().lookup("#logoImageView");
+                if (logoImageView != null) {
+                    logoImageView.setImage(logoImage);
+                } else {
+                    System.err.println("Logo ImageView not found in the scene");
+                }
+            } else {
+                System.err.println("SahaTech logo file not found in resources");
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading SahaTech logo: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void setupSearchListener() {
@@ -251,6 +282,7 @@ public class ProductFrontController {
             imageView.setImage(new Image(getClass().getResourceAsStream("/images/placeholder.png")));
         } catch (Exception ex) {
             // If placeholder can't be loaded, leave it empty
+            System.err.println("Error loading placeholder image: " + ex.getMessage());
         }
     }
 
@@ -333,4 +365,5 @@ public class ProductFrontController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
 }

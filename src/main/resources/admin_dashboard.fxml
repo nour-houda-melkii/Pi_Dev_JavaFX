@@ -14,26 +14,26 @@
     <VBox prefHeight="600.0" prefWidth="218.0" style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
         <!-- Logo Area -->
         <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="250.0" style="-fx-padding: 10 20;">
-            <Label style="-fx-font-weight: bold; -fx-font-size: 22px; -fx-text-fill: #00BCD4;" text="SAHATECK" />
+            <Label prefHeight="32.0" prefWidth="160.0" style="-fx-font-weight: bold; -fx-font-size: 22px; -fx-text-fill: #00BCD4;" text="SAHATECK" />
         </HBox>
 
         <!-- Navigation Items -->
         <VBox prefHeight="402.0" prefWidth="195.0" spacing="5.0" style="-fx-padding: 20 10;">
             <Label alignment="TOP_CENTER" prefHeight="22.0" prefWidth="159.0" style="-fx-font-size: 12px; -fx-text-fill: #9fa8b4; -fx-padding: 0 0 5 10;" text="PAGES" />
 
-            <Button fx:id="dashboardButton" alignment="TOP_RIGHT" prefHeight="40.0" prefWidth="230.0" style="-fx-background-color: transparent; -fx-alignment: center-left; -fx-padding: 0 0 0 15; -fx-border-color: transparent; -fx-text-fill: #3c4858; -fx-font-size: 14px;" text="Dashboard">
+            <Button fx:id="dashboardButton" alignment="TOP_RIGHT" prefHeight="40.0" prefWidth="157.0" style="-fx-background-color: transparent; -fx-alignment: center-left; -fx-padding: 0 0 0 15; -fx-border-color: transparent; -fx-text-fill: #3c4858; -fx-font-size: 14px;" text="Dashboard">
                 <graphic>
                     <Label style="-fx-text-fill: #3c4858; -fx-padding: 0 10 0 0;" text="⠀" />
                 </graphic>
             </Button>
 
-            <Button fx:id="productButton" prefHeight="40.0" prefWidth="230.0" style="-fx-background-color: transparent; -fx-alignment: center-left; -fx-padding: 0 0 0 15; -fx-border-color: transparent; -fx-text-fill: #3c4858; -fx-font-size: 14px;" text="Product Management">
+            <Button fx:id="productButton" prefHeight="40.0" prefWidth="158.0" style="-fx-background-color: transparent; -fx-alignment: center-left; -fx-padding: 0 0 0 15; -fx-border-color: transparent; -fx-text-fill: #3c4858; -fx-font-size: 14px;" text="Product Management">
                 <graphic>
                     <Label style="-fx-text-fill: #3c4858; -fx-padding: 0 10 0 0;" text="⠀" />
                 </graphic>
             </Button>
 
-            <Button fx:id="eventButton" prefHeight="40.0" prefWidth="230.0" style="-fx-background-color: transparent; -fx-alignment: center-left; -fx-padding: 0 0 0 15; -fx-border-color: transparent; -fx-text-fill: #3c4858; -fx-font-size: 14px;" text="Event Management">
+            <Button fx:id="eventButton" prefHeight="40.0" prefWidth="178.0" style="-fx-background-color: transparent; -fx-alignment: center-left; -fx-padding: 0 0 0 15; -fx-border-color: transparent; -fx-text-fill: #3c4858; -fx-font-size: 14px;" text="Event Management">
                 <graphic>
                     <Label style="-fx-text-fill: #3c4858; -fx-padding: 0 10 0 0;" text="⠀" />
                 </graphic>

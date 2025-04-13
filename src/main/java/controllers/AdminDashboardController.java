@@ -33,7 +33,9 @@ public class AdminDashboardController {
     @FXML
     private ComboBox<String> sortComboBox;
 
+
     private List<Produit> currentProducts;
+
 
     @FXML
     public void initialize() {
