@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="67f812a0-6c1d-4f08-bb79-468f0bf5180a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AdminDashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AdminDashboardController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ProductFrontController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ProductFrontController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/ListProduit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/ListProduit.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/admin_dashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/admin_dashboard.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/product_client.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/product_client.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/product_client.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/product_client.fxml" afterDir="false" />
-    </list>
+    <list default="true" id="95fe3ea9-757b-4a89-8f71-6333ae6a5fcc" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,21 +13,15 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="FxmlFile" />
         <option value="Class" />
+        <option value="FxmlFile" />
       </list>
     </option>
-  </component>
-  <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
-        <option name="mavenHome" value="Use Maven wrapper" />
+        <option name="mavenHome" value="$PROJECT_DIR$/../../../../../Program Files/apache-maven-3.9.9" />
       </MavenGeneralSettings>
     </option>
   </component>
@@ -43,60 +29,43 @@
     <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 0
+  &quot;associatedIndex&quot;: 5
 }</component>
-  <component name="ProjectId" id="2ulIsNH2OM5RHWFJyGb7Vs0OvFN" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="1" id="Add" />
-  </component>
+  <component name="ProjectId" id="2ukQ0TYR13uIbJTv0C86eoxa4Ai" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Application.produit.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.produit [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.produit [compile].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.produit [install].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.produit [org.openjfx:javafx-maven-plugin:0.0.8:run].executor&quot;: &quot;Run&quot;,
-    &quot;Notification.DisplayName-DoNotAsk-Vcs Important Messages&quot;: &quot;VCS important messages&quot;,
-    &quot;Notification.DoNotAsk-Vcs Important Messages&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;gestion__produit&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/nourm/OneDrive/Bureau/krayett zahy/gestion_produit&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/RayenSabri/Desktop/Projects/New folder&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.JavaFX&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RecentsManager">
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="controllers" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\nourm\OneDrive\Bureau\krayett zahy\Product-Management\src\main\resources" />
-      <recent name="C:\Users\nourm\OneDrive\Bureau\krayett zahy\Product-Management\src\main\resources\images" />
-      <recent name="C:\Users\nourm\OneDrive\Bureau\krayett zahy\Product-Management\src\main\resources\image" />
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\RayenSabri\Desktop\Projects\untitled\src\main\resources" />
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="produit" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="Main" />
-      <module name="produit" />
-      <option name="VM_PARAMETERS" value=" --module-path &quot;C:\Users\nourm\OneDrive\Bureau\krayett zahy\javafx-sdk-17.0.14\lib&quot; --add-modules javafx.controls,javafx.fxml " />
+    <configuration name="App" type="Application" factoryName="Application" nameIsGenerated="true">
+      <option name="ALTERNATIVE_JRE_PATH" value="temurin-17" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+      <option name="MAIN_CLASS_NAME" value="org.example.App" />
+      <module name="gestion_event" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;C:\Program Files\Java\javafx-sdk-17\lib&quot; --add-modules javafx.controls,javafx.fxml" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -105,94 +74,32 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="67f812a0-6c1d-4f08-bb79-468f0bf5180a" name="Changes" comment="" />
-      <created>1742816941809</created>
+      <changelist id="95fe3ea9-757b-4a89-8f71-6333ae6a5fcc" name="Changes" comment="" />
+      <created>1742789870502</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1742816941809</updated>
-      <workItem from="1742816942869" duration="3253000" />
-      <workItem from="1742820217685" duration="1430000" />
-      <workItem from="1742905546481" duration="5295000" />
-      <workItem from="1743019977605" duration="592000" />
-      <workItem from="1743022859109" duration="291000" />
-      <workItem from="1743023163816" duration="28000" />
-      <workItem from="1743180603403" duration="1766000" />
-      <workItem from="1743196339015" duration="7007000" />
-      <workItem from="1743204447195" duration="2989000" />
-      <workItem from="1743276514844" duration="12901000" />
-      <workItem from="1743338728662" duration="644000" />
-      <workItem from="1743339422639" duration="2889000" />
-      <workItem from="1743342335205" duration="11042000" />
-      <workItem from="1743435423884" duration="781000" />
-      <workItem from="1743444935730" duration="1396000" />
-      <workItem from="1743520746366" duration="1085000" />
-      <workItem from="1743533558551" duration="6249000" />
-      <workItem from="1743604297299" duration="2449000" />
-      <workItem from="1743619600520" duration="2049000" />
-      <workItem from="1743635873273" duration="2098000" />
-      <workItem from="1743698757220" duration="1355000" />
-      <workItem from="1743706799378" duration="1128000" />
-      <workItem from="1743798143695" duration="4461000" />
-      <workItem from="1743876841254" duration="2286000" />
-      <workItem from="1744021223517" duration="9000" />
-      <workItem from="1744052633691" duration="429000" />
-      <workItem from="1744059133432" duration="103000" />
-      <workItem from="1744101240620" duration="178000" />
-      <workItem from="1744107592450" duration="179000" />
-      <workItem from="1744107786193" duration="848000" />
-      <workItem from="1744144422161" duration="5107000" />
-      <workItem from="1744279568581" duration="1421000" />
-      <workItem from="1744366913791" duration="1130000" />
-      <workItem from="1744368084610" duration="1289000" />
-      <workItem from="1744393099960" duration="666000" />
-      <workItem from="1744395197438" duration="1699000" />
-      <workItem from="1744396942742" duration="16000" />
-      <workItem from="1744398237823" duration="3238000" />
-      <workItem from="1744458677176" duration="26000" />
-      <workItem from="1744458728320" duration="57000" />
-      <workItem from="1744458843396" duration="11000" />
-      <workItem from="1744459706691" duration="816000" />
-      <workItem from="1744461346252" duration="544000" />
-      <workItem from="1744464910961" duration="29000" />
-      <workItem from="1744465598595" duration="1111000" />
-      <workItem from="1744481337190" duration="1669000" />
-      <workItem from="1744483880415" duration="933000" />
-      <workItem from="1744488319782" duration="387000" />
-      <workItem from="1744540172619" duration="2735000" />
-      <workItem from="1744547237823" duration="3357000" />
-      <workItem from="1744553809131" duration="1802000" />
-      <workItem from="1744556523612" duration="3923000" />
+      <updated>1742789870502</updated>
+      <workItem from="1742789871557" duration="4553000" />
+      <workItem from="1742794624994" duration="3739000" />
+      <workItem from="1742863572737" duration="1966000" />
+      <workItem from="1742865577134" duration="685000" />
+      <workItem from="1742866288660" duration="17146000" />
+      <workItem from="1743250897274" duration="2929000" />
+      <workItem from="1743256361016" duration="1455000" />
+      <workItem from="1743260387343" duration="98000" />
+      <workItem from="1743684257827" duration="472000" />
+      <workItem from="1743685356858" duration="2286000" />
+      <workItem from="1743688021649" duration="82000" />
+      <workItem from="1743691488288" duration="1587000" />
+      <workItem from="1743694769118" duration="607000" />
+      <workItem from="1744287377258" duration="1402000" />
+      <workItem from="1744293032084" duration="314000" />
+      <workItem from="1744294086487" duration="1401000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/controllers/ProductFrontController.java</url>
-          <line>293</line>
-          <properties class="controllers.ProductFrontController" method="toggleFavorite">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

@@ -6,13 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="produit" />
+        <module name="gestion_event" />
       </profile>
     </annotationProcessing>
-  </component>
-  <component name="JavacSettings">
-    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="produit" options="-Xlint:all" />
-    </option>
+    <bytecodeTargetLevel>
+      <module name="untitled" target="1.7" />
+    </bytecodeTargetLevel>
   </component>
 </project>

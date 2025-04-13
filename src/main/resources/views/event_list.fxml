@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.EventController"
+            stylesheets="@/styles/style.css">
+
+    <top>
+        <HBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="Gestion des Événements" styleClass="label-title" />
+            <Button text="➕ Créer un nouvel événement"
+                    onAction="#handleAddEvent"
+                    styleClass="button button-green" />
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="15">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+            <!-- Événements Actifs -->
+            <TitledPane text="Événements Actifs" expanded="true">
+                <VBox spacing="10" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+                      AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+                    <HBox spacing="10">
+                        <TextField fx:id="searchTitle" promptText="Titre" onKeyReleased="#handleSearch" />
+                        <DatePicker fx:id="searchDate" promptText="jj/mm/aaaa" onAction="#handleSearch" />
+                        <ComboBox fx:id="searchCategory" promptText="Toutes les catégories" onAction="#handleSearch">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <!-- Les catégories seront ajoutées dynamiquement dans le contrôleur -->
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                        <Button text="Réinitialiser" onAction="#handleReset" styleClass="button, primary" />
+                    </HBox>
+                    <TableView fx:id="tableActifs" prefHeight="300">
+                        <columns>
+                            <TableColumn fx:id="colId" text="#" sortable="true" />
+                            <TableColumn fx:id="colTitre" text="Titre" sortable="true" />
+                            <TableColumn fx:id="colLieu" text="Lieu" sortable="true" />
+                            <TableColumn fx:id="colDebut" text="Début" sortable="true" />
+                            <TableColumn fx:id="colFin" text="Fin" sortable="true" />
+                            <TableColumn fx:id="colPlaces" text="Places" sortable="true" />
+                            <TableColumn fx:id="colCategorie" text="Catégorie" sortable="true" />
+                            <TableColumn fx:id="colAffiche" text="Affiche" />
+                            <TableColumn fx:id="colActionsActifs" text="Actions" />
+                        </columns>
+                    </TableView>
+                </VBox>
+            </TitledPane>
+
+            <!-- Événements Archivés -->
+            <TitledPane text="Événements Archivés" expanded="true">
+                <VBox spacing="10">
+                    <HBox spacing="10">
+                        <TextField fx:id="searchTitleArchives" promptText="Titre" onKeyReleased="#handleSearchArchives" />
+                        <DatePicker fx:id="searchDateArchives" promptText="jj/mm/aaaa" onAction="#handleSearchArchives" />
+                        <ComboBox fx:id="searchCategoryArchives" promptText="Toutes les catégories" onAction="#handleSearchArchives">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <!-- Les catégories seront ajoutées dynamiquement dans le contrôleur -->
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                        <Button text="Réinitialiser" onAction="#handleResetArchives" styleClass="button, primary" />
+                    </HBox>
+                    <TableView fx:id="tableArchives" prefHeight="200">
+                        <columns>
+                            <TableColumn fx:id="colIdArch" text="#" sortable="true" />
+                            <TableColumn fx:id="colTitreArch" text="Titre" sortable="true" />
+                            <TableColumn fx:id="colLieuArch" text="Lieu" sortable="true" />
+                            <TableColumn fx:id="colDebutArch" text="Début" sortable="true" />
+                            <TableColumn fx:id="colFinArch" text="Fin" sortable="true" />
+                            <TableColumn fx:id="colPlacesArch" text="Places" sortable="true" />
+                            <TableColumn fx:id="colCategorieArch" text="Catégorie" sortable="true" />
+                            <TableColumn fx:id="colAfficheArch" text="Affiche" />
+                            <TableColumn fx:id="colActionsArchives" text="Actions" />
+                        </columns>
+                    </TableView>
+                </VBox>
+            </TitledPane>
+
+        </VBox>
+    </center>
+</BorderPane>

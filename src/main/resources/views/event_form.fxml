@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.EventFormController" prefWidth="600" prefHeight="700">
+    <VBox spacing="10" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <Label text="Titre *" styleClass="required-field"/>
+        <TextField fx:id="fieldTitre" promptText="Entrez un titre" />
+
+        <Label text="Description *" styleClass="required-field"/>
+        <TextArea fx:id="fieldDescription" promptText="Entrez une description" wrapText="true" prefRowCount="3" />
+
+        <Label text="Date de début *" styleClass="required-field"/>
+        <HBox spacing="10">
+            <DatePicker fx:id="dateDebut" />
+            <Spinner fx:id="hourStartSpinner" prefWidth="70" />
+            <Spinner fx:id="minuteStartSpinner" prefWidth="70" />
+        </HBox>
+
+        <Label text="Date de fin *" styleClass="required-field"/>
+        <HBox spacing="10">
+            <DatePicker fx:id="dateFin" />
+            <Spinner fx:id="hourEndSpinner" prefWidth="70" />
+            <Spinner fx:id="minuteEndSpinner" prefWidth="70" />
+        </HBox>
+
+        <Label text="Lieu *" styleClass="required-field"/>
+        <TextField fx:id="fieldLieu" promptText="Entrez un lieu" />
+
+        <HBox spacing="10">
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label text="Latitude *" styleClass="required-field"/>
+                <TextField fx:id="fieldLatitude" promptText="ex: 36.8" />
+            </VBox>
+            <VBox spacing="5" HBox.hgrow="ALWAYS">
+                <Label text="Longitude *" styleClass="required-field"/>
+                <TextField fx:id="fieldLongitude" promptText="ex: 10.2" />
+            </VBox>
+        </HBox>
+
+        <Label text="Places disponibles *" styleClass="required-field"/>
+        <TextField fx:id="fieldPlaces" promptText="ex: 30" />
+
+        <Label text="Catégorie *" styleClass="required-field"/>
+        <ComboBox fx:id="comboCategorie" promptText="Sélectionnez une catégorie">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <!-- Les catégories seront ajoutées dynamiquement dans le contrôleur -->
+                </FXCollections>
+            </items>
+        </ComboBox>
+
+        <Label text="Affiche de l'événement (JPEG ou PNG, max 5MB)" />
+        <HBox spacing="10">
+            <Button text="Choisir une image" onAction="#handleChooseImage" />
+            <Label fx:id="labelImagePath" text="Aucune image sélectionnée" />
+        </HBox>
+
+        <ImageView fx:id="imagePreview" fitHeight="150" fitWidth="150" preserveRatio="true" />
+
+        <Label fx:id="errorLabel" styleClass="error-label" wrapText="true" />
+
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button fx:id="btnSave" text="Enregistrer" onAction="#handleSave" styleClass="primary-button" minWidth="100"/>
+            <Button text="Annuler" onAction="#handleCancel" minWidth="100"/>
+        </HBox>
+    </VBox>
+</AnchorPane>
