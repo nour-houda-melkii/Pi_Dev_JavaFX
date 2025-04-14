@@ -113,6 +113,12 @@ public class CategoryController {
             return;
         }
 
+        // Check category name length - minimum 5 characters
+        if (name.length() < 5) {
+            showAlert("Input Error", "Category name must be at least 5 characters long");
+            return;
+        }
+
         if (name.length() > 100) {
             showAlert("Input Error", "Category name is too long (max 100 characters)");
             return;
@@ -146,6 +152,12 @@ public class CategoryController {
 
         if (newName.isEmpty()) {
             showAlert("Input Error", "Category name cannot be empty");
+            return;
+        }
+
+        // Check category name length - minimum 5 characters
+        if (newName.length() < 5) {
+            showAlert("Input Error", "Category name must be at least 5 characters long");
             return;
         }
 

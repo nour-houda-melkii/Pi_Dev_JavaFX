@@ -267,6 +267,12 @@ public class ListeProduitController {
             return false;
         }
 
+        // Check product name length - minimum 5 characters
+        if (nameField.getText().trim().length() < 5) {
+            showAlert(Alert.AlertType.ERROR, "Validation Error", "Product name must be at least 5 characters long!");
+            return false;
+        }
+
         try {
             double price = Double.parseDouble(priceField.getText());
             if (price < 0) {
