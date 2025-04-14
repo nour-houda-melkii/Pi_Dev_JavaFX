@@ -15,10 +15,10 @@
 
     <!-- Header Section with Back Button -->
     <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 0 0 10 0;">
-        <Button onAction="#navigateToDashboard" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-background-radius: 5;" text="← Back" />
+        <Button onAction="#navigateToDashboard" style="-fx-background-color: #00BCD4; -fx-text-fill: white; -fx-background-radius: 5;" text="← Back" />
         <HBox alignment="TOP_CENTER" HBox.hgrow="ALWAYS">
             <children>
-                <Label style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="View Categories" textAlignment="CENTER">
+                <Label prefHeight="30.0" prefWidth="186.0" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="View Categories" textAlignment="CENTER" textFill="#00bcd4">
                     <font>
                         <Font name="Berlin Sans FB" size="12.0" />
                     </font>

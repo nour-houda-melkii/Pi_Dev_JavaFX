@@ -41,7 +41,7 @@
 
             <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e;" text="Description:" GridPane.rowIndex="1" />
             <TextField fx:id="descriptionField" prefHeight="35.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #bdc3c7; -fx-padding: 0 10;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-            <Button fx:id="generateDescriptionButton" onAction="#generateAIDescription" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 15;" text="Generate AI Description" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Button fx:id="generateDescriptionButton" onAction="#generateAIDescription" style="-fx-background-color: #00BCD4; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 15;" text="Generate AI Description" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 
             <columnConstraints>
                 <ColumnConstraints hgrow="NEVER" minWidth="120.0" prefWidth="120.0" />
@@ -58,7 +58,7 @@
 
     <!-- Action Buttons with Border -->
     <HBox alignment="CENTER" spacing="15" style="-fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-radius: 5; -fx-background-color: white; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);">
-        <Button onAction="#updateCategory" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);" text="Save Changes" />
+        <Button onAction="#updateCategory" style="-fx-background-color: #00BCD4; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);" text="Save Changes" />
         <Button onAction="#navigateBack" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);" text="Cancel" />
     </HBox>
 </VBox>

@@ -6,9 +6,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
@@ -22,11 +19,11 @@
             <Insets left="20" right="20" />
         </padding>
         <children>
-            <ImageView fitHeight="63.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
-                <image>
-                    <Image url="@images/sahatech_logo.png" />
-                </image>
-            </ImageView>
+               <Button onAction="#handleBackToAdmin" prefHeight="32.0" prefWidth="83.0" style="-fx-background-color: #00BCD4; -fx-text-fill: white; -fx-background-radius: 16; -fx-font-size: 12px; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);" text="Back to Dashboard">
+                   <graphic>
+                       <Label style="-fx-text-fill: white; -fx-font-family: 'FontAwesome'; -fx-font-size: 12px; -fx-padding: 0 5 0 0;" text="←" />
+                   </graphic>
+               </Button>
             <Region HBox.hgrow="ALWAYS" />
         </children>
     </HBox>
@@ -106,11 +103,6 @@
                         <Button onAction="#clearFields" prefHeight="35.0" prefWidth="120.0" style="-fx-background-color: #00BCD4; -fx-text-fill: white; -fx-background-radius: 18; -fx-font-size: 13px; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);" text="Clear">
                             <graphic>
                                 <Label style="-fx-text-fill: white; -fx-font-family: 'FontAwesome'; -fx-font-size: 12px; -fx-padding: 0 5 0 0;" text="⟲" />
-                            </graphic>
-                        </Button>
-                        <Button onAction="#handleBackToAdmin" prefHeight="32.0" prefWidth="173.0" style="-fx-background-color: #00BCD4; -fx-text-fill: white; -fx-background-radius: 16; -fx-font-size: 12px; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);" text="Back to Dashboard">
-                            <graphic>
-                                <Label style="-fx-text-fill: white; -fx-font-family: 'FontAwesome'; -fx-font-size: 12px; -fx-padding: 0 5 0 0;" text="←" />
                             </graphic>
                         </Button>
                     </HBox>

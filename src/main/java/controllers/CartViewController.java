@@ -171,24 +171,59 @@ public class CartViewController {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(SENDER_EMAIL));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
-            message.setSubject("Order Confirmation - " + orderReference);
+            message.setSubject("SahaTech - Order Confirmation - " + orderReference);
 
-            // Build email content
+            // Build email content with enhanced design and logo
             StringBuilder emailContent = new StringBuilder();
-            emailContent.append("<html><body>");
-            emailContent.append("<h2>Thank you for your order!</h2>");
-            emailContent.append("<p>Dear Customer,</p>");
-            emailContent.append("<p>Your order has been confirmed.</p>");
-            emailContent.append("<p><b>Order Reference:</b> ").append(orderReference).append("</p>");
-            emailContent.append("<p><b>Total Amount:</b> ").append(totalAmountLabel.getText()).append("</p>");
+            emailContent.append("<!DOCTYPE html>");
+            emailContent.append("<html><head>");
+            emailContent.append("<style type='text/css'>");
+            emailContent.append("body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; }");
+            emailContent.append(".container { max-width: 600px; margin: 0 auto; padding: 20px; }");
+            emailContent.append(".header { background-color: #3498db; padding: 20px; text-align: center; color: white; border-radius: 5px 5px 0 0; }");
+            emailContent.append(".content { background-color: #f9f9f9; padding: 20px; border-left: 1px solid #ddd; border-right: 1px solid #ddd; }");
+            emailContent.append(".footer { background-color: #3498db; color: white; text-align: center; padding: 15px; border-radius: 0 0 5px 5px; font-size: 12px; }");
+            emailContent.append(".logo { width: 150px; height: auto; }");
+            emailContent.append("table.order-details { width: 100%; border-collapse: collapse; margin: 20px 0; }");
+            emailContent.append("table.order-details th { background-color: #3498db; color: white; text-align: left; padding: 10px; }");
+            emailContent.append("table.order-details td { padding: 10px; border-bottom: 1px solid #ddd; }");
+            emailContent.append(".total-row { font-weight: bold; background-color: #f5f5f5; }");
+            emailContent.append(".order-info { background-color: white; border: 1px solid #ddd; border-radius: 5px; padding: 15px; margin-bottom: 20px; }");
+            emailContent.append(".btn { display: inline-block; padding: 10px 20px; background-color: #3498db; color: white; text-decoration: none; border-radius: 5px; margin-top: 15px; }");
+            emailContent.append("</style>");
+            emailContent.append("</head><body>");
+            emailContent.append("<div class='container'>");
 
-            emailContent.append("<h3>Order Details:</h3>");
-            emailContent.append("<table border='1' style='border-collapse: collapse;'>");
+            // Header with logo
+            emailContent.append("<div class='header'>");
+            // Include your logo as a base64 encoded image or host it somewhere and use the URL
+            emailContent.append("<img src='https://your-domain.com/images/sahatech-logo.png' alt='SahaTech Logo' class='logo'>");
+            emailContent.append("<h1>Order Confirmation</h1>");
+            emailContent.append("</div>");
+
+            // Main content
+            emailContent.append("<div class='content'>");
+            emailContent.append("<h2>Thank you for your purchase!</h2>");
+            emailContent.append("<p>Dear Customer,</p>");
+            emailContent.append("<p>Your order has been confirmed and is being processed. Below are your order details:</p>");
+
+            // Order information box
+            emailContent.append("<div class='order-info'>");
+            emailContent.append("<p><strong>Order Reference:</strong> ").append(orderReference).append("</p>");
+            emailContent.append("<p><strong>Order Date:</strong> ").append(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date())).append("</p>");
+            emailContent.append("<p><strong>Email:</strong> ").append(toEmail).append("</p>");
+            emailContent.append("</div>");
+
+            // Order details table
+            emailContent.append("<h3>Order Summary</h3>");
+            emailContent.append("<table class='order-details'>");
             emailContent.append("<tr><th>Product</th><th>Quantity</th><th>Price</th><th>Total</th></tr>");
 
+            double grandTotal = 0;
             for (Produit product : cartTableView.getItems()) {
                 int quantity = productQuantities.getOrDefault(product.getId(), 1);
                 double total = product.getPrice() * quantity;
+                grandTotal += total;
 
                 emailContent.append("<tr>");
                 emailContent.append("<td>").append(product.getName()).append("</td>");
@@ -198,9 +233,33 @@ public class CartViewController {
                 emailContent.append("</tr>");
             }
 
+            // Total row
+            emailContent.append("<tr class='total-row'>");
+            emailContent.append("<td colspan='3' align='right'><strong>Grand Total:</strong></td>");
+            emailContent.append("<td align='right'><strong>").append(currencyFormat.format(grandTotal)).append("</strong></td>");
+            emailContent.append("</tr>");
             emailContent.append("</table>");
-            emailContent.append("<p>Thank you for shopping with us!</p>");
-            emailContent.append("<p>Best regards,<br/>Your Store Team</p>");
+
+            // Call to action button
+            emailContent.append("<div style='text-align: center;'>");
+            emailContent.append("<a href='https://sahatech.com/track-order?ref=").append(orderReference).append("' class='btn'>Track Your Order</a>");
+            emailContent.append("</div>");
+
+            emailContent.append("<p>If you have any questions or need assistance, please don't hesitate to contact our customer service at <a href='mailto:support@sahatech.com'>support@sahatech.com</a>.</p>");
+            emailContent.append("</div>");
+
+            // Footer
+            emailContent.append("<div class='footer'>");
+            emailContent.append("<p>© ").append(java.time.Year.now().toString()).append(" SahaTech. All rights reserved.</p>");
+            emailContent.append("<p>123 Tech Street, Innovation City, Country</p>");
+            emailContent.append("<div style='margin-top: 10px;'>");
+            emailContent.append("<a href='https://facebook.com/sahatech' style='color: white; margin: 0 5px;'>Facebook</a> | ");
+            emailContent.append("<a href='https://twitter.com/sahatech' style='color: white; margin: 0 5px;'>Twitter</a> | ");
+            emailContent.append("<a href='https://instagram.com/sahatech' style='color: white; margin: 0 5px;'>Instagram</a>");
+            emailContent.append("</div>");
+            emailContent.append("</div>");
+
+            emailContent.append("</div>");
             emailContent.append("</body></html>");
 
             // Set email content

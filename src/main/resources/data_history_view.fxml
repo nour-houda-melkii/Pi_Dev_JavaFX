@@ -22,7 +22,7 @@
                 <Insets bottom="15" left="20" right="20" top="15" />
             </padding>
             <HBox alignment="CENTER_LEFT" spacing="15">
-                <Label fx:id="titleLabel" alignment="TOP_CENTER" prefHeight="32.0" prefWidth="634.0" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Data History" />
+                <Label fx:id="titleLabel" alignment="TOP_CENTER" prefHeight="32.0" prefWidth="663.0" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Data History" textFill="#00bcd4" />
                 <Region HBox.hgrow="ALWAYS" />
                 <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e;" text="Filter by:" />
                 <ComboBox fx:id="filterComboBox" prefHeight="26.0" prefWidth="94.0" style="-fx-background-radius: 5;" />
@@ -63,7 +63,7 @@
     <!-- Bottom Section - Action Buttons -->
     <bottom>
         <HBox alignment="CENTER_RIGHT" spacing="15" style="-fx-background-color: white; -fx-padding: 15; -fx-border-color: #f0f0f0; -fx-border-width: 1 0 0 0;">
-            <Button fx:id="exportPdfButton" alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="34.0" prefWidth="123.0" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20;" text="Export to PDF" />
+            <Button fx:id="exportPdfButton" alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="34.0" prefWidth="123.0" style="-fx-background-color: #00BCD4; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20;" text="Export to PDF" />
             <Button fx:id="closeButton" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20;" text="Close" />
         </HBox>
     </bottom>

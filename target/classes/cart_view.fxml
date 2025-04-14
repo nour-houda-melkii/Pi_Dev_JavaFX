@@ -3,22 +3,24 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.control.TitledPane?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.control.PasswordField?>
-<AnchorPane prefHeight="600.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CartViewController">
+<AnchorPane prefHeight="600.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.CartViewController">
     <children>
         <VBox layoutX="14.0" layoutY="14.0" prefHeight="572.0" prefWidth="672.0" spacing="15.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
             <children>
-                <Label text="Shopping Cart" textFill="#3498db">
+                <Label alignment="TOP_CENTER" prefHeight="35.0" prefWidth="601.0" text="Shopping Cart" textFill="#3498db">
                     <font>
                         <Font name="System Bold" size="24.0" />
                     </font>
@@ -52,16 +54,22 @@
                     <content>
                         <GridPane hgap="10" vgap="10">
                             <padding>
-                                <Insets top="10" right="10" bottom="10" left="10"/>
+                                <Insets bottom="10" left="10" right="10" top="10" />
                             </padding>
 
-                            <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                            <TextField fx:id="emailField" prefHeight="30.0" prefWidth="300.0"
-                                       promptText="customer@email.com" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                            <Label text="Email:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                            <TextField fx:id="emailField" prefHeight="30.0" prefWidth="300.0" promptText="customer@email.com" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-                            <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                            <PasswordField fx:id="passwordField" prefHeight="30.0" prefWidth="300.0"
-                                           promptText="Enter your password" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                            <Label text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <PasswordField fx:id="passwordField" prefHeight="30.0" prefWidth="300.0" promptText="Enter your password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <columnConstraints>
+                                <ColumnConstraints />
+                                <ColumnConstraints />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints />
+                                <RowConstraints />
+                            </rowConstraints>
                         </GridPane>
                     </content>
                 </TitledPane>

@@ -21,12 +21,6 @@
         <VBox prefHeight="402.0" prefWidth="195.0" spacing="5.0" style="-fx-padding: 20 10;">
             <Label alignment="TOP_CENTER" prefHeight="22.0" prefWidth="159.0" style="-fx-font-size: 12px; -fx-text-fill: #9fa8b4; -fx-padding: 0 0 5 10;" text="PAGES" />
 
-            <Button fx:id="dashboardButton" alignment="TOP_RIGHT" prefHeight="40.0" prefWidth="157.0" style="-fx-background-color: transparent; -fx-alignment: center-left; -fx-padding: 0 0 0 15; -fx-border-color: transparent; -fx-text-fill: #3c4858; -fx-font-size: 14px;" text="Dashboard">
-                <graphic>
-                    <Label style="-fx-text-fill: #3c4858; -fx-padding: 0 10 0 0;" text="⠀" />
-                </graphic>
-            </Button>
-
             <Button fx:id="productButton" prefHeight="40.0" prefWidth="158.0" style="-fx-background-color: transparent; -fx-alignment: center-left; -fx-padding: 0 0 0 15; -fx-border-color: transparent; -fx-text-fill: #3c4858; -fx-font-size: 14px;" text="Product Management">
                 <graphic>
                     <Label style="-fx-text-fill: #3c4858; -fx-padding: 0 10 0 0;" text="⠀" />
@@ -45,11 +39,16 @@
                 </graphic>
             </Button>
 
-            <Button fx:id="rendezVousButton" prefHeight="40.0" prefWidth="191.0" style="-fx-background-color: transparent; -fx-alignment: center-left; -fx-padding: 0 0 0 15; -fx-border-color: transparent; -fx-text-fill: #3c4858; -fx-font-size: 14px;" text="Gestion rendez-vous">
+            <Button fx:id="rendezVousButton" prefHeight="40.0" prefWidth="191.0" style="-fx-background-color: transparent; -fx-alignment: center-left; -fx-padding: 0 0 0 15; -fx-border-color: transparent; -fx-text-fill: #3c4858; -fx-font-size: 14px;" text="Appointment Management">
                 <graphic>
                     <Label style="-fx-text-fill: #3c4858; -fx-padding: 0 10 0 0;" text="⠀" />
                 </graphic>
             </Button>
+         <Button fx:id="productButton1" prefHeight="40.0" prefWidth="158.0" style="-fx-background-color: transparent; -fx-alignment: center-left; -fx-padding: 0 0 0 15; -fx-border-color: transparent; -fx-text-fill: #3c4858; -fx-font-size: 14px;" text="Posts Managament ">
+            <graphic>
+               <Label style="-fx-text-fill: #3c4858; -fx-padding: 0 10 0 0;" text="⠀" />
+            </graphic>
+         </Button>
 
             <Button fx:id="profileButton" prefHeight="40.0" prefWidth="230.0" style="-fx-background-color: transparent; -fx-alignment: center-left; -fx-padding: 0 0 0 15; -fx-border-color: transparent; -fx-text-fill: #3c4858; -fx-font-size: 14px;" text="Profile">
                 <graphic>
@@ -80,7 +79,7 @@
                 <text>Add Category</text>
             </Button>
             <Button fx:id="tableViewButton" onAction="#handleTableViewButton" prefHeight="35.0" prefWidth="120.0" style="-fx-font-size: 13px; -fx-background-color: #00BCD4; -fx-text-fill: white; -fx-background-radius: 5;">
-                <text>Table View</text>
+                <text>Add Product</text>
             </Button>
             <Button fx:id="statisticsButton" onAction="#handleStatistics" prefHeight="35.0" prefWidth="120.0" style="-fx-font-size: 13px; -fx-background-color: #00BCD4; -fx-text-fill: white; -fx-background-radius: 5;">
                 <text>Statistics</text>

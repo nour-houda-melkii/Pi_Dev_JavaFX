@@ -317,15 +317,15 @@ public class ProductFrontController {
             CartViewController controller = loader.getController();
             controller.setCartProducts(cartProducts);
 
-            Stage stage = new Stage();
+            // Replace the current scene instead of creating a new stage
+            Stage stage = (Stage) productContainer.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Shopping Cart");
-            stage.show();
         } catch (IOException e) {
-            showAlert("Error", "Failed to open cart view");
+            showAlert("Error", "Failed to navigate to cart view: " + e.getMessage());
+            e.printStackTrace();
         }
     }
-
     @FXML
     private void handleViewFavorites() {
         try {

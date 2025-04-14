@@ -107,7 +107,7 @@ public class AddCategoryController {
         }
     }
 
- 
+
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
