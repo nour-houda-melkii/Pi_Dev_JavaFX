@@ -167,20 +167,17 @@ public class AdminDashboardController {
 
     private void openEditForm(Produit product) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/listproduit.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/edit_product.fxml"));
             Parent root = loader.load();
 
-            ListeProduitController controller = loader.getController();
+            // Get the controller and pass the product data
+            EditProductController controller = loader.getController();
             controller.setProductToEdit(product);
 
-            Stage popupStage = new Stage();
-            popupStage.setScene(new Scene(root));
-            popupStage.setTitle("Edit Product");
-            popupStage.initModality(Modality.APPLICATION_MODAL);
-            popupStage.showAndWait();
-
-            // Refresh after editing
-            loadProductsInCardView();
+            // Replace current scene instead of creating a popup
+            Stage stage = (Stage) productContainer.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Edit Product");
 
         } catch (Exception e) {
             System.err.println("CRITICAL ERROR OPENING EDIT FORM:");
@@ -284,15 +281,7 @@ public class AdminDashboardController {
 
     @FXML
     private void handleCategories() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/category.fxml"));
-            Stage stage = (Stage) productContainer.getScene().getWindow();
-            stage.setScene(new Scene(loader.load()));
-            stage.setTitle("Manage Categories");
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Failed to load categories view");
-        }
+        handleViewCategories();
     }
 
     private void showAlert(String title, String message) {
@@ -356,4 +345,60 @@ public class AdminDashboardController {
                     "\nResource URL: " + getClass().getResource("/data_history_view.fxml"));
         }
     }
+
+    @FXML
+    private void handleViewCategories() {
+        try {
+            // Get the resource URL to verify it exists
+            java.net.URL resourceUrl = getClass().getResource("/view_categories.fxml");
+
+            if (resourceUrl == null) {
+                showAlert("Error", "Could not find resource: /view_categories.fxml");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(resourceUrl);
+            Parent root = loader.load();
+
+            // Get the current stage
+            Stage stage = (Stage) productContainer.getScene().getWindow();
+
+            // Set the new scene
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("View Categories");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "Failed to load categories view: " + e.getMessage());
+        }
+    }
+    @FXML
+    private void handleAddCategory() {
+        try {
+            // Get the resource URL to verify it exists
+            java.net.URL resourceUrl = getClass().getResource("/add_category.fxml");
+
+            if (resourceUrl == null) {
+                showAlert("Error", "Could not find resource: /add_category.fxml");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(resourceUrl);
+            Parent root = loader.load();
+
+            // Get the current stage
+            Stage stage = (Stage) productContainer.getScene().getWindow();
+
+            // Set the new scene
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Add Category");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "Failed to load add category view: " + e.getMessage());
+        }
+    }
+
 }

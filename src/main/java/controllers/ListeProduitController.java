@@ -6,14 +6,12 @@ import entities.Category;
 import entities.Produit;
 import Services.ProduitServices;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -25,48 +23,23 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class ListeProduitController {
-
-    @FXML
-    private TableColumn<Produit, String> descriptionColumn;
-
     @FXML
     private TextField descriptionField;
-
-    @FXML
-    private TableView<Produit> productsTable;
-
-    @FXML
-    private TableColumn<Produit, String> imageColumn;
 
     @FXML
     private TextField imageField;
 
     @FXML
-    private TableColumn<Produit, String> nameColumn;
-
-    @FXML
-    private TableColumn<Produit, Double> priceColumn;
-
-    @FXML
     private TextField priceField;
 
     @FXML
-    private TableColumn<Produit, Integer> quantityColumn;
-
-    @FXML
     private TextField quantityField;
-
-    @FXML
-    private TableColumn<Produit, Integer> idColumn;
 
     @FXML
     private TextField nameField;
 
     @FXML
     private ComboBox<Category> categoryCombo;
-
-    @FXML
-    private TableColumn<Produit, Integer> categoryColumn;
 
     @FXML
     private Button generateDescriptionButton;
@@ -78,26 +51,7 @@ public class ListeProduitController {
     private Produit productToEdit = null;
 
     public void initialize() throws SQLException {
-        // Configure table columns
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
-        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-        quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        imageColumn.setCellValueFactory(new PropertyValueFactory<>("imagePath"));
-        categoryColumn.setCellValueFactory(new PropertyValueFactory<>("categoryId"));
-
         loadCategories();
-
-        // Load data
-        loadProducts();
-
-        // Set up selection listener
-        productsTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                populateFields(newValue);
-            }
-        });
 
         // Add listener to name field to enable generate button only when name is entered
         nameField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -159,35 +113,6 @@ public class ListeProduitController {
         });
     }
 
-    private void loadProducts() throws SQLException {
-        List<Produit> produitList = produitService.showAll();
-        ObservableList<Produit> observableProduitList = FXCollections.observableArrayList(produitList);
-        productsTable.setItems(observableProduitList);
-    }
-
-    private void populateFields(Produit produit) {
-        nameField.setText(produit.getName());
-        descriptionField.setText(produit.getDescription());
-        priceField.setText(String.valueOf(produit.getPrice()));
-        quantityField.setText(String.valueOf(produit.getQuantity()));
-        imageField.setText(produit.getImagePath());
-
-        // Set the category in the combo box
-        try {
-            for (Category category : categoryCombo.getItems()) {
-                if (category.getId() == produit.getCategoryId()) {
-                    categoryCombo.setValue(category);
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Set this as the current product being edited
-        this.productToEdit = produit;
-    }
-
     @FXML
     void ajouterProduit(ActionEvent event) {
         if (!validateFields()) return;
@@ -198,8 +123,6 @@ public class ListeProduitController {
         try {
             int newId = produitService.insert(produit);
             produit.setId(newId);
-
-            productsTable.getItems().add(produit);
             clearFields();
 
             showSuccessAlert("Success", "Product added successfully!");
@@ -209,52 +132,6 @@ public class ListeProduitController {
             } else {
                 showAlert(Alert.AlertType.ERROR, "Database Error", "Failed to add product: " + e.getMessage());
             }
-        }
-    }
-
-    @FXML
-    void modifierProduit(ActionEvent event) {
-        Produit selectedProduct = productsTable.getSelectionModel().getSelectedItem();
-        if (selectedProduct == null && productToEdit == null) {
-            showAlert(Alert.AlertType.WARNING, "Warning", "No product selected!");
-            return;
-        }
-
-        // Use either the selected product or the product passed from another screen
-        Produit productToUpdate = (selectedProduct != null) ? selectedProduct : productToEdit;
-
-        if (!validateFields()) return;
-
-        populateProductFromFields(productToUpdate);
-
-        try {
-            produitService.update(productToUpdate);
-            loadProducts(); // Refresh the table
-            showSuccessAlert("Success", "Product updated successfully!");
-        } catch (SQLException e) {
-            if (e.getMessage().contains("already exists")) {
-                showAlert(Alert.AlertType.ERROR, "Duplicate Error", e.getMessage());
-            } else {
-                showAlert(Alert.AlertType.ERROR, "Database Error", "Failed to update product: " + e.getMessage());
-            }
-        }
-    }
-
-    @FXML
-    void supprimerProduit(ActionEvent event) {
-        Produit selectedProduct = productsTable.getSelectionModel().getSelectedItem();
-        if (selectedProduct == null) {
-            showAlert(Alert.AlertType.WARNING, "Warning", "No product selected!");
-            return;
-        }
-
-        try {
-            produitService.delete(selectedProduct);
-            productsTable.getItems().remove(selectedProduct);
-            clearFields();
-            showSuccessAlert("Success", "Product deleted successfully!");
-        } catch (SQLException e) {
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to delete: " + e.getMessage());
         }
     }
 
@@ -352,6 +229,29 @@ public class ListeProduitController {
         if (product != null) {
             populateFields(product);
         }
+    }
+
+    private void populateFields(Produit produit) {
+        nameField.setText(produit.getName());
+        descriptionField.setText(produit.getDescription());
+        priceField.setText(String.valueOf(produit.getPrice()));
+        quantityField.setText(String.valueOf(produit.getQuantity()));
+        imageField.setText(produit.getImagePath());
+
+        // Set the category in the combo box
+        try {
+            for (Category category : categoryCombo.getItems()) {
+                if (category.getId() == produit.getCategoryId()) {
+                    categoryCombo.setValue(category);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Set this as the current product being edited
+        this.productToEdit = produit;
     }
 
     public void handleBackToAdmin(ActionEvent actionEvent) {

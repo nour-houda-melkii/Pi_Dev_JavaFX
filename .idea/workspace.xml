@@ -6,17 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="67f812a0-6c1d-4f08-bb79-468f0bf5180a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AdminDashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AdminDashboardController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/CategoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ProductFrontController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ProductFrontController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ListeProduitController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ListeProduitController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/ListProduit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/ListProduit.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/admin_dashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/admin_dashboard.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/product_client.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/product_client.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/category.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/category.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/ListProduit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ListProduit.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/controllers/AdminDashboardController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/AdminDashboardController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/controllers/CategoryController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/CategoryController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/controllers/ListeProduitController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ListeProduitController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ProductFrontController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ProductFrontController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/product_client.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/product_client.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,7 +174,7 @@
       <workItem from="1744639458190" duration="1368000" />
       <workItem from="1744641414596" duration="898000" />
       <workItem from="1744645870047" duration="3718000" />
-      <workItem from="1744654464152" duration="597000" />
+      <workItem from="1744654464152" duration="4552000" />
     </task>
     <servers />
   </component>
