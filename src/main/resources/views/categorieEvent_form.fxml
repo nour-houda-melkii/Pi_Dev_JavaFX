@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.CategorieEventFormController"
+            prefWidth="400" prefHeight="300">
+    <VBox spacing="10" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <Label text="Nom *" />
+        <TextField fx:id="fieldNom" promptText="Entrez un nom" />
+
+        <Label text="Description" />
+        <TextArea fx:id="fieldDescription" promptText="Entrez une description" wrapText="true" />
+
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button fx:id="btnSave" text="Enregistrer" onAction="#handleSave" />
+            <Button fx:id="btnCancel" text="Annuler" onAction="#handleCancel" />
+        </HBox>
+    </VBox>
+</AnchorPane>

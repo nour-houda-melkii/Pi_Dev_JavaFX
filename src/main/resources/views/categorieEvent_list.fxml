@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.CategorieEventController"
+            stylesheets="@/styles/style.css">
+
+    <top>
+        <VBox spacing="10">
+            <HBox spacing="10">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+                <Label text="Gestion des Catégories" styleClass="label-title" />
+                <Button text="➕ Ajouter une catégorie"
+                        onAction="#handleAddCategorie"
+                        styleClass="button button-green" />
+            </HBox>
+            
+        </VBox>
+    </top>
+
+    <center>
+        <TableView fx:id="tableCategories">
+            <columns>
+                <TableColumn fx:id="colId" text="#" />
+                <TableColumn fx:id="colNom" text="Nom" />
+                <TableColumn fx:id="colDescription" text="Description" />
+                <TableColumn fx:id="colActions" text="Actions" />
+            </columns>
+        </TableView>
+    </center>
+</BorderPane>

@@ -13,8 +13,11 @@ public class App extends Application {
         Parent root = loader.load();
         
         Scene scene = new Scene(root);
-        primaryStage.setTitle("Mon Application JavaFX");
+        scene.getStylesheets().add(getClass().getResource("/styles/style.css").toExternalForm());
+        
+        primaryStage.setTitle("SAHATECK - Gestion des Événements");
         primaryStage.setScene(scene);
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 

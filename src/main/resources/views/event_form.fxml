@@ -1,56 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 <?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.EventFormController" prefWidth="600" prefHeight="700">
-    <VBox spacing="10" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
-          AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+<AnchorPane prefHeight="700" prefWidth="600" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="controllers.EventFormController">
+    <VBox spacing="10" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
         <padding>
-            <Insets top="20" right="20" bottom="20" left="20"/>
+            <Insets bottom="20" left="20" right="20" top="20" />
         </padding>
 
-        <Label text="Titre *" styleClass="required-field"/>
+        <Label styleClass="required-field" text="Titre *" />
         <TextField fx:id="fieldTitre" promptText="Entrez un titre" />
 
-        <Label text="Description *" styleClass="required-field"/>
-        <TextArea fx:id="fieldDescription" promptText="Entrez une description" wrapText="true" prefRowCount="3" />
+        <Label styleClass="required-field" text="Description *" />
+        <TextArea fx:id="fieldDescription" prefRowCount="3" promptText="Entrez une description" wrapText="true" />
 
-        <Label text="Date de début *" styleClass="required-field"/>
+        <Label styleClass="required-field" text="Date de début *" />
         <HBox spacing="10">
             <DatePicker fx:id="dateDebut" />
             <Spinner fx:id="hourStartSpinner" prefWidth="70" />
             <Spinner fx:id="minuteStartSpinner" prefWidth="70" />
         </HBox>
 
-        <Label text="Date de fin *" styleClass="required-field"/>
+        <Label styleClass="required-field" text="Date de fin *" />
         <HBox spacing="10">
             <DatePicker fx:id="dateFin" />
             <Spinner fx:id="hourEndSpinner" prefWidth="70" />
             <Spinner fx:id="minuteEndSpinner" prefWidth="70" />
         </HBox>
 
-        <Label text="Lieu *" styleClass="required-field"/>
+        <Label styleClass="required-field" text="Lieu *" />
         <TextField fx:id="fieldLieu" promptText="Entrez un lieu" />
 
         <HBox spacing="10">
             <VBox spacing="5" HBox.hgrow="ALWAYS">
-                <Label text="Latitude *" styleClass="required-field"/>
+                <Label styleClass="required-field" text="Latitude *" />
                 <TextField fx:id="fieldLatitude" promptText="ex: 36.8" />
             </VBox>
             <VBox spacing="5" HBox.hgrow="ALWAYS">
-                <Label text="Longitude *" styleClass="required-field"/>
+                <Label styleClass="required-field" text="Longitude *" />
                 <TextField fx:id="fieldLongitude" promptText="ex: 10.2" />
             </VBox>
         </HBox>
 
-        <Label text="Places disponibles *" styleClass="required-field"/>
+        <Label styleClass="required-field" text="Places disponibles *" />
         <TextField fx:id="fieldPlaces" promptText="ex: 30" />
 
-        <Label text="Catégorie *" styleClass="required-field"/>
+        <Label styleClass="required-field" text="Catégorie *" />
         <ComboBox fx:id="comboCategorie" promptText="Sélectionnez une catégorie">
             <items>
                 <FXCollections fx:factory="observableArrayList">
@@ -61,17 +68,17 @@
 
         <Label text="Affiche de l'événement (JPEG ou PNG, max 5MB)" />
         <HBox spacing="10">
-            <Button text="Choisir une image" onAction="#handleChooseImage" />
+            <Button onAction="#handleChooseImage" text="Choisir une image" />
             <Label fx:id="labelImagePath" text="Aucune image sélectionnée" />
+        </HBox>
+
+        <HBox alignment="CENTER_RIGHT" spacing="10">
+            <Button fx:id="btnSave" minWidth="100" onAction="#handleSave" styleClass="primary-button" text="Enregistrer" />
+            <Button onAction="#handleRetourListe" styleClass="button button-secondary" text="Retour à la liste" />
         </HBox>
 
         <ImageView fx:id="imagePreview" fitHeight="150" fitWidth="150" preserveRatio="true" />
 
         <Label fx:id="errorLabel" styleClass="error-label" wrapText="true" />
-
-        <HBox spacing="10" alignment="CENTER_RIGHT">
-            <Button fx:id="btnSave" text="Enregistrer" onAction="#handleSave" styleClass="primary-button" minWidth="100"/>
-            <Button text="Annuler" onAction="#handleCancel" minWidth="100"/>
-        </HBox>
     </VBox>
 </AnchorPane>

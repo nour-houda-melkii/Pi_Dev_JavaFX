@@ -8,6 +8,7 @@ controllers\EventController$2.class
 controllers\CategorieEventController$1.class
 org\example\App.class
 org\example\DataSource.class
+org\example\controllers\WelcomeController.class
 utils\DatabaseConnection.class
 controllers\EventFormController.class
 services\EventDAO.class

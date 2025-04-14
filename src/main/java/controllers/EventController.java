@@ -8,12 +8,15 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -212,12 +215,16 @@ public class EventController {
 
     private void addActionsToActifs() {
         colActionsActifs.setCellFactory(col -> new TableCell<>() {
-            private final Button btnEdit = new Button("✏️");
-            private final Button btnArchive = new Button("📦");
+            private final Button btnEdit = createButton("edit", "images/icons/edit.png");
+            private final Button btnArchive = createButton("archive", "images/icons/archive.png");
+            private final HBox container = new HBox(5);
 
             {
-                btnEdit.getStyleClass().addAll("button", "edit");
-                btnArchive.getStyleClass().addAll("button", "archive");
+                btnEdit.getStyleClass().addAll("action-button", "edit-button");
+                btnArchive.getStyleClass().addAll("action-button", "archive-button");
+                
+                container.getStyleClass().add("action-buttons-container");
+                container.getChildren().addAll(btnEdit, btnArchive);
 
                 btnEdit.setOnAction(e -> handleEditEvent(getTableView().getItems().get(getIndex())));
                 btnArchive.setOnAction(e -> {
@@ -234,22 +241,24 @@ public class EventController {
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    HBox hbox = new HBox(8, btnEdit, btnArchive);
-                    setGraphic(hbox);
+                    setGraphic(container);
                 }
             }
         });
     }
 
-
     private void addActionsToArchives() {
         colActionsArchives.setCellFactory(col -> new TableCell<>() {
-            private final Button btnRestore = new Button("🔁");
-            private final Button btnDelete = new Button("🗑️");
+            private final Button btnRestore = createButton("restore", "images/icons/restore.png");
+            private final Button btnDelete = createButton("delete", "images/icons/delete.png");
+            private final HBox container = new HBox(5);
 
             {
-                btnRestore.getStyleClass().addAll("button", "restore");
-                btnDelete.getStyleClass().addAll("button", "delete");
+                btnRestore.getStyleClass().addAll("action-button", "restore-button");
+                btnDelete.getStyleClass().addAll("action-button", "delete-button");
+                
+                container.getStyleClass().add("action-buttons-container");
+                container.getChildren().addAll(btnRestore, btnDelete);
 
                 btnRestore.setOnAction(e -> {
                     Event event = getTableView().getItems().get(getIndex());
@@ -271,17 +280,38 @@ public class EventController {
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    VBox vbox = new VBox(5, btnRestore, btnDelete);
-                    setGraphic(vbox);
+                    setGraphic(container);
                 }
             }
         });
     }
 
+    private Button createButton(String tooltip, String iconPath) {
+        Button button = new Button();
+        try {
+            ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/" + iconPath)));
+            imageView.setFitHeight(16);
+            imageView.setFitWidth(16);
+            button.setGraphic(imageView);
+            button.setTooltip(new Tooltip(tooltip));
+        } catch (Exception e) {
+            button.setText(tooltip);
+        }
+        return button;
+    }
 
     @FXML
     private void handleAddEvent(ActionEvent event) {
-        openEventForm(null);
+        try {
+            Parent formPage = FXMLLoader.load(getClass().getResource("/views/event_form.fxml"));
+            // Obtenir la référence au BorderPane principal
+            BorderPane mainContent = (BorderPane) ((Node) event.getSource()).getScene().getRoot().lookup("#contentArea");
+            if (mainContent != null) {
+                mainContent.setCenter(formPage);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void handleEditEvent(Event event) {

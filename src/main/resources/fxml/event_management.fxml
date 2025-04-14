@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controllers.EventManagementController">
+    <!-- Barre de navigation à gauche -->
+    <left>
+        <VBox prefWidth="200.0" style="-fx-background-color: #f8f9fa;" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+            <Label text="SAHATECK" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+            <Separator prefWidth="200.0">
+                <VBox.margin>
+                    <Insets bottom="10.0" top="10.0"/>
+                </VBox.margin>
+            </Separator>
+            <Button fx:id="dashboardBtn" maxWidth="Infinity" mnemonicParsing="false" text="Dashboard" style="-fx-alignment: LEFT;">
+                <VBox.margin>
+                    <Insets bottom="5.0"/>
+                </VBox.margin>
+            </Button>
+            <Button fx:id="eventManagementBtn" maxWidth="Infinity" mnemonicParsing="false" text="Event Management" style="-fx-alignment: LEFT;"/>
+        </VBox>
+    </left>
+    
+    <!-- Contenu principal -->
+    <center>
+        <VBox spacing="10.0" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            </padding>
+            
+            <!-- En-tête -->
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+                <Label text="Gestion des Événements" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            </HBox>
+            
+            <!-- Barre de recherche et filtres -->
+            <HBox spacing="10.0" alignment="CENTER_LEFT">
+                <TextField fx:id="searchField" promptText="Titre" prefWidth="200.0"/>
+                <DatePicker fx:id="datePicker" promptText="jj/mm/aaaa"/>
+                <ComboBox fx:id="categoryComboBox" promptText="Toutes les catégories" prefWidth="150.0"/>
+                <Button fx:id="searchButton" text="Rechercher" style="-fx-background-color: #007bff; -fx-text-fill: white;"/>
+            </HBox>
+            
+            <!-- Bouton Créer -->
+            <Button fx:id="createEventBtn" text="Créer un nouvel événement" 
+                    style="-fx-background-color: #28a745; -fx-text-fill: white;"/>
+            
+            <!-- Onglets -->
+            <TabPane>
+                <tabs>
+                    <Tab text="Événements Actifs" closable="false">
+                        <TableView fx:id="eventTable">
+                            <columns>
+                                <TableColumn fx:id="idColumn" text="#" prefWidth="50.0"/>
+                                <TableColumn fx:id="titleColumn" text="Titre" prefWidth="200.0"/>
+                                <TableColumn fx:id="locationColumn" text="Lieu" prefWidth="150.0"/>
+                                <TableColumn fx:id="startDateColumn" text="Début" prefWidth="150.0"/>
+                                <TableColumn fx:id="endDateColumn" text="Fin" prefWidth="150.0"/>
+                                <TableColumn fx:id="placesColumn" text="Places" prefWidth="100.0"/>
+                                <TableColumn fx:id="categoryColumn" text="Catégorie" prefWidth="150.0"/>
+                                <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="100.0"/>
+                            </columns>
+                        </TableView>
+                    </Tab>
+                    <Tab text="Événements Archivés" closable="false"/>
+                </tabs>
+            </TabPane>
+        </VBox>
+    </center>
+</BorderPane> 

@@ -1,140 +1,240 @@
+/* ========== VARIABLES GLOBALES ========== */
+* {
+    -primary-color: #007bff;
+    -secondary-color: #6c757d;
+    -success-color: #28a745;
+    -danger-color: #dc3545;
+    -warning-color: #ffc107;
+    -info-color: #17a2b8;
+    -light-color: #f8f9fa;
+    -dark-color: #343a40;
+}
+
+/* ========== STYLES DE BASE ========== */
 .root {
-    -fx-font-family: 'Open Sans', sans-serif;
-    -fx-background-color: #f8f9fa;
+    -fx-font-family: 'Segoe UI', 'Open Sans', sans-serif;
+    -fx-background-color: -light-color;
 }
 
 .label {
-    -fx-font-size: 16px;
-    -fx-text-fill: #495057;
+    -fx-font-size: 14px;
+    -fx-text-fill: -dark-color;
 }
 
+/* ========== BOUTONS PRINCIPAUX ========== */
 .button {
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-padding: 8px 16px;
-    -fx-background-radius: 5px;
+    -fx-padding: 8 16;
+    -fx-background-radius: 5;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0.0, 0, 2);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 4, 0, 0, 1);
 }
 
 .button:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 6, 0, 0, 2);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.button:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* Variantes de boutons */
+.button-primary {
+    -fx-background-color: -primary-color;
+}
+
+.button-primary:hover {
+    -fx-background-color: derive(-primary-color, -10%);
+}
+
+.button-success {
+    -fx-background-color: -success-color;
+}
+
+.button-success:hover {
+    -fx-background-color: derive(-success-color, -10%);
+}
+
+/* ========== BOUTONS D'ACTION ========== */
+.action-button {
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-max-width: 40px;
+    -fx-max-height: 40px;
+    -fx-background-radius: 20;
+    -fx-padding: 8;
+    -fx-content-display: graphic-only;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 4, 0, 0, 1);
+    -fx-cursor: hand;
+}
+
+.action-button:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 8, 0, 0, 2);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.action-button:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+}
+
+.action-button .image-view {
     -fx-opacity: 0.9;
 }
 
-.button.edit {
-    -fx-background-color: #ffc107;
-}
-
-.button.archive {
-    -fx-background-color: #1a73e8; /* bleu */
-}
-
-.button.restore {
-    -fx-background-color: #34a853; /* vert */
-}
-
-.button.delete {
-    -fx-background-color: #dc3545;
-}
-
-.button-green {
-    -fx-background-color: #198754;
-}
-
-.button.primary {
-    -fx-background-color: #0d6efd;
-}
-
-.button.success {
-    -fx-background-color: #198754;
-}
-
-.button.danger {
-    -fx-background-color: #dc3545;
-}
-
-.button.warning {
-    -fx-background-color: #ffc107;
-    -fx-text-fill: #000;
-}
-
-.badge {
-    -fx-padding: 3 10;
-    -fx-background-radius: 30;
+/* Bouton Affiche (gris) */
+.affiche-button {
+    -fx-background-color: #6c757d;
     -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-font-size: 12px;
 }
 
-.badge.success {
-    -fx-background-color: #198754;
+.affiche-button:hover {
+    -fx-background-color: #5a6268;
 }
 
-.badge.warning {
-    -fx-background-color: #ffc107;
-    -fx-text-fill: black;
+.affiche-button .image-view {
+    -fx-opacity: 1;
 }
 
-.badge.danger {
+/* Bouton Archive (bleu) */
+.archive-button {
+    -fx-background-color: #17a2b8;
+    -fx-text-fill: white;
+}
+
+.archive-button:hover {
+    -fx-background-color: #138496;
+}
+
+/* Bouton Restaurer (vert) */
+.restore-button {
+    -fx-background-color: #28a745;
+    -fx-text-fill: white;
+}
+
+.restore-button:hover {
+    -fx-background-color: #218838;
+}
+
+/* Bouton Supprimer (rouge) */
+.delete-button {
     -fx-background-color: #dc3545;
+    -fx-text-fill: white;
 }
 
-.table-view {
-    -fx-border-color: #dee2e6;
-    -fx-border-width: 1;
-    -fx-background-color: white;
-    -fx-table-cell-border-color: #dee2e6;
+.delete-button:hover {
+    -fx-background-color: #c82333;
 }
 
-.table-column-header {
-    -fx-background-color: #f1f3f5;
-    -fx-border-color: #dee2e6;
-    -fx-font-weight: bold;
+/* Container pour les boutons d'action */
+.action-buttons-container {
+    -fx-spacing: 10;
+    -fx-alignment: center;
+    -fx-padding: 4;
+}
+
+/* ========== BARRE LATÉRALE ========== */
+.sidebar-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: -dark-color;
+    -fx-font-size: 14px;
+    -fx-padding: 12 16;
+    -fx-background-radius: 8;
     -fx-alignment: CENTER_LEFT;
+    -fx-graphic-text-gap: 10;
 }
 
-.titled-pane > .title {
-    -fx-background-color: #e9ecef;
-    -fx-text-fill: #212529;
+.sidebar-button:hover {
+    -fx-background-color: derive(-light-color, -5%);
+}
+
+.sidebar-button:selected {
+    -fx-background-color: derive(-primary-color, 90%);
+    -fx-text-fill: -primary-color;
+}
+
+.sidebar-sub-button {
+    -fx-padding: 8 16 8 32;
+    -fx-font-size: 13px;
+}
+
+/* ========== TABLEAUX ========== */
+.table-view {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-padding: 0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 2);
+}
+
+.table-view .column-header {
+    -fx-background-color: white;
+    -fx-padding: 12 8;
+    -fx-border-color: transparent transparent derive(-light-color, -5%) transparent;
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+}
+
+.table-view .table-row-cell:odd {
+    -fx-background-color: derive(-light-color, 2%);
+}
+
+.table-view .table-row-cell:hover {
+    -fx-background-color: derive(-light-color, -2%);
+}
+
+/* ========== BADGES ========== */
+.badge {
+    -fx-background-radius: 12;
+    -fx-padding: 4 8;
+    -fx-font-size: 11px;
     -fx-font-weight: bold;
-    -fx-padding: 10 15;
-}
-
-.button button-green {
-    -fx-background-color: #198754;
-}
-
-/* Style pour les boutons */
-.primary-button {
-    -fx-background-color: #4CAF50;
     -fx-text-fill: white;
-    -fx-font-weight: bold;
 }
 
-.button {
-    -fx-background-radius: 5;
-    -fx-padding: 8 15;
-}
+.badge.success { -fx-background-color: -success-color; }
+.badge.warning { -fx-background-color: -warning-color; }
+.badge.danger { -fx-background-color: -danger-color; }
 
-/* Style pour les labels d'erreur */
-.error-label {
-    -fx-text-fill: red;
-    -fx-font-weight: bold;
-}
-
-/* Style pour les champs de texte */
+/* ========== CHAMPS DE TEXTE ========== */
 .text-field {
-    -fx-border-color: lightgray;
-    -fx-border-radius: 5;
-    -fx-padding: 5;
+    -fx-background-color: white;
+    -fx-background-radius: 6;
+    -fx-border-color: derive(-light-color, -10%);
+    -fx-border-radius: 6;
+    -fx-padding: 8 12;
 }
 
 .text-field:focused {
-    -fx-border-color: #4CAF50;
+    -fx-border-color: -primary-color;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,123,255,0.15), 4, 0, 0, 0);
 }
 
-/* Style pour les tables */
-.table-view {
-    -fx-table-cell-border-color: transparent;
-    -fx-padding: 10;
+/* ========== TITRES ========== */
+.label-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -dark-color;
+}
+
+.section-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 8 0;
+}
+
+/* ========== CONTENEURS ========== */
+.card {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-padding: 16;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 8, 0, 0, 2);
 }
