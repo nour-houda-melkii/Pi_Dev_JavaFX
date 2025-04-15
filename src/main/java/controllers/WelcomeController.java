@@ -1,4 +1,4 @@
-package org.example.controllers;
+package controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,15 +17,10 @@ public class WelcomeController {
     private Button frontEndButton;
 
     @FXML
-    public void initialize() {
-        // Initialisation de la page d'accueil
-    }
-
-    @FXML
-    private void handleFrontEndAccess() {
+    private void handleShowEvents() {
         try {
-            // Charger la vue front-end principale avec la navbar
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/front_main.fxml"));
+            // Charger la vue front-end des événements
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/front_event_list.fxml"));
             Parent root = loader.load();
             
             // Créer une nouvelle fenêtre
@@ -44,7 +39,7 @@ public class WelcomeController {
             
             // Configurer la fenêtre
             eventStage.setScene(scene);
-            eventStage.setTitle("SAHATECH - Événements");
+            eventStage.setTitle("SAHATECH - Liste des Événements");
             
             // Configurer en plein écran
             Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
@@ -56,12 +51,12 @@ public class WelcomeController {
             // Empêcher le redimensionnement
             eventStage.setResizable(false);
             
-            // Afficher la nouvelle fenêtre sans fermer la fenêtre backend
+            // Afficher la nouvelle fenêtre sans bloquer la fenêtre backend
             eventStage.show();
             
         } catch (IOException e) {
             e.printStackTrace();
-            // Gérer l'erreur de manière appropriée (par exemple, afficher une alerte)
+            System.out.println("Erreur lors du chargement de la vue: " + e.getMessage());
         }
     }
 } 

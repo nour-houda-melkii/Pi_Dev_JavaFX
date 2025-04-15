@@ -75,63 +75,42 @@ public class EventController {
     }
 
     private void setupColumns() {
+        // Configuration des colonnes pour les événements actifs
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colTitre.setCellValueFactory(new PropertyValueFactory<>("title"));
         colLieu.setCellValueFactory(new PropertyValueFactory<>("location"));
         colPlaces.setCellValueFactory(new PropertyValueFactory<>("placesDisponibles"));
-
         colDebut.setCellValueFactory(cell -> new SimpleStringProperty(
                 cell.getValue().getStartDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))));
-
         colFin.setCellValueFactory(cell -> new SimpleStringProperty(
                 cell.getValue().getEndDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))));
-
         colCategorie.setCellValueFactory(cell -> new SimpleStringProperty(
                 cell.getValue().getCategorie().getNom()));
-
         colAffiche.setCellValueFactory(cell -> new SimpleObjectProperty<>(
                 loadImageView(cell.getValue().getAffiche())));
 
-        // Badge coloré pour places
-        colPlaces.setCellFactory(col -> new TableCell<>() {
-            @Override
-            protected void updateItem(Integer item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setGraphic(null);
-                } else {
-                    Label badge = new Label(item == 0 ? "Complet" : item.toString());
-                    badge.getStyleClass().add("badge");
-                    if (item == 0) {
-                        badge.getStyleClass().add("danger");
-                    } else if (item < 10) {
-                        badge.getStyleClass().add("warning");
-                    } else {
-                        badge.getStyleClass().add("success");
-                    }
-                    setGraphic(badge);
-                }
-            }
-        });
-
+        // Configuration des colonnes pour les événements archivés
         colIdArch.setCellValueFactory(new PropertyValueFactory<>("id"));
         colTitreArch.setCellValueFactory(new PropertyValueFactory<>("title"));
         colLieuArch.setCellValueFactory(new PropertyValueFactory<>("location"));
         colPlacesArch.setCellValueFactory(new PropertyValueFactory<>("placesDisponibles"));
-
         colDebutArch.setCellValueFactory(cell -> new SimpleStringProperty(
                 cell.getValue().getStartDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))));
-
         colFinArch.setCellValueFactory(cell -> new SimpleStringProperty(
                 cell.getValue().getEndDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))));
-
         colCategorieArch.setCellValueFactory(cell -> new SimpleStringProperty(
                 cell.getValue().getCategorie().getNom()));
-
         colAfficheArch.setCellValueFactory(cell -> new SimpleObjectProperty<>(
                 loadImageView(cell.getValue().getAffiche())));
 
-        colPlacesArch.setCellFactory(col -> new TableCell<>() {
+        setupPlacesColumn(colPlaces);
+        setupPlacesColumn(colPlacesArch);
+        setupActionsColumn();
+        setupArchiveActionsColumn();
+    }
+
+    private void setupPlacesColumn(TableColumn<Event, Integer> column) {
+        column.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
@@ -151,9 +130,128 @@ public class EventController {
                 }
             }
         });
+    }
 
-        addActionsToActifs();
-        addActionsToArchives();
+    private void setupActionsColumn() {
+        colActionsActifs.setCellFactory(col -> new TableCell<>() {
+            private final HBox container = new HBox(8);
+            private final Button editButton = createButton("Modifier", "/images/icons/edit.png");
+            private final Button archiveButton = createButton("Archiver", "/images/icons/archive.png");
+
+            {
+                editButton.getStyleClass().addAll("action-button", "edit-button");
+                archiveButton.getStyleClass().addAll("action-button", "archive-button");
+
+                container.setAlignment(javafx.geometry.Pos.CENTER);
+                container.getChildren().addAll(editButton, archiveButton);
+
+                editButton.setOnAction(e -> {
+                    Event event = getTableView().getItems().get(getIndex());
+                    handleEditEvent(event);
+                });
+
+                archiveButton.setOnAction(e -> {
+                    Event event = getTableView().getItems().get(getIndex());
+                    Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirmAlert.setTitle("Confirmation d'archivage");
+                    confirmAlert.setHeaderText("Archiver l'événement");
+                    confirmAlert.setContentText("Êtes-vous sûr de vouloir archiver l'événement \"" + event.getTitle() + "\" ?");
+
+                    if (confirmAlert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+                        eventDAO.updateEventArchiveStatus(event.getId(), true);
+                        loadEvents();
+                        
+                        Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                        successAlert.setTitle("Archivage réussi");
+                        successAlert.setHeaderText(null);
+                        successAlert.setContentText("L'événement a été archivé avec succès.");
+                        successAlert.showAndWait();
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : container);
+            }
+        });
+    }
+
+    private void setupArchiveActionsColumn() {
+        colActionsArchives.setCellFactory(col -> new TableCell<>() {
+            private final HBox container = new HBox(8);
+            private final Button restoreButton = createButton("Restaurer", "/images/icons/restore.png");
+            private final Button deleteButton = createButton("Supprimer", "/images/icons/delete.png");
+
+            {
+                restoreButton.getStyleClass().addAll("action-button", "restore-button");
+                deleteButton.getStyleClass().addAll("action-button", "delete-button");
+
+                container.setAlignment(javafx.geometry.Pos.CENTER);
+                container.getChildren().addAll(restoreButton, deleteButton);
+
+                restoreButton.setOnAction(e -> {
+                    Event event = getTableView().getItems().get(getIndex());
+                    Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirmAlert.setTitle("Confirmation de restauration");
+                    confirmAlert.setHeaderText("Restaurer l'événement");
+                    confirmAlert.setContentText("Êtes-vous sûr de vouloir restaurer l'événement \"" + event.getTitle() + "\" ?");
+
+                    if (confirmAlert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+                        eventDAO.updateEventArchiveStatus(event.getId(), false);
+                        loadEvents();
+                        
+                        Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                        successAlert.setTitle("Restauration réussie");
+                        successAlert.setHeaderText(null);
+                        successAlert.setContentText("L'événement a été restauré avec succès.");
+                        successAlert.showAndWait();
+                    }
+                });
+
+                deleteButton.setOnAction(e -> {
+                    Event event = getTableView().getItems().get(getIndex());
+                    Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirmAlert.setTitle("Confirmation de suppression");
+                    confirmAlert.setHeaderText("Supprimer l'événement");
+                    confirmAlert.setContentText("Êtes-vous sûr de vouloir supprimer définitivement l'événement \"" + event.getTitle() + "\" ? Cette action est irréversible.");
+
+                    if (confirmAlert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK) {
+                        eventDAO.deleteEvent(event.getId());
+                        loadEvents();
+                        
+                        Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                        successAlert.setTitle("Suppression réussie");
+                        successAlert.setHeaderText(null);
+                        successAlert.setContentText("L'événement a été supprimé avec succès.");
+                        successAlert.showAndWait();
+                    }
+                });
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                setGraphic(empty ? null : container);
+            }
+        });
+    }
+
+    private Button createButton(String tooltip, String iconPath) {
+        Button button = new Button();
+        try {
+            Image image = new Image(getClass().getResourceAsStream(iconPath));
+            ImageView imageView = new ImageView(image);
+            imageView.setFitHeight(16);
+            imageView.setFitWidth(16);
+            button.setGraphic(imageView);
+            button.setTooltip(new Tooltip(tooltip));
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement de l'icône " + iconPath + ": " + e.getMessage());
+            button.setText(tooltip);
+        }
+        return button;
     }
 
     private void loadCategories() {
@@ -213,93 +311,6 @@ public class EventController {
         return imageView;
     }
 
-    private void addActionsToActifs() {
-        colActionsActifs.setCellFactory(col -> new TableCell<>() {
-            private final Button btnEdit = createButton("edit", "images/icons/edit.png");
-            private final Button btnArchive = createButton("archive", "images/icons/archive.png");
-            private final HBox container = new HBox(5);
-
-            {
-                btnEdit.getStyleClass().addAll("action-button", "edit-button");
-                btnArchive.getStyleClass().addAll("action-button", "archive-button");
-                
-                container.getStyleClass().add("action-buttons-container");
-                container.getChildren().addAll(btnEdit, btnArchive);
-
-                btnEdit.setOnAction(e -> handleEditEvent(getTableView().getItems().get(getIndex())));
-                btnArchive.setOnAction(e -> {
-                    Event event = getTableView().getItems().get(getIndex());
-                    event.setArchived(true);
-                    eventDAO.updateEventArchiveStatus(event.getId(), true);
-                    loadEvents();
-                });
-            }
-
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(container);
-                }
-            }
-        });
-    }
-
-    private void addActionsToArchives() {
-        colActionsArchives.setCellFactory(col -> new TableCell<>() {
-            private final Button btnRestore = createButton("restore", "images/icons/restore.png");
-            private final Button btnDelete = createButton("delete", "images/icons/delete.png");
-            private final HBox container = new HBox(5);
-
-            {
-                btnRestore.getStyleClass().addAll("action-button", "restore-button");
-                btnDelete.getStyleClass().addAll("action-button", "delete-button");
-                
-                container.getStyleClass().add("action-buttons-container");
-                container.getChildren().addAll(btnRestore, btnDelete);
-
-                btnRestore.setOnAction(e -> {
-                    Event event = getTableView().getItems().get(getIndex());
-                    event.setArchived(false);
-                    eventDAO.updateEventArchiveStatus(event.getId(), false);
-                    loadEvents();
-                });
-
-                btnDelete.setOnAction(e -> {
-                    Event event = getTableView().getItems().get(getIndex());
-                    eventDAO.deleteEvent(event.getId());
-                    loadEvents();
-                });
-            }
-
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(container);
-                }
-            }
-        });
-    }
-
-    private Button createButton(String tooltip, String iconPath) {
-        Button button = new Button();
-        try {
-            ImageView imageView = new ImageView(new Image(getClass().getResourceAsStream("/" + iconPath)));
-            imageView.setFitHeight(16);
-            imageView.setFitWidth(16);
-            button.setGraphic(imageView);
-            button.setTooltip(new Tooltip(tooltip));
-        } catch (Exception e) {
-            button.setText(tooltip);
-        }
-        return button;
-    }
-
     @FXML
     private void handleAddEvent(ActionEvent event) {
         try {
@@ -315,24 +326,20 @@ public class EventController {
     }
 
     private void handleEditEvent(Event event) {
-        openEventForm(event);
-    }
-
-    private void openEventForm(Event eventToEdit) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/event_form.fxml"));
-            AnchorPane formPane = loader.load();
-
+            Parent formPage = loader.load();
+            
+            // Configurer le contrôleur du formulaire
             EventFormController formController = loader.getController();
-            formController.setEvent(eventToEdit);
+            formController.setEvent(event);
             formController.setOnFormSubmitted(v -> loadEvents());
 
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle(eventToEdit == null ? "Ajouter un événement" : "Modifier l'événement");
-            dialogStage.initModality(Modality.WINDOW_MODAL);
-            dialogStage.setScene(new Scene(formPane));
-            dialogStage.show();
-
+            // Obtenir la référence au BorderPane principal et charger le formulaire
+            BorderPane mainContent = (BorderPane) tableActifs.getScene().getRoot().lookup("#contentArea");
+            if (mainContent != null) {
+                mainContent.setCenter(formPage);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

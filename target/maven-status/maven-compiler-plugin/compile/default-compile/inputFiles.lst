@@ -2,6 +2,10 @@ C:\Users\RayenSabri\Desktop\Projects\New folder\src\main\java\controllers\Catego
 C:\Users\RayenSabri\Desktop\Projects\New folder\src\main\java\controllers\CategorieEventFormController.java
 C:\Users\RayenSabri\Desktop\Projects\New folder\src\main\java\controllers\EventController.java
 C:\Users\RayenSabri\Desktop\Projects\New folder\src\main\java\controllers\EventFormController.java
+C:\Users\RayenSabri\Desktop\Projects\New folder\src\main\java\controllers\FrontEventListController.java
+C:\Users\RayenSabri\Desktop\Projects\New folder\src\main\java\controllers\FrontMainController.java
+C:\Users\RayenSabri\Desktop\Projects\New folder\src\main\java\controllers\FrontNavbarController.java
+C:\Users\RayenSabri\Desktop\Projects\New folder\src\main\java\controllers\WelcomeController.java
 C:\Users\RayenSabri\Desktop\Projects\New folder\src\main\java\models\CategorieEvent.java
 C:\Users\RayenSabri\Desktop\Projects\New folder\src\main\java\models\Event.java
 C:\Users\RayenSabri\Desktop\Projects\New folder\src\main\java\org\example\App.java
@@ -10,5 +14,6 @@ C:\Users\RayenSabri\Desktop\Projects\New folder\src\main\java\org\example\contro
 C:\Users\RayenSabri\Desktop\Projects\New folder\src\main\java\org\example\DataSource.java
 C:\Users\RayenSabri\Desktop\Projects\New folder\src\main\java\services\CategorieEventDAO.java
 C:\Users\RayenSabri\Desktop\Projects\New folder\src\main\java\services\EventDAO.java
+C:\Users\RayenSabri\Desktop\Projects\New folder\src\main\java\services\EventService.java
 C:\Users\RayenSabri\Desktop\Projects\New folder\src\main\java\utils\DatabaseConnection.java
 C:\Users\RayenSabri\Desktop\Projects\New folder\src\main\java\utils\MyConnection.java

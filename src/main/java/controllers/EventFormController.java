@@ -49,6 +49,16 @@ public class EventFormController {
     @FXML private Button btnSave;
     @FXML private Button btnCancel;
     @FXML private Label errorLabel;
+    @FXML private Label titreError;
+    @FXML private Label descriptionError;
+    @FXML private Label dateDebutError;
+    @FXML private Label dateFinError;
+    @FXML private Label lieuError;
+    @FXML private Label latitudeError;
+    @FXML private Label longitudeError;
+    @FXML private Label placesError;
+    @FXML private Label categorieError;
+    @FXML private Label imageError;
 
     private final EventDAO eventDAO = new EventDAO();
     private final CategorieEventDAO categorieDAO = new CategorieEventDAO();
@@ -119,11 +129,11 @@ public class EventFormController {
                 LocalTime.of(hourEndSpinner.getValue(), minuteEndSpinner.getValue()));
 
             if (start.isAfter(end)) {
-                dateFin.setStyle("-fx-border-color: red;");
                 dateDebut.setStyle("-fx-border-color: red;");
+                dateFin.setStyle("-fx-border-color: red;");
             } else {
-                dateFin.setStyle("");
                 dateDebut.setStyle("");
+                dateFin.setStyle("");
             }
         }
     }
@@ -204,75 +214,35 @@ public class EventFormController {
         }
     }
 
-    private List<String> validateForm() {
-        List<String> errors = new ArrayList<>();
-
-        // Validation du titre
-        if (fieldTitre.getText() == null || fieldTitre.getText().trim().isEmpty()) {
-            errors.add("Le titre est obligatoire");
-        }
-
-        // Validation des dates
-        if (dateDebut.getValue() == null || dateFin.getValue() == null) {
-            errors.add("Les dates sont obligatoires");
-        } else {
-            LocalDateTime start = LocalDateTime.of(dateDebut.getValue(), 
-                LocalTime.of(hourStartSpinner.getValue(), minuteStartSpinner.getValue()));
-            LocalDateTime end = LocalDateTime.of(dateFin.getValue(), 
-                LocalTime.of(hourEndSpinner.getValue(), minuteEndSpinner.getValue()));
-
-            if (start.isAfter(end)) {
-                errors.add("La date de début doit être avant la date de fin");
-            }
-        }
-
-        // Validation des coordonnées
+    @FXML
+    private void handleRetourListe() {
         try {
-            double lat = Double.parseDouble(fieldLatitude.getText());
-            double lon = Double.parseDouble(fieldLongitude.getText());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/event_list.fxml"));
+            Parent eventList = loader.load();
             
-            if (lat < -90 || lat > 90) {
-                errors.add("La latitude doit être entre -90 et 90");
+            // Obtenir la référence au BorderPane principal
+            BorderPane mainContent = (BorderPane) fieldTitre.getScene().getRoot().lookup("#contentArea");
+            if (mainContent != null) {
+                mainContent.setCenter(eventList);
             }
-            if (lon < -180 || lon > 180) {
-                errors.add("La longitude doit être entre -180 et 180");
-            }
-        } catch (NumberFormatException e) {
-            errors.add("Les coordonnées doivent être des nombres valides");
+        } catch (IOException e) {
+            showError("Erreur lors du retour à la liste : " + e.getMessage());
         }
-
-        // Validation des places
-        try {
-            int places = Integer.parseInt(fieldPlaces.getText());
-            if (places < 0) {
-                errors.add("Le nombre de places doit être positif");
-            }
-        } catch (NumberFormatException e) {
-            errors.add("Le nombre de places doit être un nombre valide");
-        }
-
-        // Validation de la catégorie
-        if (comboCategorie.getValue() == null) {
-            errors.add("La catégorie est obligatoire");
-        }
-
-        return errors;
-    }
-
-    private void showError(String message) {
-        errorLabel.setText(message);
-        errorLabel.setStyle("-fx-text-fill: red;");
     }
 
     @FXML
     private void handleSave(ActionEvent e) {
+        // Réinitialiser les erreurs
+        clearErrors();
+
+        // Valider le formulaire
         List<String> errors = validateForm();
         if (!errors.isEmpty()) {
-            showError(String.join("\n", errors));
             return;
         }
 
         try {
+            // Récupérer les valeurs du formulaire
             String title = fieldTitre.getText();
             String description = fieldDescription.getText();
             LocalDateTime start = LocalDateTime.of(dateDebut.getValue(), 
@@ -285,7 +255,10 @@ public class EventFormController {
             int places = Integer.parseInt(fieldPlaces.getText());
             CategorieEvent categorie = comboCategorie.getValue();
 
-            if (event == null) event = new Event();
+            // Créer ou mettre à jour l'événement
+            if (event == null) {
+                event = new Event();
+            }
 
             event.setTitle(title);
             event.setDescription(description);
@@ -297,6 +270,7 @@ public class EventFormController {
             event.setPlacesDisponibles(places);
             event.setCategorie(categorie);
 
+            // Gérer l'image si elle a été sélectionnée
             if (selectedImageFile != null) {
                 String extension = selectedImageFile.getName().substring(selectedImageFile.getName().lastIndexOf("."));
                 String uniqueName = UUID.randomUUID().toString() + extension;
@@ -305,17 +279,168 @@ public class EventFormController {
                 event.setAffiche(uniqueName);
             }
 
+            // Sauvegarder dans la base de données
             if (event.getId() == 0) {
                 eventDAO.insert(event);
             } else {
                 eventDAO.update(event);
             }
 
-            if (onFormSubmitted != null) onFormSubmitted.accept(null);
-            closeForm(e);
+            // Notifier le callback et retourner à la liste
+            if (onFormSubmitted != null) {
+                onFormSubmitted.accept(null);
+            }
+            
+            // Retourner à la liste des événements
+            handleRetourListe();
         } catch (Exception ex) {
             showError("Une erreur est survenue lors de la sauvegarde : " + ex.getMessage());
         }
+    }
+
+    private void showError(String message) {
+        if (errorLabel != null) {
+            errorLabel.setText(message);
+            errorLabel.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+            errorLabel.setVisible(true);
+            errorLabel.setManaged(true);
+        }
+    }
+
+    private void clearErrors() {
+        titreError.setVisible(false);
+        titreError.setManaged(false);
+        descriptionError.setVisible(false);
+        descriptionError.setManaged(false);
+        dateDebutError.setVisible(false);
+        dateDebutError.setManaged(false);
+        dateFinError.setVisible(false);
+        dateFinError.setManaged(false);
+        lieuError.setVisible(false);
+        lieuError.setManaged(false);
+        latitudeError.setVisible(false);
+        latitudeError.setManaged(false);
+        longitudeError.setVisible(false);
+        longitudeError.setManaged(false);
+        placesError.setVisible(false);
+        placesError.setManaged(false);
+        categorieError.setVisible(false);
+        categorieError.setManaged(false);
+        imageError.setVisible(false);
+        imageError.setManaged(false);
+
+        // Réinitialiser les styles des champs
+        fieldTitre.setStyle("");
+        fieldDescription.setStyle("");
+        dateDebut.setStyle("");
+        dateFin.setStyle("");
+        fieldLieu.setStyle("");
+        fieldLatitude.setStyle("");
+        fieldLongitude.setStyle("");
+        fieldPlaces.setStyle("");
+        comboCategorie.setStyle("");
+    }
+
+    private void showFieldError(Label errorLabel, String message) {
+        errorLabel.setText(message);
+        errorLabel.setVisible(true);
+        errorLabel.setManaged(true);
+    }
+
+    private List<String> validateForm() {
+        List<String> errors = new ArrayList<>();
+        clearErrors();
+
+        // Validation du titre
+        if (fieldTitre.getText() == null || fieldTitre.getText().trim().isEmpty()) {
+            showFieldError(titreError, "Le titre est obligatoire");
+            fieldTitre.setStyle("-fx-border-color: red;");
+            errors.add("Le titre est obligatoire");
+        }
+
+        // Validation des dates
+        if (dateDebut.getValue() == null) {
+            showFieldError(dateDebutError, "La date de début est obligatoire");
+            dateDebut.setStyle("-fx-border-color: red;");
+            errors.add("La date de début est obligatoire");
+        }
+
+        if (dateFin.getValue() == null) {
+            showFieldError(dateFinError, "La date de fin est obligatoire");
+            dateFin.setStyle("-fx-border-color: red;");
+            errors.add("La date de fin est obligatoire");
+        }
+
+        if (dateDebut.getValue() != null && dateFin.getValue() != null) {
+            LocalDateTime start = LocalDateTime.of(dateDebut.getValue(), 
+                LocalTime.of(hourStartSpinner.getValue(), minuteStartSpinner.getValue()));
+            LocalDateTime end = LocalDateTime.of(dateFin.getValue(), 
+                LocalTime.of(hourEndSpinner.getValue(), minuteEndSpinner.getValue()));
+
+            if (start.isAfter(end)) {
+                showFieldError(dateDebutError, "La date de début doit être avant la date de fin");
+                dateDebut.setStyle("-fx-border-color: red;");
+                dateFin.setStyle("-fx-border-color: red;");
+                errors.add("La date de début doit être avant la date de fin");
+            }
+        }
+
+        // Validation du lieu
+        if (fieldLieu.getText() == null || fieldLieu.getText().trim().isEmpty()) {
+            showFieldError(lieuError, "Le lieu est obligatoire");
+            fieldLieu.setStyle("-fx-border-color: red;");
+            errors.add("Le lieu est obligatoire");
+        }
+
+        // Validation des coordonnées
+        try {
+            double lat = Double.parseDouble(fieldLatitude.getText());
+            if (lat < -90 || lat > 90) {
+                showFieldError(latitudeError, "La latitude doit être entre -90 et 90");
+                fieldLatitude.setStyle("-fx-border-color: red;");
+                errors.add("La latitude doit être entre -90 et 90");
+            }
+        } catch (NumberFormatException e) {
+            showFieldError(latitudeError, "La latitude doit être un nombre valide");
+            fieldLatitude.setStyle("-fx-border-color: red;");
+            errors.add("La latitude doit être un nombre valide");
+        }
+
+        try {
+            double lon = Double.parseDouble(fieldLongitude.getText());
+            if (lon < -180 || lon > 180) {
+                showFieldError(longitudeError, "La longitude doit être entre -180 et 180");
+                fieldLongitude.setStyle("-fx-border-color: red;");
+                errors.add("La longitude doit être entre -180 et 180");
+            }
+        } catch (NumberFormatException e) {
+            showFieldError(longitudeError, "La longitude doit être un nombre valide");
+            fieldLongitude.setStyle("-fx-border-color: red;");
+            errors.add("La longitude doit être un nombre valide");
+        }
+
+        // Validation des places
+        try {
+            int places = Integer.parseInt(fieldPlaces.getText());
+            if (places < 0) {
+                showFieldError(placesError, "Le nombre de places doit être positif");
+                fieldPlaces.setStyle("-fx-border-color: red;");
+                errors.add("Le nombre de places doit être positif");
+            }
+        } catch (NumberFormatException e) {
+            showFieldError(placesError, "Le nombre de places doit être un nombre valide");
+            fieldPlaces.setStyle("-fx-border-color: red;");
+            errors.add("Le nombre de places doit être un nombre valide");
+        }
+
+        // Validation de la catégorie
+        if (comboCategorie.getValue() == null) {
+            showFieldError(categorieError, "La catégorie est obligatoire");
+            comboCategorie.setStyle("-fx-border-color: red;");
+            errors.add("La catégorie est obligatoire");
+        }
+
+        return errors;
     }
 
     @FXML
@@ -326,17 +451,5 @@ public class EventFormController {
     private void closeForm(ActionEvent e) {
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         stage.close();
-    }
-
-    @FXML
-    private void handleRetourListe() {
-        try {
-            Parent eventList = FXMLLoader.load(getClass().getResource("/views/event_list.fxml"));
-            // Obtenir la référence au BorderPane principal
-            BorderPane mainContent = (BorderPane) fieldTitre.getScene().getRoot().lookup("#contentArea");
-            mainContent.setCenter(eventList);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

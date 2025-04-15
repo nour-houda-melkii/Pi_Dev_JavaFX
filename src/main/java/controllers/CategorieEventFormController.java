@@ -1,15 +1,16 @@
 package controllers;
 
 import javafx.fxml.FXML;
-import javafx.scene.Node;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
+import javafx.scene.layout.BorderPane;
 import models.CategorieEvent;
 import services.CategorieEventDAO;
 
+import java.io.IOException;
 import java.util.function.Consumer;
 
 public class CategorieEventFormController {
@@ -55,17 +56,31 @@ public class CategorieEventFormController {
             categorieDAO.update(categorie);
         }
 
-        if (onFormSubmitted != null) onFormSubmitted.accept(null);
-        closeForm();
+        if (onFormSubmitted != null) {
+            onFormSubmitted.accept(null);
+        }
+        
+        handleRetourListe();
     }
 
     @FXML
     private void handleCancel() {
-        closeForm();
+        handleRetourListe();
     }
 
-    private void closeForm() {
-        Stage stage = (Stage) btnCancel.getScene().getWindow();
-        stage.close();
+    @FXML
+    private void handleRetourListe() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/categorieEvent_list.fxml"));
+            Parent listPage = loader.load();
+            
+            // Obtenir la référence au BorderPane principal
+            BorderPane mainContent = (BorderPane) fieldNom.getScene().getRoot().lookup("#contentArea");
+            if (mainContent != null) {
+                mainContent.setCenter(listPage);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

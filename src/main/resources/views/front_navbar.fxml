@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.FrontNavbarController"
+      styleClass="front-navbar"
+      alignment="CENTER_LEFT"
+      spacing="20"
+      prefHeight="70.0">
+    
+    <padding>
+        <Insets top="10" right="20" bottom="10" left="20" />
+    </padding>
+    
+    <!-- Logo -->
+    <ImageView fitHeight="50" fitWidth="50" preserveRatio="true">
+        <Image url="@../images/logo.png" />
+    </ImageView>
+    
+    <!-- Titre -->
+    <Label text="SAHATECH" styleClass="front-nav-title">
+        <font>
+            <Font name="System Bold" size="24" />
+        </font>
+    </Label>
+    
+    <Pane HBox.hgrow="ALWAYS" /> <!-- Spacer -->
+    
+    <!-- Boutons de navigation -->
+    <Button text="Accueil" styleClass="front-nav-button" onAction="#handleHome" />
+    <Button text="Événements" styleClass="front-nav-button, active-nav-button" onAction="#handleEvents" />
+    <Button text="À propos" styleClass="front-nav-button" onAction="#handleAbout" />
+    <Button text="Contact" styleClass="front-nav-button" onAction="#handleContact" />
+    
+</HBox> 

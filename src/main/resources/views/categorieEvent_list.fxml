@@ -16,7 +16,7 @@
                 <Label text="Gestion des Catégories" styleClass="label-title" />
                 <Button text="➕ Ajouter une catégorie"
                         onAction="#handleAddCategorie"
-                        styleClass="button button-green" />
+                        styleClass="button-green" />
             </HBox>
             
         </VBox>

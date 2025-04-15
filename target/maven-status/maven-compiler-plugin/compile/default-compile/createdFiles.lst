@@ -1,7 +1,10 @@
+controllers\FrontMainController.class
 controllers\EventController$3.class
 services\CategorieEventDAO.class
+controllers\FrontNavbarController.class
+controllers\FrontEventListController.class
 controllers\EventController.class
-controllers\EventController$4.class
+controllers\WelcomeController.class
 utils\MyConnection.class
 controllers\CategorieEventController.class
 controllers\EventController$2.class
@@ -14,6 +17,7 @@ controllers\EventFormController.class
 services\EventDAO.class
 models\Event.class
 models\CategorieEvent.class
+services\EventService.class
 controllers\CategorieEventFormController.class
 controllers\EventController$1.class
 org\example\controllers\MainController.class

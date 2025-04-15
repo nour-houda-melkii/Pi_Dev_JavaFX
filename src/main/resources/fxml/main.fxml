@@ -29,18 +29,18 @@
             <Separator />
             
             <!-- Menu items -->
-            <Button fx:id="dashboardBtn" alignment="BASELINE_LEFT" maxWidth="Infinity" onAction="#handleDashboard" styleClass="sidebar-button" text="Dashboard" />
+            <Button fx:id="dashboardBtn" styleClass="sidebar-button" text="Dashboard" onAction="#handleDashboard" />
             
             <!-- Gestion des Événements avec sous-menus -->
             <VBox spacing="5">
-                <Button fx:id="eventsManagementBtn" alignment="BASELINE_LEFT" maxWidth="Infinity" onAction="#toggleEventsSubMenu" styleClass="sidebar-button" text="Gestion des Événements" />
+                <Button fx:id="eventsManagementBtn" styleClass="sidebar-button" text="Gestion des Événements" onAction="#toggleEventsSubMenu" />
                 
-                <VBox fx:id="eventsSubMenu" managed="false" spacing="5" visible="false">
+                <VBox fx:id="eventsSubMenu" spacing="5" managed="false" visible="false">
                     <padding>
                         <Insets left="20" />
                     </padding>
-                    <Button alignment="BASELINE_LEFT" maxWidth="Infinity" onAction="#handleEvents" styleClass="sidebar-sub-button" text="Événements" />
-                    <Button alignment="BASELINE_LEFT" maxWidth="Infinity" onAction="#handleCategories" styleClass="sidebar-sub-button" text="Catégories" />
+                    <Button styleClass="sidebar-sub-button" text="Événements" onAction="#handleEvents" />
+                    <Button styleClass="sidebar-sub-button" text="Catégories" onAction="#handleCategories" />
                 </VBox>
             </VBox>
         </VBox>

@@ -5,22 +5,39 @@
 <?import javafx.geometry.Insets?>
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="controllers.CategorieEventFormController"
-            prefWidth="400" prefHeight="300">
-    <VBox spacing="10" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+            styleClass="form-container" stylesheets="@/styles/style.css">
+    <VBox spacing="20" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
           AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
         <padding>
-            <Insets top="20" right="20" bottom="20" left="20"/>
+            <Insets top="30" right="40" bottom="30" left="40"/>
         </padding>
 
-        <Label text="Nom *" />
-        <TextField fx:id="fieldNom" promptText="Entrez un nom" />
+        <!-- En-tête -->
+        <Label text="Nouvelle Catégorie" styleClass="form-title"/>
+        <Separator/>
 
-        <Label text="Description" />
-        <TextArea fx:id="fieldDescription" promptText="Entrez une description" wrapText="true" />
+        <!-- Formulaire -->
+        <VBox spacing="15">
+            <!-- Champ Nom -->
+            <VBox spacing="5">
+                <Label text="Nom *" styleClass="field-label"/>
+                <TextField fx:id="fieldNom" promptText="Entrez un nom" styleClass="form-field"/>
+            </VBox>
 
+            <!-- Champ Description -->
+            <VBox spacing="5">
+                <Label text="Description" styleClass="field-label"/>
+                <TextArea fx:id="fieldDescription" promptText="Entrez une description" 
+                         wrapText="true" prefRowCount="4" styleClass="form-field"/>
+            </VBox>
+        </VBox>
+
+        <!-- Boutons -->
         <HBox spacing="10" alignment="CENTER_RIGHT">
-            <Button fx:id="btnSave" text="Enregistrer" onAction="#handleSave" />
-            <Button fx:id="btnCancel" text="Annuler" onAction="#handleCancel" />
+            <Button fx:id="btnCancel" text="Annuler" onAction="#handleCancel" 
+                    styleClass="button-secondary"/>
+            <Button fx:id="btnSave" text="Enregistrer" onAction="#handleSave" 
+                    styleClass="primary-button"/>
         </HBox>
     </VBox>
 </AnchorPane>

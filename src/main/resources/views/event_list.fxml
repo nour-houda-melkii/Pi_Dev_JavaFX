@@ -16,7 +16,7 @@
             <Label text="Gestion des Événements" styleClass="label-title" />
             <Button text="➕ Créer un nouvel événement"
                     onAction="#handleAddEvent"
-                    styleClass="button button-green" />
+                    styleClass="button-green" />
         </HBox>
     </top>
 
@@ -40,7 +40,7 @@
                                 </FXCollections>
                             </items>
                         </ComboBox>
-                        <Button text="Réinitialiser" onAction="#handleReset" styleClass="button, primary" />
+                        <Button text="Réinitialiser" onAction="#handleReset" styleClass="primary" />
                     </HBox>
                     <TableView fx:id="tableActifs" prefHeight="300">
                         <columns>
@@ -71,7 +71,7 @@
                                 </FXCollections>
                             </items>
                         </ComboBox>
-                        <Button text="Réinitialiser" onAction="#handleResetArchives" styleClass="button, primary" />
+                        <Button text="Réinitialiser" onAction="#handleResetArchives" styleClass="primary" />
                     </HBox>
                     <TableView fx:id="tableArchives" prefHeight="200">
                         <columns>
