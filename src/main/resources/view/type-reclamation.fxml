@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.TypeReclamationController" spacing="10" style="-fx-padding: 10;">
+
+    <TableView fx:id="typeTable">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" minWidth="50"/>
+            <TableColumn fx:id="nomColumn" text="Nom" minWidth="200"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10">
+        <Label text="Nom:"/>
+        <TextField fx:id="nomField" prefWidth="200"/>
+    </HBox>
+
+    <HBox spacing="10">
+        <Button fx:id="addButton" text="Ajouter" onAction="#handleAdd"/>
+        <Button fx:id="updateButton" text="Modifier" onAction="#handleUpdate"/>
+        <Button fx:id="deleteButton" text="Supprimer" onAction="#handleDelete"/>
+    </HBox>
+</VBox>

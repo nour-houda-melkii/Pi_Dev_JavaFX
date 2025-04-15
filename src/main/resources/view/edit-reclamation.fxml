@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="mainContainer" prefHeight="600.0" prefWidth="800.0" spacing="15" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EditReclamationController">
+    <padding>
+        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+    </padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 0 0 10 0;">
+        <HBox alignment="TOP_CENTER" HBox.hgrow="ALWAYS">
+            <Label style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Modifier Réclamation">
+                <font>
+                    <Font name="Berlin Sans FB" size="12.0" />
+                </font>
+            </Label>
+        </HBox>
+    </HBox>
+
+    <VBox style="-fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-radius: 5; -fx-background-color: white; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);" VBox.vgrow="ALWAYS">
+        <GridPane hgap="15" vgap="15">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+
+            <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e;" text="Type:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+            <ComboBox fx:id="typeComboBox" prefHeight="35.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #bdc3c7;" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="0" />
+
+            <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e;" text="Description:" GridPane.rowIndex="1" />
+            <TextArea fx:id="descriptionField" prefHeight="100.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #bdc3c7; -fx-padding: 5 10;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+            <Button fx:id="generateDescriptionButton" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 15;" text="Générer Description" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+
+            <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e;" text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <DatePicker fx:id="datePicker" prefHeight="35.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #bdc3c7;" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+
+            <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e;" text="Médecin:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <ComboBox fx:id="medecinComboBox" prefHeight="35.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #bdc3c7;" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" />
+
+            <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e;" text="Photo:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+            <HBox spacing="10" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4">
+                <ImageView fx:id="photoView" fitHeight="100" fitWidth="100" style="-fx-border-color: #bdc3c7; -fx-border-radius: 5;"/>
+                <Button fx:id="browseButton" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 15;" text="Parcourir" />
+            </HBox>
+
+            <columnConstraints>
+                <ColumnConstraints hgrow="NEVER" minWidth="120.0" prefWidth="120.0" />
+                <ColumnConstraints hgrow="ALWAYS" minWidth="200.0" />
+                <ColumnConstraints hgrow="ALWAYS" minWidth="200.0" />
+                <ColumnConstraints hgrow="NEVER" minWidth="200.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="35.0" prefHeight="35.0" vgrow="NEVER" />
+                <RowConstraints minHeight="100.0" prefHeight="100.0" vgrow="NEVER" />
+                <RowConstraints minHeight="35.0" prefHeight="35.0" vgrow="NEVER" />
+                <RowConstraints minHeight="35.0" prefHeight="35.0" vgrow="NEVER" />
+                <RowConstraints minHeight="100.0" prefHeight="100.0" vgrow="NEVER" />
+            </rowConstraints>
+        </GridPane>
+    </VBox>
+
+    <HBox alignment="CENTER" spacing="15" style="-fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-radius: 5; -fx-background-color: white; -fx-padding: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);">
+        <Button fx:id="saveButton" style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);" text="Enregistrer" />
+        <Button fx:id="cancelButton" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);" text="Annuler" />
+    </HBox>
+</VBox>

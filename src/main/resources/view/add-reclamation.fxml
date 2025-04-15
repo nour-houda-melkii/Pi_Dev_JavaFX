@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+
+<?import java.net.URL?>
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AddReclamationController">
+    <stylesheets>
+        <URL value="@/styles/main.css" />
+    </stylesheets>
+
+    <top>
+        <HBox style="-fx-background-color: #4361ee; -fx-padding: 15;" alignment="CENTER_LEFT">
+            <Button text="← Back" styleClass="back-button" onAction="#navigateToDashboard" />
+            <Label text="Add New Reclamation" style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;" />
+        </HBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" style="-fx-background: white;">
+            <VBox style="-fx-padding: 20;" spacing="15">
+                <!-- Form -->
+                <GridPane hgap="20" vgap="15">
+                    <Label text="Type:" styleClass="form-label" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                    <ComboBox fx:id="typeComboBox" styleClass="form-combo" GridPane.rowIndex="0" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+
+                    <Label text="Description:" styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                    <TextArea fx:id="descriptionField" styleClass="form-textarea" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+
+                    <Label text="Date:" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                    <DatePicker fx:id="datePicker" styleClass="form-datepicker" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+
+                    <Label text="Médecin:" styleClass="form-label" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                    <ComboBox fx:id="medecinComboBox" styleClass="form-combo" GridPane.rowIndex="3" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+
+                    <Label text="Photo:" styleClass="form-label" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+                    <HBox spacing="10" GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.columnSpan="2">
+                        <ImageView fx:id="photoView" fitHeight="100" fitWidth="100" style="-fx-border-color: #ddd; -fx-border-radius: 5;" />
+                        <Button fx:id="browseButton" text="Browse" styleClass="secondary-button" onAction="#browsePhoto" />
+                    </HBox>
+
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="NEVER" minWidth="150" />
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="200" />
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="200" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="40" />
+                        <RowConstraints minHeight="120" />
+                        <RowConstraints minHeight="40" />
+                        <RowConstraints minHeight="40" />
+                        <RowConstraints minHeight="120" />
+                    </rowConstraints>
+                </GridPane>
+
+                <!-- Action Buttons -->
+                <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-padding: 20 0 0 0;">
+                    <Button text="Cancel" styleClass="secondary-button" onAction="#navigateToDashboard" />
+                    <Button text="Save Reclamation" styleClass="primary-button" onAction="#addReclamation" />
+                </HBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

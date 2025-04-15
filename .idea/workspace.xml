@@ -4,36 +4,37 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="67f812a0-6c1d-4f08-bb79-468f0bf5180a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AddCategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AddCategoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/CartViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/CartViewController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ProductFrontController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ProductFrontController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/ListProduit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/ListProduit.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/add_category.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/add_category.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/admin_dashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/admin_dashboard.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/cart_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/cart_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/category.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/category.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/data_history_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data_history_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/edit_category.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/edit_category.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/edit_product.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/edit_product.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/favorites_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/favorites_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/product_client.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/product_client.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/view_categories.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/view_categories.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ListProduit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ListProduit.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/add_category.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/add_category.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/admin_dashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/admin_dashboard.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/cart_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cart_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/category.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/category.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/CartViewController$TableButtonCell.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/CartViewController$TableButtonCell.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/CartViewController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/CartViewController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ProductFrontController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ProductFrontController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/data_history_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/data_history_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/edit_category.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/edit_category.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/edit_product.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/edit_product.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/favorites_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/favorites_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/product_client.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/product_client.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view_categories.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view_categories.fxml" afterDir="false" />
+    <list default="true" id="2e2d85f5-2d02-4fd0-8be5-dc0d5b8f007b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mvnw" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mvnw.cmd" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/AddReclamationController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/EditReclamationController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/MainController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/MedecinController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/TypeReclamationController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/entity/Medecin.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/entity/Reclamation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/entity/TypeReclamation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/services/MedecinService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/services/ReclamationServices.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/services/TypeReclamationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/utils/connBD.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/client_reclamation.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/styles/main.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/view/add-reclamation.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/view/edit-reclamation.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/view/main-view.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/view/type-reclamation.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,192 +44,154 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="FxmlFile" />
+        <option value="JavaFXApplication" />
         <option value="Class" />
+        <option value="FxmlFile" />
+        <option value="CSS File" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="MarkdownSettingsMigration">
-    <option name="stateVersion" value="1" />
-  </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
-        <option name="mavenHome" value="Use Maven wrapper" />
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
       </MavenGeneralSettings>
     </option>
   </component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+  <component name="MavenRunner">
+    <option name="skipTests" value="true" />
   </component>
   <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 0
+  &quot;associatedIndex&quot;: 8
 }</component>
-  <component name="ProjectId" id="2ulIsNH2OM5RHWFJyGb7Vs0OvFN" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="1" id="Add" />
-  </component>
+  <component name="ProjectId" id="2vSnJTfKrYrkJhtGipg5fooaT7V" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Application.produit.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.produit [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.produit [compile].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.produit [install].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.produit [org.openjfx:javafx-maven-plugin:0.0.8:run].executor&quot;: &quot;Run&quot;,
-    &quot;Notification.DisplayName-DoNotAsk-Vcs Important Messages&quot;: &quot;VCS important messages&quot;,
-    &quot;Notification.DoNotAsk-Vcs Important Messages&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;gestion__produit&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/nourm/OneDrive/Bureau/krayett zahy/gestion_produit&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.JavaFX&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Application.main.executor": "Run",
+    "Maven.reclamation2 [clean].executor": "Run",
+    "Maven.reclamation2 [compile].executor": "Run",
+    "Maven.reclamation2 [dependency:purge-local-repository].executor": "Run",
+    "Maven.reclamation2 [install].executor": "Run",
+    "Maven.reclamation2 [org.openjfx:javafx-maven-plugin:0.0.8:run].executor": "Run",
+    "Maven.reclamation2 [package].executor": "Run",
+    "Maven.reclamation2 [validate].executor": "Run",
+    "Maven.reclamation2 [verify].executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/mysql-connector-j-8.0.33.jar",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.12464855",
+    "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql_aurora",
+      "mysql"
+    ]
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
-      <recent name="controllers" />
+      <recent name="controller" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\nourm\OneDrive\Bureau\krayett zahy\gestion_produit\src\main\resources\images" />
-      <recent name="C:\Users\nourm\OneDrive\Bureau\krayett zahy\gestion_produit\src\main\resources" />
-      <recent name="C:\Users\nourm\OneDrive\Bureau\krayett zahy\Product-Management\src\main\resources" />
-      <recent name="C:\Users\nourm\OneDrive\Bureau\krayett zahy\Product-Management\src\main\resources\images" />
-      <recent name="C:\Users\nourm\OneDrive\Bureau\krayett zahy\Product-Management\src\main\resources\image" />
+      <recent name="C:\Users\asus\IdeaProjects\reclamation\reclamation2\src\main\resources\styles" />
     </key>
   </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="mvn compile" />
+      <command value="mvn package" />
+      <command value="mvn install" />
+      <command value="mvn clean" />
+      <command value="mvn dependency:purge-local-repository" />
+    </option>
+  </component>
   <component name="RunManager">
-    <configuration name="produit" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="Main" />
-      <module name="produit" />
-      <option name="VM_PARAMETERS" value=" --module-path &quot;C:\Users\nourm\OneDrive\Bureau\krayett zahy\javafx-sdk-17.0.14\lib&quot; --add-modules javafx.controls,javafx.fxml " />
+    <configuration name="main" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="main" />
+      <module name="reclamation2" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;C:\openjfx-17.0.14_windows-x64_bin-sdk\javafx-sdk-17.0.14\lib&quot;  --add-modules javafx.controls,javafx.fxml" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
   </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-b114ca120d71-intellij.indexing.shared.core-IU-242.21829.142" />
+        <option value="bundled-js-predefined-d6986cc7102b-7c0b70fcd90d-JavaScript-IU-242.21829.142" />
+      </set>
+    </attachedChunks>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="67f812a0-6c1d-4f08-bb79-468f0bf5180a" name="Changes" comment="" />
-      <created>1742816941809</created>
+      <changelist id="2e2d85f5-2d02-4fd0-8be5-dc0d5b8f007b" name="Changes" comment="" />
+      <created>1744147274605</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1742816941809</updated>
-      <workItem from="1742816942869" duration="3253000" />
-      <workItem from="1742820217685" duration="1430000" />
-      <workItem from="1742905546481" duration="5295000" />
-      <workItem from="1743019977605" duration="592000" />
-      <workItem from="1743022859109" duration="291000" />
-      <workItem from="1743023163816" duration="28000" />
-      <workItem from="1743180603403" duration="1766000" />
-      <workItem from="1743196339015" duration="7007000" />
-      <workItem from="1743204447195" duration="2989000" />
-      <workItem from="1743276514844" duration="12901000" />
-      <workItem from="1743338728662" duration="644000" />
-      <workItem from="1743339422639" duration="2889000" />
-      <workItem from="1743342335205" duration="11042000" />
-      <workItem from="1743435423884" duration="781000" />
-      <workItem from="1743444935730" duration="1396000" />
-      <workItem from="1743520746366" duration="1085000" />
-      <workItem from="1743533558551" duration="6249000" />
-      <workItem from="1743604297299" duration="2449000" />
-      <workItem from="1743619600520" duration="2049000" />
-      <workItem from="1743635873273" duration="2098000" />
-      <workItem from="1743698757220" duration="1355000" />
-      <workItem from="1743706799378" duration="1128000" />
-      <workItem from="1743798143695" duration="4461000" />
-      <workItem from="1743876841254" duration="2286000" />
-      <workItem from="1744021223517" duration="9000" />
-      <workItem from="1744052633691" duration="429000" />
-      <workItem from="1744059133432" duration="103000" />
-      <workItem from="1744101240620" duration="178000" />
-      <workItem from="1744107592450" duration="179000" />
-      <workItem from="1744107786193" duration="848000" />
-      <workItem from="1744144422161" duration="5107000" />
-      <workItem from="1744279568581" duration="1421000" />
-      <workItem from="1744366913791" duration="1130000" />
-      <workItem from="1744368084610" duration="1289000" />
-      <workItem from="1744393099960" duration="666000" />
-      <workItem from="1744395197438" duration="1699000" />
-      <workItem from="1744396942742" duration="16000" />
-      <workItem from="1744398237823" duration="3238000" />
-      <workItem from="1744458677176" duration="26000" />
-      <workItem from="1744458728320" duration="57000" />
-      <workItem from="1744458843396" duration="11000" />
-      <workItem from="1744459706691" duration="816000" />
-      <workItem from="1744461346252" duration="544000" />
-      <workItem from="1744464910961" duration="29000" />
-      <workItem from="1744465598595" duration="1111000" />
-      <workItem from="1744481337190" duration="1669000" />
-      <workItem from="1744483880415" duration="933000" />
-      <workItem from="1744488319782" duration="387000" />
-      <workItem from="1744540172619" duration="2735000" />
-      <workItem from="1744547237823" duration="3357000" />
-      <workItem from="1744553809131" duration="1802000" />
-      <workItem from="1744556523612" duration="3923000" />
-      <workItem from="1744620162653" duration="1367000" />
-      <workItem from="1744625380099" duration="539000" />
-      <workItem from="1744632485857" duration="1849000" />
-      <workItem from="1744639458190" duration="1368000" />
-      <workItem from="1744641414596" duration="898000" />
-      <workItem from="1744645870047" duration="3718000" />
-      <workItem from="1744654464152" duration="10565000" />
-      <workItem from="1744666136822" duration="347000" />
-      <workItem from="1744666647983" duration="409000" />
+      <updated>1744147274605</updated>
+      <workItem from="1744147276035" duration="2639000" />
+      <workItem from="1744153849655" duration="5034000" />
+      <workItem from="1744193391236" duration="18681000" />
+      <workItem from="1744279845010" duration="1860000" />
+      <workItem from="1744306938877" duration="9372000" />
+      <workItem from="1744393135029" duration="3104000" />
+      <workItem from="1744407684072" duration="4797000" />
+      <workItem from="1744455439673" duration="9467000" />
+      <workItem from="1744481962687" duration="15217000" />
+      <workItem from="1744499144843" duration="3170000" />
+      <workItem from="1744503464518" duration="365000" />
+      <workItem from="1744503847780" duration="654000" />
+      <workItem from="1744504764240" duration="1122000" />
+      <workItem from="1744506067855" duration="1277000" />
+      <workItem from="1744540891941" duration="8304000" />
+      <workItem from="1744560520236" duration="22552000" />
+      <workItem from="1744630072216" duration="409000" />
+      <workItem from="1744631962956" duration="5774000" />
+      <workItem from="1744642801328" duration="966000" />
+      <workItem from="1744652079220" duration="30088000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/controllers/ProductFrontController.java</url>
-          <line>292</line>
-          <properties class="controllers.ProductFrontController" method="toggleFavorite">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="1" />
+        <line-breakpoint enabled="true" type="java-field">
+          <url>file://$PROJECT_DIR$/src/main/java/controller/MedecinController.java</url>
+          <line>18</line>
+          <properties field="updateButton" class="controller.MedecinController" />
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/services/TypeReclamationService.java</url>
+          <line>61</line>
+          <option name="timeStamp" value="3" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
-  </component>
-  <component name="XSLT-Support.FileAssociations.UIState">
-    <expand />
-    <select />
   </component>
 </project>

@@ -1,0 +1,133 @@
+/* Couleurs principales */
+.root {
+    -primary-color: #4361ee;
+    -secondary-color: #3f37c9;
+    -accent-color: #4895ef;
+    -danger-color: #f72585;
+    -success-color: #4cc9f0;
+    -light-gray: #f8f9fa;
+    -dark-gray: #6c757d;
+}
+
+/* Boutons */
+.primary-button {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 20;
+    -fx-cursor: hand;
+}
+
+.primary-button:hover {
+    -fx-background-color: -secondary-color;
+}
+
+.secondary-button {
+    -fx-background-color: -light-gray;
+    -fx-text-fill: -dark-gray;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 20;
+    -fx-border-color: -dark-gray;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-cursor: hand;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #e9ecef;
+}
+
+.back-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 5 10;
+}
+
+.back-button:hover {
+    -fx-underline: true;
+}
+
+/* Menu */
+.menu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+}
+
+.menu-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+}
+
+.menu-button.active {
+    -fx-background-color: -primary-color;
+}
+
+.menu-button.logout {
+    -fx-text-fill: -danger-color;
+}
+
+/* Formulaires */
+.form-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: -dark-gray;
+}
+
+.form-combo, .form-datepicker, .form-textarea, .form-textfield {
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: #ced4da;
+    -fx-padding: 8;
+}
+
+.form-textarea {
+    -fx-pref-height: 100;
+}
+
+/* Table */
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: -light-gray;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: -accent-color;
+    -fx-text-fill: white;
+}
+
+.table-cell {
+    -fx-padding: 10 15;
+    -fx-border-color: transparent;
+}
+
+.edit-btn {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-padding: 3 8;
+}
+
+.delete-btn {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-padding: 3 8;
+}
+
+.edit-btn:hover {
+    -fx-background-color: #2980b9;
+}
+
+.delete-btn:hover {
+    -fx-background-color: #c0392b;
+}
