@@ -4,10 +4,15 @@ import entity.TypeReclamation;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 import services.TypeReclamationService;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class TypeReclamationController {
@@ -77,19 +82,30 @@ public class TypeReclamationController {
         }
     }
 
+    // Ajoutez cette méthode à votre TypeReclamationController
     @FXML
     private void handleUpdate() {
         TypeReclamation selected = typeTable.getSelectionModel().getSelectedItem();
-        if (selected != null && validateForm()) {
-            selected.setNom(nomField.getText());
-
+        if (selected != null) {
             try {
-                service.updateType(selected);
-                loadData();
-                showAlert("Succès", "Type mis à jour!");
-            } catch (SQLException e) {
-                showAlert("Erreur", "Échec de mise à jour: " + e.getMessage());
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/edit-type.fxml"));
+                Parent root = loader.load();
+
+                EditTypeController controller = loader.getController();
+                controller.setTypeToEdit(selected);
+                controller.setParentController(this);
+
+                Stage stage = new Stage();
+                stage.setScene(new Scene(root));
+                stage.setTitle("Modifier Type");
+                stage.show();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlert("Erreur", "Impossible d'ouvrir la fenêtre de modification: " + e.getMessage());
             }
+        } else {
+            showAlert("Avertissement", "Veuillez sélectionner un type à modifier");
         }
     }
 
@@ -105,6 +121,14 @@ public class TypeReclamationController {
             } catch (SQLException e) {
                 showAlert("Erreur", "Échec de suppression: " + e.getMessage());
             }
+        }
+    }
+    public void refreshTable() {
+        try {
+            data.setAll(service.getAllTypes());
+            typeTable.setItems(data);
+        } catch (SQLException e) {
+            showAlert("Erreur", "Erreur de chargement: " + e.getMessage());
         }
     }
 

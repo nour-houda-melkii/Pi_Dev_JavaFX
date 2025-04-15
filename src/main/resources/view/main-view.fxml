@@ -6,21 +6,25 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 
+
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="controller.MainController"
             stylesheets="@../styles/main.css">
 
-    <!-- Top: Header -->
     <top>
-        <HBox style="-fx-background-color: #4361ee; -fx-padding: 15;" alignment="CENTER_LEFT">
+        <HBox style="-fx-background-color: #4361ee; -fx-padding: 30;" alignment="CENTER_LEFT">
             <Label text="SAHATECK" style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;">
                 <font>
                     <Font name="Berlin Sans FB" size="24.0" />
                 </font>
             </Label>
             <Region HBox.hgrow="ALWAYS" />
-            <ImageView fitHeight="40" fitWidth="40" preserveRatio="true">
+            <Button fx:id="backendButton"
+                    onAction="#handleBackend"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 8 15;"
+                    text="Backend" />
+            <ImageView fitHeight="100" fitWidth="60" preserveRatio="true">
                 <image>
                     <Image url="@../images/logo.png" />
                 </image>

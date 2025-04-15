@@ -273,4 +273,40 @@ public class ReclamationServices {
     }
 
 
+
+
+    // Dans ReclamationServices.java
+
+    public void addType(TypeReclamation type) throws SQLException {
+        String query = "INSERT INTO type_reclamation (nom) VALUES (?)";
+        try (PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, type.getNom());
+            ps.executeUpdate();
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    type.setId(generatedKeys.getInt(1));
+                }
+            }
+        }
+    }
+
+    public boolean updateType(TypeReclamation type) throws SQLException {
+        String query = "UPDATE type_reclamation SET nom = ? WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, type.getNom());
+            ps.setInt(2, type.getId());
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    public boolean deleteType(int id) throws SQLException {
+        String query = "DELETE FROM type_reclamation WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+
 }

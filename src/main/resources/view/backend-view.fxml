@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.BackendController"
+      spacing="10"
+      style="-fx-padding: 20;"
+      prefWidth="800"
+      prefHeight="600">
+
+    <Label text="PANEAU D'ADMINISTRATION"
+           style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+    <Label text="PANEAU D'ADMINISTRATION"
+           style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <VBox fx:id="contentArea" VBox.vgrow="ALWAYS">
+    <TableView fx:id="adminTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn text="ID" prefWidth="50"/>
+            <TableColumn text="Nom" prefWidth="200"/>
+        </columns>
+    </TableView>
+    </VBox>
+</VBox>

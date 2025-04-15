@@ -4,23 +4,26 @@
 <?import javafx.scene.layout.*?>
 
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="controller.TypeReclamationController" spacing="10" style="-fx-padding: 10;">
+      fx:controller="controller.TypeReclamationController" spacing="15" style="-fx-padding: 20;">
 
-    <TableView fx:id="typeTable">
+    <TableView fx:id="typeTable" style="-fx-background-color: transparent;">
         <columns>
             <TableColumn fx:id="idColumn" text="ID" minWidth="50"/>
             <TableColumn fx:id="nomColumn" text="Nom" minWidth="200"/>
         </columns>
     </TableView>
 
-    <HBox spacing="10">
-        <Label text="Nom:"/>
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Nom:" style="-fx-font-weight: bold;"/>
         <TextField fx:id="nomField" prefWidth="200"/>
     </HBox>
 
-    <HBox spacing="10">
-        <Button fx:id="addButton" text="Ajouter" onAction="#handleAdd"/>
-        <Button fx:id="updateButton" text="Modifier" onAction="#handleUpdate"/>
-        <Button fx:id="deleteButton" text="Supprimer" onAction="#handleDelete"/>
+    <HBox spacing="15" alignment="CENTER">
+        <Button fx:id="addButton" text="Ajouter" onAction="#handleAdd"
+                style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20;"/>
+        <Button fx:id="updateButton" text="Modifier" onAction="#handleUpdate"
+                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20;"/>
+        <Button fx:id="deleteButton" text="Supprimer" onAction="#handleDelete"
+                style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20;"/>
     </HBox>
 </VBox>

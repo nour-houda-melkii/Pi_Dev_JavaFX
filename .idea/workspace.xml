@@ -17,7 +17,9 @@
       <change afterPath="$PROJECT_DIR$/mvnw.cmd" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/controller/AddReclamationController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/BackendController.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/controller/EditReclamationController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/EditTypeController.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/controller/MainController.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/controller/MedecinController.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/controller/TypeReclamationController.java" afterDir="false" />
@@ -32,7 +34,9 @@
       <change afterPath="$PROJECT_DIR$/src/main/resources/client_reclamation.fxml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/styles/main.css" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/view/add-reclamation.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/view/backend-view.fxml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/view/edit-reclamation.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/view/edit-type.fxml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/view/main-view.fxml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/view/type-reclamation.fxml" afterDir="false" />
     </list>
@@ -45,9 +49,9 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JavaFXApplication" />
-        <option value="Class" />
-        <option value="FxmlFile" />
         <option value="CSS File" />
+        <option value="FxmlFile" />
+        <option value="Class" />
       </list>
     </option>
   </component>
@@ -170,7 +174,8 @@
       <workItem from="1744630072216" duration="409000" />
       <workItem from="1744631962956" duration="5774000" />
       <workItem from="1744642801328" duration="966000" />
-      <workItem from="1744652079220" duration="30088000" />
+      <workItem from="1744652079220" duration="31993000" />
+      <workItem from="1744694109381" duration="5936000" />
     </task>
     <servers />
   </component>

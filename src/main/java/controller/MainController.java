@@ -5,13 +5,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import services.ReclamationServices;
 
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -26,6 +29,7 @@ public class MainController {
     @FXML private TableColumn<Reclamation, String> photoColumn;
     @FXML private Button editBtn;
     @FXML private Button deleteBtn;
+    @FXML private Button backendButton;
 
     private final ReclamationServices service = new ReclamationServices();
     private final ObservableList<Reclamation> data = FXCollections.observableArrayList();
@@ -97,11 +101,6 @@ public class MainController {
                 Parent root = loader.load();
 
                 EditReclamationController controller = loader.getController();
-                if (controller == null) {
-                    showAlert("Erreur", "Impossible de charger le contrôleur d'édition");
-                    return;
-                }
-
                 controller.setReclamationToEdit(selected);
                 controller.setMainController(this);
 
@@ -112,12 +111,36 @@ public class MainController {
 
             } catch (IOException e) {
                 showAlert("Erreur", "Impossible d'ouvrir la fenêtre d'édition: " + e.getMessage());
-                e.printStackTrace();
             }
-        } else {
-            showAlert("Aucune sélection", "Veuillez sélectionner une réclamation à modifier");
         }
     }
+
+    @FXML
+    private void handleBackend(javafx.event.ActionEvent event) {
+        try {
+            System.out.println("Tentative de chargement de l'interface admin...");
+            // Chemin absolu vérifié
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/backend-view.fxml"));
+            Parent root = loader.load();
+
+            Stage adminStage = new Stage();
+            adminStage.setTitle("Administration SAHATECK");
+            adminStage.setScene(new Scene(root, 800, 600));
+
+            // Empêche l'interaction avec la fenêtre parente
+            adminStage.initModality(Modality.WINDOW_MODAL);
+            adminStage.initOwner(((Node)event.getSource()).getScene().getWindow());
+
+            adminStage.show();
+
+        } catch (Exception e) {
+            showErrorAlert("ERREUR",
+                    "Échec du chargement",
+                    "Détails : " + e.getMessage() +
+                            "\nVérifiez que le fichier existe dans view/backend-view.fxml");
+        }
+    }
+
 
     @FXML
     private void handleDelete() {
@@ -144,4 +167,36 @@ public class MainController {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
+
+    private void showErrorAlert(String title, String header, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+
+    @FXML
+    private void navigateToDashboard() {
+        try {
+            // Chargez votre vue dashboard si vous en avez une
+            // Ou simplement fermez la fenêtre actuelle si c'est la page principale
+            Stage stage = (Stage) reclamationTable.getScene().getWindow();
+            stage.close();
+
+            // Si vous avez un dashboard.fxml:
+        /*
+        Parent root = FXMLLoader.load(getClass().getResource("/view/dashboard.fxml"));
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+        */
+
+        } catch (Exception e) {
+            showAlert("Erreur", "Impossible de revenir au tableau de bord: " + e.getMessage());
+        }
+    }
+
 }

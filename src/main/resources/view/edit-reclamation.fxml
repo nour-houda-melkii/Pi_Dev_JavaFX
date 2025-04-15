@@ -32,10 +32,10 @@
 
             <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e;" text="Description:" GridPane.rowIndex="1" />
             <TextArea fx:id="descriptionField" prefHeight="100.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #bdc3c7; -fx-padding: 5 10;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-            <Button fx:id="generateDescriptionButton" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 15;" text="Générer Description" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+
 
             <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e;" text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-            <DatePicker fx:id="datePicker" prefHeight="35.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #bdc3c7;" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" />
+            <DatePicker fx:id="datePicker" prefHeight="35.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #bdc3c7;" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" disable="true"/>
 
             <Label style="-fx-font-weight: bold; -fx-text-fill: #34495e;" text="Médecin:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
             <ComboBox fx:id="medecinComboBox" prefHeight="35.0" style="-fx-background-radius: 5; -fx-border-radius: 5; -fx-border-color: #bdc3c7;" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3" />
