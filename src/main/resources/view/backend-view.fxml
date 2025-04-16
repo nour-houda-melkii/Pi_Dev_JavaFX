@@ -1,27 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="controller.BackendController"
-      spacing="10"
-      style="-fx-padding: 20;"
-      prefWidth="800"
-      prefHeight="600">
 
-    <Label text="PANEAU D'ADMINISTRATION"
-           style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
-    <Label text="PANEAU D'ADMINISTRATION"
-           style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.BackendController"
+            prefWidth="1000" prefHeight="700">
 
-    <VBox fx:id="contentArea" VBox.vgrow="ALWAYS">
-    <TableView fx:id="adminTable" VBox.vgrow="ALWAYS">
-        <columns>
-            <TableColumn text="ID" prefWidth="50"/>
-            <TableColumn text="Nom" prefWidth="200"/>
-        </columns>
-    </TableView>
-    </VBox>
-</VBox>
+    <!-- Left Sidebar -->
+    <left>
+        <VBox style="-fx-background-color: #2c3e50;" spacing="10" prefWidth="200">
+            <Label text="SAHATECK" style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold; -fx-padding: 20 10 20 10; -fx-alignment: CENTER;"/>
+
+            <Separator style="-fx-background-color: #2c3e50;"/>
+
+            <Button fx:id="typeReclamationBtn" text="Type Reclamation"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20;"/>
+            <Button fx:id="reclamationBtn" text="Reclamation"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20;"/>
+            <Button fx:id="reponseBtn" text="Réponses"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20;"/>
+
+            <Separator style="-fx-background-color: #2c3e50;"/>
+
+            <Button text="Sign Out" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20;"/>
+        </VBox>
+    </left>
+
+
+
+    <!-- Center Content -->
+    <center>
+        <VBox spacing="20" style="-fx-padding: 20;">
+            <Label text="PANEAU D'ADMINISTRATION" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+            <VBox fx:id="contentArea" style="-fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-border-radius: 5; -fx-padding: 15;"
+                  VBox.vgrow="ALWAYS">
+                <!-- Content will be loaded here dynamically -->
+                <Label text="Sélectionnez une option dans le menu" style="-fx-font-size: 16px; -fx-text-fill: #2c3e50;"/>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

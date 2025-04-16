@@ -8,12 +8,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static utils.connBD.getConnection;
+
 public class ReclamationServices {
     private Connection connection;
 
     public ReclamationServices() {
         try {
-            connection = connBD.getConnection();
+            connection = getConnection();
         } catch (SQLException e) {
             System.err.println("Error connecting to database: " + e.getMessage());
         }
@@ -181,7 +183,7 @@ public class ReclamationServices {
         List<TypeReclamation> types = new ArrayList<>();
         String sql = "SELECT id, nom FROM type_reclamation ORDER BY id";
 
-        try (Connection conn = connBD.getConnection();
+        try (Connection conn = getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -249,7 +251,7 @@ public class ReclamationServices {
 
     public boolean typeExists(String typeId) throws SQLException {
         String sql = "SELECT COUNT(*) FROM type_reclamation WHERE id = ?";
-        try (Connection conn = connBD.getConnection();
+        try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, Integer.parseInt(typeId));
             try (ResultSet rs = stmt.executeQuery()) {

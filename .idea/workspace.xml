@@ -22,13 +22,17 @@
       <change afterPath="$PROJECT_DIR$/src/main/java/controller/EditTypeController.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/controller/MainController.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/controller/MedecinController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/ReclamationViewController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/ReponseViewController.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/controller/TypeReclamationController.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/entity/Medecin.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/entity/Reclamation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/entity/Reponse.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/entity/TypeReclamation.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/main.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/services/MedecinService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/services/ReclamationServices.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/services/ReponseService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/services/TypeReclamationService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/utils/connBD.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/client_reclamation.fxml" afterDir="false" />
@@ -38,6 +42,8 @@
       <change afterPath="$PROJECT_DIR$/src/main/resources/view/edit-reclamation.fxml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/view/edit-type.fxml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/view/main-view.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/view/reclamation-view.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/view/reponse-view.fxml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/view/type-reclamation.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -77,41 +83,41 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.main.executor": "Run",
-    "Maven.reclamation2 [clean].executor": "Run",
-    "Maven.reclamation2 [compile].executor": "Run",
-    "Maven.reclamation2 [dependency:purge-local-repository].executor": "Run",
-    "Maven.reclamation2 [install].executor": "Run",
-    "Maven.reclamation2 [org.openjfx:javafx-maven-plugin:0.0.8:run].executor": "Run",
-    "Maven.reclamation2 [package].executor": "Run",
-    "Maven.reclamation2 [validate].executor": "Run",
-    "Maven.reclamation2 [verify].executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/mysql-connector-j-8.0.33.jar",
-    "list.type.of.created.stylesheet": "CSS",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.12464855",
-    "settings.editor.selected.configurable": "reference.settings.project.maven.repository.indices",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.main.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.reclamation2 [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.reclamation2 [compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.reclamation2 [dependency:purge-local-repository].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.reclamation2 [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.reclamation2 [org.openjfx:javafx-maven-plugin:0.0.8:run].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.reclamation2 [package].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.reclamation2 [validate].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.reclamation2 [verify].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/mysql-connector-j-8.0.33.jar&quot;,
+    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.12464855&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql_aurora",
-      "mysql"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql_aurora&quot;,
+      &quot;mysql&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="controller" />
@@ -175,7 +181,8 @@
       <workItem from="1744631962956" duration="5774000" />
       <workItem from="1744642801328" duration="966000" />
       <workItem from="1744652079220" duration="31993000" />
-      <workItem from="1744694109381" duration="5936000" />
+      <workItem from="1744694109381" duration="14540000" />
+      <workItem from="1744804367663" duration="28243000" />
     </task>
     <servers />
   </component>

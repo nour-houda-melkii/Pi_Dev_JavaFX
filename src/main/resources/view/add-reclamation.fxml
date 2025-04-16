@@ -30,8 +30,8 @@
                     <Label text="Description:" styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0" />
                     <TextArea fx:id="descriptionField" styleClass="form-textarea" GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="2" />
 
-                    <Label text="Date:" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0"  />
-                    <DatePicker fx:id="datePicker" styleClass="form-datepicker" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="2" disable="true"/>
+                    <Label text="Date:" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                    <DatePicker fx:id="datePicker" styleClass="form-datepicker" GridPane.rowIndex="2" GridPane.columnIndex="1" GridPane.columnSpan="2" />
 
                     <Label text="Médecin:" styleClass="form-label" GridPane.rowIndex="3" GridPane.columnIndex="0" />
                     <ComboBox fx:id="medecinComboBox" styleClass="form-combo" GridPane.rowIndex="3" GridPane.columnIndex="1" GridPane.columnSpan="2" />

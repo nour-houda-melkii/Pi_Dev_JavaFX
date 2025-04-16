@@ -131,3 +131,548 @@
 .delete-btn:hover {
     -fx-background-color: #c0392b;
 }
+
+
+/* Couleurs principales */
+.root {
+    -primary-color: #4361ee;
+    -secondary-color: #3f37c9;
+    -accent-color: #4895ef;
+    -danger-color: #f72585;
+    -success-color: #4cc9f0;
+    -light-color: #f8f9fa;
+    -dark-color: #212529;
+}
+
+/* En-tête */
+.header-toolbar {
+    -fx-background-color: -primary-color;
+    -fx-padding: 15;
+}
+
+.header-title {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 0 10;
+}
+
+/* Boutons */
+.back-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-graphic-text-gap: 8;
+}
+
+.primary-button {
+    -fx-background-color: -primary-color;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 20;
+}
+
+.secondary-button {
+    -fx-background-color: -secondary-color;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+}
+
+.cancel-button {
+    -fx-background-color: -danger-color;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 20;
+}
+
+/* Formulaire */
+.form-scroll-pane {
+    -fx-background: white;
+    -fx-border-color: transparent;
+}
+
+.form-container {
+    -fx-padding: 20;
+    -fx-spacing: 20;
+}
+
+.form-grid {
+    -fx-hgap: 15;
+    -fx-vgap: 15;
+    -fx-padding: 20;
+}
+
+.form-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: -dark-color;
+}
+
+.form-combo, .form-textarea, .form-datepicker {
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: #ced4da;
+    -fx-padding: 5;
+}
+
+.form-textarea {
+    -fx-pref-height: 120;
+}
+
+.form-actions {
+    -fx-alignment: CENTER_RIGHT;
+    -fx-spacing: 15;
+    -fx-padding: 20 0 0 0;
+}
+
+.photo-preview {
+    -fx-fit-height: 120;
+    -fx-fit-width: 120;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 5;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);
+}
+/* Sidebar */
+.sidebar {
+    -fx-background-color: -dark-color;
+    -fx-spacing: 10;
+    -fx-padding: 20 0 0 0;
+}
+
+.sidebar-title {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 20 20 20;
+}
+
+.sidebar-separator {
+    -fx-background-color: #495057;
+    -fx-padding: 0 0 1 0;
+}
+
+.sidebar-menu {
+    -fx-spacing: 5;
+    -fx-padding: 0 10 10 10;
+}
+
+.sidebar-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #adb5bd;
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 20;
+    -fx-content-display: LEFT;
+}
+
+.sidebar-button:hover {
+    -fx-text-fill: white;
+    -fx-background-color: #495057;
+}
+
+.sidebar-button:selected {
+    -fx-text-fill: white;
+    -fx-background-color: -primary-color;
+}
+
+.logout {
+    -fx-text-fill: -danger-color;
+}
+
+/* Content */
+.content-container {
+    -fx-padding: 20;
+    -fx-spacing: 20;
+}
+
+.content-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: -dark-color;
+}
+
+.content-area {
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 20;
+    -fx-background-color: white;
+}
+
+.content-placeholder {
+    -fx-font-size: 16px;
+    -fx-text-fill: #6c757d;
+}
+
+/* Wizard styles */
+.wizard-container {
+    -fx-padding: 30;
+    -fx-spacing: 20;
+    -fx-background-color: white;
+}
+
+.wizard-step {
+    -fx-spacing: 15;
+    -fx-padding: 20;
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1;
+}
+
+.step-title {
+    -fx-font-size: 1.3em;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4361ee;
+}
+
+.step-subtitle {
+    -fx-font-size: 1.1em;
+    -fx-text-fill: #6c757d;
+}
+
+.wizard-radio {
+    -fx-font-size: 1.1em;
+    -fx-padding: 8 15;
+}
+
+.wizard-textarea {
+    -fx-pref-height: 150;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
+}
+
+.photo-upload {
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 0;
+}
+
+.photo-preview {
+    -fx-fit-height: 150;
+    -fx-fit-width: 150;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 5;
+}
+
+.confirmation-box {
+    -fx-spacing: 10;
+    -fx-padding: 20;
+    -fx-alignment: CENTER;
+}
+
+.wizard-navigation {
+    -fx-padding: 20 0 0 0;
+}
+
+.success-button {
+    -fx-background-color: #28a745;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 20;
+}
+
+
+/* Wizard styles */
+.wizard-container {
+    -fx-padding: 30;
+    -fx-spacing: 20;
+    -fx-background-color: white;
+}
+
+.wizard-step {
+    -fx-spacing: 15;
+    -fx-padding: 20;
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 1;
+}
+
+.step-title {
+    -fx-font-size: 1.3em;
+    -fx-font-weight: bold;
+    -fx-text-fill: #4361ee;
+}
+
+.step-subtitle {
+    -fx-font-size: 1.1em;
+    -fx-text-fill: #6c757d;
+}
+
+.wizard-radio {
+    -fx-font-size: 1.1em;
+    -fx-padding: 8 15;
+}
+
+.wizard-textarea {
+    -fx-pref-height: 150;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-padding: 10;
+}
+
+.photo-upload {
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 0;
+}
+
+.photo-preview {
+    -fx-fit-height: 150;
+    -fx-fit-width: 150;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 5;
+}
+
+.confirmation-box {
+    -fx-spacing: 10;
+    -fx-padding: 20;
+    -fx-alignment: CENTER;
+}
+
+.wizard-navigation {
+    -fx-padding: 20 0 0 0;
+}
+
+.success-button {
+    -fx-background-color: #28a745;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 20;
+}
+
+/* Style général */
+.wizard-container {
+    -fx-padding: 30px;
+    -fx-background-color: #f5f7fa;
+    -fx-spacing: 20px;
+}
+
+/* Étapes */
+.wizard-step {
+    -fx-padding: 25px;
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #e1e5eb;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 0);
+}
+
+.step-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 0 0 5px 0;
+}
+
+.step-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+    -fx-padding: 0 0 20px 0;
+}
+
+/* Options */
+.option-group {
+    -fx-padding: 10px 0;
+}
+
+.wizard-radio {
+    -fx-font-size: 15px;
+    -fx-padding: 8px 15px;
+    -fx-cursor: hand;
+}
+
+.wizard-radio .radio {
+    -fx-padding: 0 8px 0 0;
+}
+
+/* Zone de texte */
+.wizard-textarea {
+    -fx-pref-height: 150px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+}
+
+/* Upload */
+.upload-section {
+    -fx-padding: 15px 0 5px 0;
+    -fx-alignment: center-left;
+}
+
+.browse-btn {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-padding: 6px 12px;
+    -fx-font-size: 13px;
+}
+
+.file-name {
+    -fx-font-size: 13px;
+    -fx-text-fill: #3498db;
+    -fx-padding: 5px 0;
+}
+
+/* Confirmation */
+.confirmation-box {
+    -fx-spacing: 10px;
+    -fx-padding: 20px;
+    -fx-alignment: center-left;
+}
+
+.confirmation-box Label {
+    -fx-font-size: 15px;
+    -fx-text-fill: #2c3e50;
+}
+
+/* Boutons de navigation */
+.navigation-buttons {
+    -fx-padding: 20px 0 0 0;
+    -fx-alignment: center-right;
+}
+
+.nav-btn {
+    -fx-padding: 8px 20px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-radius: 5px;
+}
+
+.nav-btn.primary {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+}
+
+.nav-btn.secondary {
+    -fx-background-color: #95a5a6;
+    -fx-text-fill: white;
+}
+
+.nav-btn.success {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+}
+/* Style général */
+.wizard-container {
+    -fx-padding: 30px;
+    -fx-background-color: #f5f7fa;
+    -fx-spacing: 20px;
+}
+
+/* Étapes */
+.wizard-step {
+    -fx-padding: 25px;
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #e1e5eb;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 0);
+}
+
+.step-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 0 0 5px 0;
+}
+
+.step-subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+    -fx-padding: 0 0 20px 0;
+}
+
+/* Options */
+.option-group {
+    -fx-padding: 10px 0;
+}
+
+.wizard-radio {
+    -fx-font-size: 15px;
+    -fx-padding: 8px 15px;
+    -fx-cursor: hand;
+}
+
+.wizard-radio .radio {
+    -fx-padding: 0 8px 0 0;
+}
+
+/* Zone de texte */
+.wizard-textarea {
+    -fx-pref-height: 150px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-padding: 10px;
+    -fx-font-size: 14px;
+}
+
+/* Upload */
+.upload-section {
+    -fx-padding: 15px 0 5px 0;
+    -fx-alignment: center-left;
+}
+
+.browse-btn {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-padding: 6px 12px;
+    -fx-font-size: 13px;
+}
+
+.file-name {
+    -fx-font-size: 13px;
+    -fx-text-fill: #3498db;
+    -fx-padding: 5px 0;
+}
+
+/* Confirmation */
+.confirmation-box {
+    -fx-spacing: 10px;
+    -fx-padding: 20px;
+    -fx-alignment: center-left;
+}
+
+.confirmation-box Label {
+    -fx-font-size: 15px;
+    -fx-text-fill: #2c3e50;
+}
+
+/* Boutons de navigation */
+.navigation-buttons {
+    -fx-padding: 20px 0 0 0;
+    -fx-alignment: center-right;
+}
+
+.nav-btn {
+    -fx-padding: 8px 20px;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-background-radius: 5px;
+}
+
+.nav-btn.primary {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+}
+
+.nav-btn.secondary {
+    -fx-background-color: #95a5a6;
+    -fx-text-fill: white;
+}
+
+.nav-btn.success {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+}

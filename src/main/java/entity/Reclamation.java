@@ -20,6 +20,10 @@ public class Reclamation {
         this.photoPath = photoPath;
     }
 
+    public Reclamation() {
+
+    }
+
     // Getters and setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
