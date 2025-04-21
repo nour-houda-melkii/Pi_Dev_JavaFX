@@ -9,7 +9,12 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.layout.Region;
+import javafx.geometry.Pos;
+import javafx.geometry.Insets;
 import models.CategorieEvent;
 import services.CategorieEventDAO;
 
@@ -18,57 +23,67 @@ import java.util.List;
 
 public class CategorieEventController {
 
-    @FXML private TableView<CategorieEvent> tableCategories;
-    @FXML private TableColumn<CategorieEvent, Integer> colId;
-    @FXML private TableColumn<CategorieEvent, String> colNom;
-    @FXML private TableColumn<CategorieEvent, String> colDescription;
-    @FXML private TableColumn<CategorieEvent, Void> colActions;
+    @FXML private FlowPane categoriesContainer;
+    @FXML private TextField searchField;
 
     private final CategorieEventDAO categorieDAO = new CategorieEventDAO();
 
     @FXML
     public void initialize() {
-        setupColumns();
         loadCategories();
+        setupSearch();
     }
 
-    private void setupColumns() {
-        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
-        colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
-        setupActionsColumn();
-    }
-
-    private void setupActionsColumn() {
-        colActions.setCellFactory(col -> new TableCell<>() {
-            private final HBox container = new HBox(8);
-            private final Button editButton = createButton("Modifier", "/images/icons/edit.png");
-            private final Button deleteButton = createButton("Supprimer", "/images/icons/delete.png");
-
-            {
-                editButton.getStyleClass().addAll("action-button", "edit-button");
-                deleteButton.getStyleClass().addAll("action-button", "delete-button");
-
-                container.setAlignment(javafx.geometry.Pos.CENTER);
-                container.getChildren().addAll(editButton, deleteButton);
-
-                editButton.setOnAction(e -> {
-                    CategorieEvent categorie = getTableView().getItems().get(getIndex());
-                    handleEditCategorie(categorie);
-                });
-
-                deleteButton.setOnAction(e -> {
-                    CategorieEvent categorie = getTableView().getItems().get(getIndex());
-                    handleDeleteCategorie(categorie);
-                });
-            }
-
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                setGraphic(empty ? null : container);
+    private void setupSearch() {
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            categoriesContainer.getChildren().clear();
+            List<CategorieEvent> categories = categorieDAO.getAll();
+            for (CategorieEvent categorie : categories) {
+                if (newValue.isEmpty() || 
+                    categorie.getNom().toLowerCase().contains(newValue.toLowerCase()) ||
+                    categorie.getDescription().toLowerCase().contains(newValue.toLowerCase())) {
+                    categoriesContainer.getChildren().add(createCategorieCard(categorie));
+                }
             }
         });
+    }
+
+    private VBox createCategorieCard(CategorieEvent categorie) {
+        VBox card = new VBox(10);
+        card.getStyleClass().add("category-card");
+        card.setPrefWidth(200);
+        card.setPrefHeight(150);
+        card.setPadding(new Insets(15));
+        
+        Label nomLabel = new Label(categorie.getNom());
+        nomLabel.getStyleClass().add("category-title");
+        nomLabel.setWrapText(true);
+        
+        Label descLabel = new Label(categorie.getDescription());
+        descLabel.getStyleClass().add("category-description");
+        descLabel.setWrapText(true);
+        
+        Region spacer = new Region();
+        spacer.setPrefHeight(10);
+        VBox.setVgrow(spacer, javafx.scene.layout.Priority.ALWAYS);
+        
+        HBox buttonsBox = new HBox(8);
+        buttonsBox.setAlignment(Pos.CENTER);
+        
+        Button editButton = createButton("Modifier", "/images/icons/edit.png");
+        Button deleteButton = createButton("Supprimer", "/images/icons/delete.png");
+        
+        editButton.getStyleClass().addAll("action-button", "edit-button");
+        deleteButton.getStyleClass().addAll("action-button", "delete-button");
+        
+        editButton.setOnAction(e -> handleEditCategorie(categorie));
+        deleteButton.setOnAction(e -> handleDeleteCategorie(categorie));
+        
+        buttonsBox.getChildren().addAll(editButton, deleteButton);
+        
+        card.getChildren().addAll(nomLabel, descLabel, spacer, buttonsBox);
+        
+        return card;
     }
 
     private Button createButton(String tooltip, String iconPath) {
@@ -88,8 +103,12 @@ public class CategorieEventController {
     }
 
     private void loadCategories() {
+        categoriesContainer.getChildren().clear();
         List<CategorieEvent> categories = categorieDAO.getAll();
-        tableCategories.setItems(FXCollections.observableArrayList(categories));
+        
+        for (CategorieEvent categorie : categories) {
+            categoriesContainer.getChildren().add(createCategorieCard(categorie));
+        }
     }
 
     @FXML
@@ -102,7 +121,7 @@ public class CategorieEventController {
             formController.setOnFormSubmitted(v -> loadCategories());
 
             // Obtenir la référence au BorderPane principal
-            BorderPane mainContent = (BorderPane) tableCategories.getScene().getRoot().lookup("#contentArea");
+            BorderPane mainContent = (BorderPane) ((Control)event.getSource()).getScene().getRoot().lookup("#contentArea");
             if (mainContent != null) {
                 mainContent.setCenter(formPage);
             }
@@ -121,7 +140,7 @@ public class CategorieEventController {
             formController.setOnFormSubmitted(v -> loadCategories());
 
             // Obtenir la référence au BorderPane principal
-            BorderPane mainContent = (BorderPane) tableCategories.getScene().getRoot().lookup("#contentArea");
+            BorderPane mainContent = (BorderPane) categoriesContainer.getScene().getRoot().lookup("#contentArea");
             if (mainContent != null) {
                 mainContent.setCenter(formPage);
             }

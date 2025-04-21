@@ -5,9 +5,11 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" 
           fx:controller="controllers.FrontEventListController"
+          stylesheets="@/styles/style.css"
           style="-fx-background-color: white;">
     
     <!-- En-tête -->
@@ -25,11 +27,31 @@
     
     <!-- Contenu principal -->
     <center>
-        <ScrollPane fitToWidth="true" styleClass="edge-to-edge">
+        <ScrollPane fitToWidth="true" styleClass="transparent-scroll-pane">
             <VBox spacing="30" style="-fx-background-color: white;">
                 <padding>
                     <Insets top="0" right="40" bottom="30" left="40"/>
                 </padding>
+                
+                <!-- Carte des événements -->
+                <VBox spacing="10">
+                    <Label text="Carte des événements" styleClass="section-title"/>
+                    <AnchorPane fx:id="mapContainer" minHeight="400" style="-fx-border-color: #ddd; -fx-border-radius: 8px; -fx-background-color: #f8f8f8;">
+                        <WebView fx:id="mapView" prefHeight="400" 
+                                AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" 
+                                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                    </AnchorPane>
+                    <HBox spacing="15" alignment="CENTER">
+                        <HBox spacing="5" alignment="CENTER_LEFT">
+                            <StackPane maxWidth="20" maxHeight="20" minWidth="20" minHeight="20" style="-fx-background-color: #4CAF50; -fx-background-radius: 10;"/>
+                            <Label text="Événements actifs" styleClass="legend-text"/>
+                        </HBox>
+                        <HBox spacing="5" alignment="CENTER_LEFT">
+                            <StackPane maxWidth="20" maxHeight="20" minWidth="20" minHeight="20" style="-fx-background-color: #F44336; -fx-background-radius: 10;"/>
+                            <Label text="Événements expirés" styleClass="legend-text"/>
+                        </HBox>
+                    </HBox>
+                </VBox>
                 
                 <!-- Section Événements Actifs -->
                 <VBox spacing="20">

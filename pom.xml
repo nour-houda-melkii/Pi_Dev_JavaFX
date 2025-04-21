@@ -27,6 +27,12 @@
       <artifactId>javafx-fxml</artifactId>
       <version>17.0.8</version>
     </dependency>
+    <!-- Ajout de la dépendance JavaFX WebView pour la carte interactive -->
+    <dependency>
+      <groupId>org.openjfx</groupId>
+      <artifactId>javafx-web</artifactId>
+      <version>17.0.8</version>
+    </dependency>
 
     <!-- ✅ Ajoute ceci pour corriger ton erreur -->
     <dependency>
@@ -57,6 +63,11 @@
         <version>0.0.8</version>
         <configuration>
           <mainClass>org.example.App</mainClass>
+          <!-- Ajouter les modules JavaFX nécessaires -->
+          <options>
+            <option>--add-modules</option>
+            <option>javafx.controls,javafx.fxml,javafx.web</option>
+          </options>
         </configuration>
       </plugin>
     </plugins>

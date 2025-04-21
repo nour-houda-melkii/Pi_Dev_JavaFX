@@ -21,15 +21,13 @@
     </top>
 
     <center>
-        <VBox spacing="15">
-            <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
-            </padding>
-
-            <!-- Événements Actifs -->
-            <TitledPane text="Événements Actifs" expanded="true">
-                <VBox spacing="10" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
-                      AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <TabPane styleClass="events-tabpane" tabClosingPolicy="UNAVAILABLE" side="LEFT">
+            <Tab text="Événements Actifs">
+                <VBox spacing="10">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+                    
                     <HBox spacing="10">
                         <TextField fx:id="searchTitle" promptText="Titre" onKeyReleased="#handleSearch" />
                         <DatePicker fx:id="searchDate" promptText="jj/mm/aaaa" onAction="#handleSearch" />
@@ -42,25 +40,23 @@
                         </ComboBox>
                         <Button text="Réinitialiser" onAction="#handleReset" styleClass="primary" />
                     </HBox>
-                    <TableView fx:id="tableActifs" prefHeight="300">
-                        <columns>
-                            <TableColumn fx:id="colId" text="#" sortable="true" />
-                            <TableColumn fx:id="colTitre" text="Titre" sortable="true" />
-                            <TableColumn fx:id="colLieu" text="Lieu" sortable="true" />
-                            <TableColumn fx:id="colDebut" text="Début" sortable="true" />
-                            <TableColumn fx:id="colFin" text="Fin" sortable="true" />
-                            <TableColumn fx:id="colPlaces" text="Places" sortable="true" />
-                            <TableColumn fx:id="colCategorie" text="Catégorie" sortable="true" />
-                            <TableColumn fx:id="colAffiche" text="Affiche" />
-                            <TableColumn fx:id="colActionsActifs" text="Actions" />
-                        </columns>
-                    </TableView>
+                    
+                    <ScrollPane fitToWidth="true" styleClass="transparent-scroll-pane" VBox.vgrow="ALWAYS">
+                        <FlowPane fx:id="eventsContainer" hgap="25" vgap="30" styleClass="events-container" alignment="CENTER">
+                            <padding>
+                                <Insets top="25" right="20" bottom="25" left="20"/>
+                            </padding>
+                        </FlowPane>
+                    </ScrollPane>
                 </VBox>
-            </TitledPane>
-
-            <!-- Événements Archivés -->
-            <TitledPane text="Événements Archivés" expanded="true">
+            </Tab>
+            
+            <Tab text="Événements Archivés">
                 <VBox spacing="10">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+                    
                     <HBox spacing="10">
                         <TextField fx:id="searchTitleArchives" promptText="Titre" onKeyReleased="#handleSearchArchives" />
                         <DatePicker fx:id="searchDateArchives" promptText="jj/mm/aaaa" onAction="#handleSearchArchives" />
@@ -73,22 +69,16 @@
                         </ComboBox>
                         <Button text="Réinitialiser" onAction="#handleResetArchives" styleClass="primary" />
                     </HBox>
-                    <TableView fx:id="tableArchives" prefHeight="200">
-                        <columns>
-                            <TableColumn fx:id="colIdArch" text="#" sortable="true" />
-                            <TableColumn fx:id="colTitreArch" text="Titre" sortable="true" />
-                            <TableColumn fx:id="colLieuArch" text="Lieu" sortable="true" />
-                            <TableColumn fx:id="colDebutArch" text="Début" sortable="true" />
-                            <TableColumn fx:id="colFinArch" text="Fin" sortable="true" />
-                            <TableColumn fx:id="colPlacesArch" text="Places" sortable="true" />
-                            <TableColumn fx:id="colCategorieArch" text="Catégorie" sortable="true" />
-                            <TableColumn fx:id="colAfficheArch" text="Affiche" />
-                            <TableColumn fx:id="colActionsArchives" text="Actions" />
-                        </columns>
-                    </TableView>
+                    
+                    <ScrollPane fitToWidth="true" styleClass="transparent-scroll-pane" VBox.vgrow="ALWAYS">
+                        <FlowPane fx:id="archivedEventsContainer" hgap="25" vgap="30" styleClass="events-container" alignment="CENTER">
+                            <padding>
+                                <Insets top="25" right="20" bottom="25" left="20"/>
+                            </padding>
+                        </FlowPane>
+                    </ScrollPane>
                 </VBox>
-            </TitledPane>
-
-        </VBox>
+            </Tab>
+        </TabPane>
     </center>
 </BorderPane>

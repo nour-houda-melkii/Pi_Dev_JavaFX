@@ -22,6 +22,7 @@
             <VBox spacing="5">
                 <Label text="Nom *" styleClass="field-label"/>
                 <TextField fx:id="fieldNom" promptText="Entrez un nom" styleClass="form-field"/>
+                <Label fx:id="nomError" text="Le nom est obligatoire" styleClass="error-message" visible="false" managed="true"/>
             </VBox>
 
             <!-- Champ Description -->
@@ -29,6 +30,7 @@
                 <Label text="Description" styleClass="field-label"/>
                 <TextArea fx:id="fieldDescription" promptText="Entrez une description" 
                          wrapText="true" prefRowCount="4" styleClass="form-field"/>
+                <Label fx:id="descriptionError" text="" styleClass="error-message" visible="false" managed="true"/>
             </VBox>
         </VBox>
 

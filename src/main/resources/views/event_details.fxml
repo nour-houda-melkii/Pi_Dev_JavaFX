@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" 
+          fx:controller="controllers.EventDetailsController"
+          stylesheets="@/styles/style.css">
+    
+    <!-- En-tête -->
+    <top>
+        <VBox spacing="10" style="-fx-background-color: white;">
+            <padding>
+                <Insets top="20" right="40" bottom="10" left="40"/>
+            </padding>
+            
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <Button text="← Retour" onAction="#handleRetour" styleClass="back-button"/>
+                <Label fx:id="titleLabel" styleClass="main-title"/>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <!-- Contenu principal -->
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="transparent-scroll-pane">
+            <VBox spacing="30" style="-fx-background-color: white;">
+                <padding>
+                    <Insets top="0" right="40" bottom="40" left="40"/>
+                </padding>
+                
+                <!-- Image et détails de l'événement -->
+                <HBox spacing="30">
+                    <!-- Image de l'événement -->
+                    <VBox spacing="10" HBox.hgrow="NEVER">
+                        <StackPane styleClass="image-container" minWidth="350" maxWidth="350">
+                            <ImageView fx:id="eventImage" fitWidth="350" fitHeight="250" preserveRatio="true"/>
+                            <HBox alignment="TOP_RIGHT" StackPane.alignment="TOP_RIGHT">
+                                <padding>
+                                    <Insets top="10" right="10"/>
+                                </padding>
+                                <Label fx:id="categoryLabel" styleClass="badge, badge-category"/>
+                            </HBox>
+                        </StackPane>
+                    </VBox>
+                    
+                    <!-- Détails de l'événement -->
+                    <VBox spacing="15" HBox.hgrow="ALWAYS">
+                        <VBox spacing="5">
+                            <Label text="Date" styleClass="detail-label"/>
+                            <Label fx:id="dateLabel" styleClass="detail-value"/>
+                        </VBox>
+                        
+                        <VBox spacing="5">
+                            <Label text="Lieu" styleClass="detail-label"/>
+                            <Label fx:id="locationLabel" styleClass="detail-value"/>
+                        </VBox>
+                        
+                        <VBox spacing="5">
+                            <Label text="Places disponibles" styleClass="detail-label"/>
+                            <Label fx:id="placesLabel" styleClass="detail-value"/>
+                        </VBox>
+                        
+                        <VBox spacing="5">
+                            <Label text="Description" styleClass="detail-label"/>
+                            <Label fx:id="descriptionLabel" styleClass="detail-value" wrapText="true"/>
+                        </VBox>
+                    </VBox>
+                </HBox>
+                
+                <!-- Carte de localisation -->
+                <VBox spacing="10">
+                    <Label text="Localisation de l'événement" styleClass="section-title"/>
+                    <AnchorPane minHeight="400" style="-fx-border-color: #ddd; -fx-border-radius: 8px; -fx-background-color: #f8f8f8;">
+                        <WebView fx:id="mapView" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" 
+                                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                    </AnchorPane>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane> 

@@ -19,17 +19,23 @@
                         styleClass="button-green" />
             </HBox>
             
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <padding>
+                    <Insets left="10" right="10"/>
+                </padding>
+                <TextField fx:id="searchField" promptText="Rechercher une catégorie..." 
+                        prefWidth="300" styleClass="search-field"/>
+            </HBox>
         </VBox>
     </top>
 
     <center>
-        <TableView fx:id="tableCategories">
-            <columns>
-                <TableColumn fx:id="colId" text="#" />
-                <TableColumn fx:id="colNom" text="Nom" />
-                <TableColumn fx:id="colDescription" text="Description" />
-                <TableColumn fx:id="colActions" text="Actions" />
-            </columns>
-        </TableView>
+        <ScrollPane fitToWidth="true" styleClass="transparent-scroll-pane">
+            <FlowPane fx:id="categoriesContainer" hgap="20" vgap="20" styleClass="categories-container">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+            </FlowPane>
+        </ScrollPane>
     </center>
 </BorderPane>

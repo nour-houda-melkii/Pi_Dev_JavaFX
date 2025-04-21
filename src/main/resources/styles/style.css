@@ -337,10 +337,10 @@
 
 /* ========== MESSAGES D'ERREUR ========== */
 .error-message {
-    -fx-text-fill: #dc3545;
-    -fx-font-size: 12px;
-    -fx-padding: 2 0 0 0;
+    -fx-text-fill: #e74c3c;
+    -fx-font-size: 11px;
     -fx-font-style: italic;
+    -fx-padding: 2px 0 0 0;
 }
 
 .error-field {
@@ -376,10 +376,9 @@
 /* ========== STYLES DE FORMULAIRE ========== */
 .form-container {
     -fx-background-color: white;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 3);
     -fx-background-radius: 8px;
-    -fx-min-width: 500px;
-    -fx-min-height: 400px;
+    -fx-padding: 15px;
+    -fx-spacing: 10px;
 }
 
 .form-title {
@@ -433,14 +432,20 @@
 
 .event-card {
     -fx-background-color: white;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);
-    -fx-background-radius: 8;
-    -fx-border-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 5);
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-transition: all 0.3s ease;
+}
+
+.event-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 20, 0, 0, 7);
+    -fx-translate-y: -3;
 }
 
 .card-content {
     -fx-background-color: white;
-    -fx-background-radius: 0 0 8 8;
+    -fx-background-radius: 0 0 10 10;
 }
 
 .card-title {
@@ -620,4 +625,372 @@
 .footer-text {
     -fx-text-fill: white;
     -fx-font-size: 12px;
+}
+
+/* Styles pour les catégories */
+.categories-container {
+    -fx-background-color: #f5f7fa;
+}
+
+.category-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 10, 0, 0, 4);
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+}
+
+.category-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 15, 0, 0, 6);
+    -fx-border-color: #3498db;
+    -fx-border-width: 2px;
+}
+
+.category-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.category-description {
+    -fx-font-size: 12px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.search-field {
+    -fx-background-radius: 20px;
+    -fx-padding: 8px 12px;
+    -fx-prompt-text-fill: #95a5a6;
+}
+
+/* Enhanced styles for transparent ScrollPane with no edges */
+.transparent-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 0;
+}
+
+.transparent-scroll-pane > .viewport {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.transparent-scroll-pane .scroll-bar:vertical,
+.transparent-scroll-pane .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0;
+    -fx-padding: 0;
+}
+
+.transparent-scroll-pane .scroll-bar .thumb {
+    -fx-background-color: rgba(180, 180, 180, 0.3);
+    -fx-background-radius: 5;
+    -fx-background-insets: 0;
+}
+
+.transparent-scroll-pane .scroll-bar .thumb:hover {
+    -fx-background-color: rgba(160, 160, 160, 0.6);
+}
+
+.transparent-scroll-pane .scroll-bar .increment-button,
+.transparent-scroll-pane .scroll-bar .decrement-button,
+.transparent-scroll-pane .scroll-bar .increment-arrow,
+.transparent-scroll-pane .scroll-bar .decrement-arrow {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-shape: " ";
+}
+
+.transparent-scroll-pane .corner {
+    -fx-background-color: transparent;
+}
+
+/* Fix for all ScrollPanes with no edge */
+.no-edge-scroll {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.no-edge-scroll .corner {
+    -fx-background-color: transparent;
+}
+
+/* Styles pour les boutons d'action */
+.action-button {
+    -fx-background-radius: 20px;
+    -fx-min-width: 32px;
+    -fx-min-height: 32px;
+    -fx-padding: 6px;
+}
+
+.edit-button {
+    -fx-background-color: #3498db;
+}
+
+.edit-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.delete-button {
+    -fx-background-color: #e74c3c;
+}
+
+.delete-button:hover {
+    -fx-background-color: #c0392b;
+}
+
+/* Styles pour les événements */
+.events-container {
+    -fx-background-color: #f5f7fa;
+    -fx-alignment: center;
+    -fx-min-height: 400px;
+}
+
+.event-card {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 5);
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-transition: all 0.3s ease;
+}
+
+.event-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 20, 0, 0, 7);
+    -fx-translate-y: -3;
+}
+
+.image-wrapper {
+    -fx-background-color: #f0f0f0;
+    -fx-min-height: 180px;
+    -fx-background-radius: 0;
+}
+
+.image-wrapper ImageView {
+    -fx-preserve-ratio: true;
+}
+
+.card-content {
+    -fx-background-color: white;
+    -fx-background-radius: 0 0 10 10;
+}
+
+.card-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-wrap-text: true;
+    -fx-max-width: 290px;
+}
+
+.badge {
+    -fx-padding: 4 8;
+    -fx-background-radius: 4;
+    -fx-font-size: 13px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 5, 0, 0, 1);
+}
+
+.badge-category {
+    -fx-background-color: #2196F3;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+}
+
+/* Styles pour les onglets */
+.events-tabpane .tab-header-area {
+    -fx-padding: 0 10 0 0;
+}
+
+.events-tabpane .tab {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 0;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #e9ecef;
+    -fx-padding: 12 20;
+}
+
+.events-tabpane .tab:selected {
+    -fx-background-color: #4CAF50;
+}
+
+.events-tabpane .tab:selected .tab-label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.events-tabpane .tab-label {
+    -fx-text-fill: #495057;
+    -fx-font-size: 14px;
+}
+
+.events-tabpane .tab:hover {
+    -fx-background-color: #e9ecef;
+    -fx-cursor: hand;
+}
+
+.events-tabpane .tab:selected:hover {
+    -fx-background-color: #43A047;
+}
+
+/* Styles pour la carte dans le formulaire d'événement */
+.map-section {
+    -fx-background-color: #f8f8f8;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #ddd;
+    -fx-border-width: 1px;
+    -fx-padding: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 4, 0, 0, 1);
+    -fx-min-height: 450px;
+}
+
+.map-container {
+    -fx-border-color: #ddd;
+    -fx-border-width: 1px;
+    -fx-border-radius: 8px;
+    -fx-background-color: #f8f8f8;
+    -fx-min-height: 350px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 2, 0, 0, 1);
+}
+
+.map-container WebView {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.map-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.location-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 8px;
+    -fx-font-style: italic;
+    -fx-background-color: #f0f3f5;
+    -fx-background-radius: 4px;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 4px;
+    -fx-alignment: center;
+}
+
+/* Style pour le bouton de génération d'image */
+.generate-image-button {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+    -fx-padding: 8px 16px;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-background-radius: 4px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 2, 0, 0, 1);
+}
+
+.generate-image-button:hover {
+    -fx-background-color: #1976D2;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 4, 0, 0, 2);
+}
+
+/* Style pour le bouton de sélection de fichier */
+.file-chooser-button {
+    -fx-background-color: #f5f5f5;
+    -fx-text-fill: #333;
+    -fx-border-color: #ddd;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-padding: 7px 15px;
+    -fx-cursor: hand;
+    -fx-font-weight: normal;
+}
+
+.file-chooser-button:hover {
+    -fx-background-color: #e9e9e9;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 2, 0, 0, 1);
+}
+
+/* Style pour l'aperçu d'image */
+.image-view-container {
+    -fx-border-color: #ddd;
+    -fx-border-width: 1px;
+    -fx-border-radius: 4px;
+    -fx-background-color: #f8f8f8;
+    -fx-padding: 5px;
+    -fx-alignment: center;
+    -fx-pref-height: 160px;
+}
+
+/* Styles pour le ScrollPane transparent */
+.transparent-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+
+.transparent-scroll > .viewport {
+    -fx-background-color: transparent;
+}
+
+.transparent-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 0 5;
+}
+
+.transparent-scroll .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.transparent-scroll .scroll-bar .thumb {
+    -fx-background-color: #cdcdcd;
+    -fx-background-radius: 3px;
+}
+
+.transparent-scroll .scroll-bar .thumb:hover {
+    -fx-background-color: #b8b8b8;
+}
+
+.transparent-scroll .scroll-bar .increment-button,
+.transparent-scroll .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 2px;
+}
+
+/* Style amélioré pour le conteneur de formulaire */
+.form-container {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-padding: 15px;
+    -fx-spacing: 10px;
+}
+
+.legend-text {
+    -fx-font-size: 13px;
+    -fx-text-fill: #555555;
+    -fx-font-weight: normal;
+}
+
+/* Styles pour la page de détails d'événement */
+.detail-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #555555;
+}
+
+.detail-value {
+    -fx-font-size: 16px;
+    -fx-text-fill: #333333;
+}
+
+.image-container {
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 4);
 }

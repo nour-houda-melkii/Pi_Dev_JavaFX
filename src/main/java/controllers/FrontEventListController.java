@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Button;
@@ -18,6 +19,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.application.Platform;
 import javafx.scene.Node;
+import javafx.scene.web.WebView;
+import javafx.scene.web.WebEngine;
+import javafx.concurrent.Worker;
+import netscape.javascript.JSObject;
+
 import java.io.IOException;
 import java.util.List;
 import java.time.LocalDateTime;
@@ -35,6 +41,13 @@ public class FrontEventListController {
     @FXML
     private FlowPane expiredEventsContainer;
     
+    @FXML
+    private WebView mapView;
+    
+    @FXML
+    private AnchorPane mapContainer;
+    
+    private WebEngine webEngine;
     private EventService eventService;
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
@@ -48,6 +61,9 @@ public class FrontEventListController {
             
             // Initialiser le service et charger les événements
             eventService = new EventService();
+            
+            // Initialiser la carte
+            initializeMap();
             
             // Charger les événements après un court délai pour éviter les problèmes de rendu
             Platform.runLater(() -> {
@@ -63,6 +79,26 @@ public class FrontEventListController {
         }
     }
 
+    private void initializeMap() {
+        webEngine = mapView.getEngine();
+        
+        // Charger le HTML de la carte (utilisera Leaflet.js, une bibliothèque de cartographie JavaScript)
+        String mapHTML = createMapHTML();
+        webEngine.loadContent(mapHTML);
+        
+        // Attendre que la carte soit chargée avant d'ajouter des marqueurs
+        webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == Worker.State.SUCCEEDED) {
+                // Rendre le pont JavaScript-Java disponible
+                JSObject window = (JSObject) webEngine.executeScript("window");
+                window.setMember("javaConnector", this);
+                
+                // La carte est prête, on peut charger les marqueurs
+                Platform.runLater(this::loadEventMarkers);
+            }
+        });
+    }
+    
     public void refreshEvents() {
         loadEvents();
     }
@@ -84,6 +120,56 @@ public class FrontEventListController {
                     activeEventsContainer.getChildren().add(eventCard);
                 }
             }
+            
+            // Recharger les marqueurs sur la carte
+            if (webEngine != null && webEngine.getLoadWorker().getState() == Worker.State.SUCCEEDED) {
+                loadEventMarkers();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadEventMarkers() {
+        try {
+            // Vider d'abord tous les marqueurs existants
+            webEngine.executeScript("clearAllMarkers()");
+            
+            List<Event> events = eventService.getAllEvents();
+            
+            for (Event event : events) {
+                // Vérifier si l'événement a des coordonnées valides
+                double latitude = event.getLatitude();
+                double longitude = event.getLongitude();
+                
+                if (latitude != 0 && longitude != 0) {
+                    boolean isExpired = isEventExpired(event);
+                    String markerColor = isExpired ? "red" : "green";
+                    String title = event.getTitle();
+                    String popupContent = String.format(
+                        "<b>%s</b><br/>%s<br/>%s - %s<br/>Places: %d",
+                        event.getTitle(),
+                        event.getLocation(),
+                        event.getStartDate().format(dateFormatter),
+                        event.getEndDate().format(dateFormatter),
+                        event.getPlacesDisponibles()
+                    );
+                    
+                    // Échapper les caractères spéciaux pour JavaScript
+                    title = title.replace("'", "\\'");
+                    popupContent = popupContent.replace("'", "\\'");
+                    
+                    // Ajouter le marqueur
+                    webEngine.executeScript(String.format(
+                        "addMarker(%f, %f, '%s', '%s', '%s')",
+                        latitude, longitude, title, popupContent, markerColor
+                    ));
+                }
+            }
+            
+            // Ajuster la vue de la carte si nécessaire
+            webEngine.executeScript("fitMapToMarkers()");
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -91,6 +177,98 @@ public class FrontEventListController {
 
     private boolean isEventExpired(Event event) {
         return event.getEndDate().isBefore(LocalDateTime.now());
+    }
+
+    // Méthode JavaScript peut appeler cette méthode
+    public void showEventDetailsFromMap(String eventId) {
+        try {
+            int id = Integer.parseInt(eventId);
+            Event event = eventService.findById(id);
+            if (event != null) {
+                showEventDetails(event);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String createMapHTML() {
+        return "<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "<head>\n" +
+                "    <title>Carte des Événements</title>\n" +
+                "    <meta charset=\"utf-8\" />\n" +
+                "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                "    <link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet@1.7.1/dist/leaflet.css\" />\n" +
+                "    <script src=\"https://unpkg.com/leaflet@1.7.1/dist/leaflet.js\"></script>\n" +
+                "    <style>\n" +
+                "        html, body, #map {\n" +
+                "            height: 100%;\n" +
+                "            width: 100%;\n" +
+                "            margin: 0;\n" +
+                "            padding: 0;\n" +
+                "        }\n" +
+                "    </style>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "    <div id=\"map\"></div>\n" +
+                "    <script>\n" +
+                "        // Initialiser la carte avec une vue centrée sur la Tunisie\n" +
+                "        var map = L.map('map').setView([34.0, 9.0], 7);\n" +
+                "\n" +
+                "        // Ajouter la couche OpenStreetMap\n" +
+                "        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {\n" +
+                "            attribution: '&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors'\n" +
+                "        }).addTo(map);\n" +
+                "\n" +
+                "        // Stocker tous les marqueurs pour pouvoir ajuster la vue plus tard\n" +
+                "        var markers = [];\n" +
+                "\n" +
+                "        // Fonction pour ajouter un marqueur\n" +
+                "        function addMarker(lat, lng, title, popupContent, color) {\n" +
+                "            var markerOptions = {\n" +
+                "                title: title\n" +
+                "            };\n" +
+                "\n" +
+                "            // Déterminer l'icône en fonction de la couleur (vert pour actif, rouge pour expiré)\n" +
+                "            var iconUrl = color === 'green' ? \n" +
+                "                'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png' : \n" +
+                "                'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png';\n" +
+                "\n" +
+                "            var customIcon = new L.Icon({\n" +
+                "                iconUrl: iconUrl,\n" +
+                "                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',\n" +
+                "                iconSize: [25, 41],\n" +
+                "                iconAnchor: [12, 41],\n" +
+                "                popupAnchor: [1, -34],\n" +
+                "                shadowSize: [41, 41]\n" +
+                "            });\n" +
+                "\n" +
+                "            markerOptions.icon = customIcon;\n" +
+                "            var marker = L.marker([lat, lng], markerOptions).addTo(map);\n" +
+                "            marker.bindPopup(popupContent);\n" +
+                "            markers.push(marker);\n" +
+                "            return marker;\n" +
+                "        }\n" +
+                "\n" +
+                "        // Fonction pour supprimer tous les marqueurs\n" +
+                "        function clearAllMarkers() {\n" +
+                "            for (var i = 0; i < markers.length; i++) {\n" +
+                "                map.removeLayer(markers[i]);\n" +
+                "            }\n" +
+                "            markers = [];\n" +
+                "        }\n" +
+                "\n" +
+                "        // Ajuster la vue pour voir tous les marqueurs\n" +
+                "        function fitMapToMarkers() {\n" +
+                "            if (markers.length > 0) {\n" +
+                "                var group = new L.featureGroup(markers);\n" +
+                "                map.fitBounds(group.getBounds().pad(0.2));\n" +
+                "            }\n" +
+                "        }\n" +
+                "    </script>\n" +
+                "</body>\n" +
+                "</html>";
     }
 
     private Node createEventCard(Event event) {
@@ -248,17 +426,23 @@ public class FrontEventListController {
             scene.getStylesheets().add(getClass().getResource("/styles/style.css").toExternalForm());
             
             stage.setScene(scene);
-            stage.setTitle("SAHATECH - Détails de " + event.getTitle());
+            stage.setTitle("Détails de l'événement: " + event.getTitle());
             
-            // Configurer en plein écran
-            Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-            stage.setX(screenBounds.getMinX());
-            stage.setY(screenBounds.getMinY());
-            stage.setWidth(screenBounds.getWidth());
-            stage.setHeight(screenBounds.getHeight());
+            // Configurer pour plein écran
+            Screen screen = Screen.getPrimary();
+            Rectangle2D bounds = screen.getVisualBounds();
+            stage.setX(bounds.getMinX());
+            stage.setY(bounds.getMinY());
+            stage.setWidth(bounds.getWidth());
+            stage.setHeight(bounds.getHeight());
+            
+            // Récupérer le contrôleur et passer l'événement
+            EventDetailsController controller = loader.getController();
+            controller.setEvent(event);
+            controller.setPreviousStage((Stage) activeEventsContainer.getScene().getWindow());
             
             stage.show();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

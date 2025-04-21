@@ -11,6 +11,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
+import javafx.concurrent.Worker;
+import netscape.javascript.JSObject;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import models.CategorieEvent;
@@ -28,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.Locale;
 
 public class EventFormController {
 
@@ -59,6 +64,8 @@ public class EventFormController {
     @FXML private Label placesError;
     @FXML private Label categorieError;
     @FXML private Label imageError;
+    @FXML private WebView mapView;
+    @FXML private Label selectedLocationLabel;
 
     private final EventDAO eventDAO = new EventDAO();
     private final CategorieEventDAO categorieDAO = new CategorieEventDAO();
@@ -67,6 +74,7 @@ public class EventFormController {
     private Consumer<Void> onFormSubmitted;
     private File selectedImageFile;
     private final String IMAGE_DIR = "src/main/resources/affiches/";
+    private WebEngine webEngine;
 
     @FXML
     public void initialize() {
@@ -83,9 +91,175 @@ public class EventFormController {
         // Initialiser les validations
         setupValidations();
 
+        // Initialiser la carte
+        initMap();
+
         // Forcer l'affichage des boutons
         if (btnSave != null) btnSave.setVisible(true);
         if (btnCancel != null) btnCancel.setVisible(true);
+    }
+
+    private void initMap() {
+        try {
+            webEngine = mapView.getEngine();
+            
+            // Désactiver les popups d'erreurs JavaScript
+            webEngine.setOnError(event -> {
+                System.err.println("JavaScript Error: " + event.getMessage());
+            });
+
+            // Charger le HTML de la carte
+            webEngine.loadContent(getMapHtml());
+            
+            // Attendre que la carte soit chargée
+            webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue == Worker.State.SUCCEEDED) {
+                    try {
+                        // Permettre à JavaScript d'appeler des méthodes Java
+                        JSObject window = (JSObject) webEngine.executeScript("window");
+                        window.setMember("javaController", this);
+                        
+                        // Résoudre le problème de dimensionnement de la carte
+                        webEngine.executeScript("setTimeout(function() { map.invalidateSize(true); }, 1000);");
+                        
+                        // Si nous avons déjà des coordonnées (en mode édition), centrer la carte dessus
+                        if (event != null && event.getLatitude() != 0 && event.getLongitude() != 0) {
+                            try {
+                                double lat = event.getLatitude();
+                                double lng = event.getLongitude();
+                                webEngine.executeScript("setMarker(" + lat + ", " + lng + ")");
+                                updateCoordinatesLabel(lat, lng);
+                            } catch (Exception e) {
+                                System.err.println("Erreur lors de la définition du marqueur initial: " + e.getMessage());
+                            }
+                        } else if (fieldLatitude.getText() != null && !fieldLatitude.getText().isEmpty() 
+                                && fieldLongitude.getText() != null && !fieldLongitude.getText().isEmpty()) {
+                            try {
+                                double lat = Double.parseDouble(fieldLatitude.getText());
+                                double lng = Double.parseDouble(fieldLongitude.getText());
+                                webEngine.executeScript("setMarker(" + lat + ", " + lng + ")");
+                                updateCoordinatesLabel(lat, lng);
+                            } catch (NumberFormatException e) {
+                                // Coordonnées invalides, centrer sur la Tunisie
+                                webEngine.executeScript("map.setView([34.0, 9.0], 6);");
+                            }
+                        } else {
+                            // Par défaut, centrer sur la Tunisie
+                            webEngine.executeScript("map.setView([34.0, 9.0], 6);");
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Erreur lors de l'initialisation de la carte: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            System.err.println("Erreur lors de l'initialisation de la carte: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    // Méthode appelée depuis JavaScript quand un utilisateur clique sur la carte
+    public void updateCoordinates(double lat, double lng) {
+        try {
+            fieldLatitude.setText(String.format(Locale.US, "%.6f", lat));
+            fieldLongitude.setText(String.format(Locale.US, "%.6f", lng));
+            updateCoordinatesLabel(lat, lng);
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la mise à jour des coordonnées: " + e.getMessage());
+        }
+    }
+    
+    private void updateCoordinatesLabel(double lat, double lng) {
+        selectedLocationLabel.setText("Latitude sélectionnée : " + String.format(Locale.US, "%.6f", lat) + 
+                                     " | Longitude sélectionnée : " + String.format(Locale.US, "%.6f", lng));
+    }
+    
+    private String getMapHtml() {
+        return "<!DOCTYPE html>\n" +
+               "<html lang=\"fr\">\n" +
+               "<head>\n" +
+               "    <meta charset=\"utf-8\">\n" +
+               "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+               "    <title>Carte de sélection d'emplacement</title>\n" +
+               "    <link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet@1.7.1/dist/leaflet.css\" />\n" +
+               "    <script src=\"https://unpkg.com/leaflet@1.7.1/dist/leaflet.js\"></script>\n" +
+               "    <style>\n" +
+               "        html, body { height: 100%; width: 100%; margin: 0; padding: 0; }\n" +
+               "        #map { height: 100%; width: 100%; }\n" +
+               "    </style>\n" +
+               "</head>\n" +
+               "<body>\n" +
+               "    <div id=\"map\"></div>\n" +
+               "    <script>\n" +
+               "        // Initialiser la carte avec une vue par défaut sur la Tunisie\n" +
+               "        var map = L.map('map', {\n" +
+               "            center: [34.0, 9.0],\n" +
+               "            zoom: 6,\n" +
+               "            attributionControl: true,\n" +
+               "            zoomControl: true\n" +
+               "        });\n" +
+               "        \n" +
+               "        // Ajouter la couche de tuiles OpenStreetMap\n" +
+               "        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {\n" +
+               "            attribution: '&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors',\n" +
+               "            maxZoom: 19\n" +
+               "        }).addTo(map);\n" +
+               "        \n" +
+               "        // Variable pour stocker le marqueur\n" +
+               "        var marker = null;\n" +
+               "        \n" +
+               "        // Fonction pour définir/déplacer le marqueur\n" +
+               "        function setMarker(lat, lng) {\n" +
+               "            // Supprimer le marqueur existant s'il y en a un\n" +
+               "            if (marker) {\n" +
+               "                map.removeLayer(marker);\n" +
+               "            }\n" +
+               "            \n" +
+               "            // Créer un nouveau marqueur\n" +
+               "            marker = L.marker([lat, lng], {\n" +
+               "                draggable: true,\n" +
+               "                title: 'Emplacement de l\\'événement'\n" +
+               "            }).addTo(map);\n" +
+               "            \n" +
+               "            // Ajouter une popup au marqueur\n" +
+               "            marker.bindPopup(\n" +
+               "                '<b>Emplacement sélectionné</b><br>' +\n" +
+               "                'Latitude: ' + lat.toFixed(6) + '<br>' +\n" +
+               "                'Longitude: ' + lng.toFixed(6)\n" +
+               "            ).openPopup();\n" +
+               "            \n" +
+               "            // Mettre à jour les coordonnées lorsque le marqueur est déplacé\n" +
+               "            marker.on('dragend', function() {\n" +
+               "                var pos = marker.getLatLng();\n" +
+               "                marker.bindPopup(\n" +
+               "                    '<b>Emplacement sélectionné</b><br>' +\n" +
+               "                    'Latitude: ' + pos.lat.toFixed(6) + '<br>' +\n" +
+               "                    'Longitude: ' + pos.lng.toFixed(6)\n" +
+               "                ).openPopup();\n" +
+               "                javaController.updateCoordinates(pos.lat, pos.lng);\n" +
+               "            });\n" +
+               "            \n" +
+               "            // Centrer la carte sur le marqueur\n" +
+               "            map.setView([lat, lng], 13);\n" +
+               "        }\n" +
+               "        \n" +
+               "        // Gérer les clics sur la carte\n" +
+               "        map.on('click', function(e) {\n" +
+               "            setMarker(e.latlng.lat, e.latlng.lng);\n" +
+               "            javaController.updateCoordinates(e.latlng.lat, e.latlng.lng);\n" +
+               "        });\n" +
+               "        \n" +
+               "        // Forcer le redimensionnement correct de la carte\n" +
+               "        setTimeout(function() { map.invalidateSize(); }, 100);\n" +
+               "        \n" +
+               "        // Redimensionner la carte quand la fenêtre change de taille\n" +
+               "        window.addEventListener('resize', function() {\n" +
+               "            map.invalidateSize();\n" +
+               "        });\n" +
+               "    </script>\n" +
+               "</body>\n" +
+               "</html>";
     }
 
     private void setupValidations() {
@@ -295,6 +469,65 @@ public class EventFormController {
             handleRetourListe();
         } catch (Exception ex) {
             showError("Une erreur est survenue lors de la sauvegarde : " + ex.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleGenerateImage(ActionEvent e) {
+        if (fieldTitre.getText() == null || fieldTitre.getText().trim().isEmpty()) {
+            showError("Veuillez d'abord saisir un titre pour l'événement");
+            return;
+        }
+        
+        try {
+            // Créer un nom unique pour l'image générée
+            String imageName = "generated_" + UUID.randomUUID().toString().substring(0, 8) + ".png";
+            
+            // Chemins pour l'image générée
+            Path imagePath = Paths.get(IMAGE_DIR + imageName);
+            
+            // Créer le répertoire s'il n'existe pas
+            Files.createDirectories(Paths.get(IMAGE_DIR));
+            
+            // Générer l'image via une requête web (services gratuits de génération d'images)
+            String title = fieldTitre.getText();
+            
+            // On utilise une couleur aléatoire
+            String[] colors = {"blue", "green", "red", "purple", "orange"};
+            String color = colors[(int)(Math.random() * colors.length)];
+            
+            // Construire l'URL vers un service de génération d'images
+            String serviceUrl = "https://placehold.co/600x400/" + color + "/white/png?text=" + 
+                             title.replace(" ", "+");
+            
+            // Télécharger l'image
+            try {
+                // On simule ici le téléchargement - en production, utilisez java.net.URL ou HttpClient
+                // pour télécharger réellement l'image depuis le service web
+                
+                // Pour le démo, on crée une image locale temporaire
+                Image generatedImage = new Image(serviceUrl);
+                imagePreview.setImage(generatedImage);
+                
+                // Mettre à jour l'interface
+                labelImagePath.setText(imageName);
+                
+                // Dans une implémentation réelle, sauvegardez l'image téléchargée
+                // Pour ce démo, on garde juste la référence
+                selectedImageFile = new File(serviceUrl);
+                
+                // Notifier l'utilisateur
+                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                successAlert.setTitle("Image générée");
+                successAlert.setHeaderText(null);
+                successAlert.setContentText("Une image d'affiche a été générée avec succès!");
+                successAlert.showAndWait();
+                
+            } catch (Exception ex) {
+                showError("Erreur lors de la génération de l'image: " + ex.getMessage());
+            }
+        } catch (IOException ex) {
+            showError("Erreur lors de la création du répertoire d'images: " + ex.getMessage());
         }
     }
 
