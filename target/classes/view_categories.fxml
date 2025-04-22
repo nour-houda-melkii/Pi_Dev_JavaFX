@@ -4,31 +4,61 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="mainContainer" prefHeight="600.0" prefWidth="800.0" spacing="15" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ViewCategoryController">
-    <padding>
-        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-    </padding>
+<BorderPane prefHeight="650.0" prefWidth="850.0" style="-fx-background-color: #f5f5f7;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.ViewCategoryController">
+    <top>
+        <!-- Enhanced Header Section -->
+        <VBox spacing="15">
+            <padding>
+                <Insets bottom="10.0" left="25.0" right="25.0" top="20.0" />
+            </padding>
 
-    <!-- Header Section with Back Button -->
-    <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 0 0 10 0;">
-        <Button onAction="#navigateToDashboard" style="-fx-background-color: #00BCD4; -fx-text-fill: white; -fx-background-radius: 5;" text="← Back" />
-        <HBox alignment="TOP_CENTER" HBox.hgrow="ALWAYS">
-            <children>
-                <Label prefHeight="30.0" prefWidth="186.0" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="View Categories" textAlignment="CENTER" textFill="#00bcd4">
+            <!-- App Bar -->
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Button onAction="#navigateToDashboard" prefHeight="35.0" prefWidth="76.0" style="-fx-background-color: #33ccff; -fx-text-fill: white; -fx-background-radius: 5; -fx-font-weight: bold; -fx-padding: 8 15;" text="← Back">
                     <font>
-                        <Font name="Berlin Sans FB" size="12.0" />
+                        <Font size="13" />
                     </font>
-                </Label>
-            </children>
-        </HBox>
-    </HBox>
+                </Button>
 
-    <!-- Category List with Border -->
-    <VBox style="-fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-radius: 5; -fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);" VBox.vgrow="ALWAYS">
-        <ListView fx:id="categoryListView" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS" />
-    </VBox>
-</VBox>
+                <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
+                    <Label prefHeight="38.0" prefWidth="237.0" style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Categories">
+                        <font>
+                            <Font name="System Bold" size="26.0" />
+                        </font>
+                    </Label>
+                </HBox>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <!-- Main Content Area -->
+        <VBox spacing="15" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="25.0" left="25.0" right="25.0" top="10.0" />
+            </padding>
+
+            <!-- Category Count Label -->
+            <HBox>
+                <Label fx:id="categoryCountLabel" alignment="TOP_CENTER" prefHeight="20.0" prefWidth="870.0" style="-fx-font-size: 14px; -fx-text-fill: #666666;" text="Showing all categories" />
+            </HBox>
+
+            <!-- Enhanced Category List -->
+            <VBox style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);" VBox.vgrow="ALWAYS">
+                <ListView fx:id="categoryListView" style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 5;" VBox.vgrow="ALWAYS">
+                    <placeholder>
+                        <Label style="-fx-text-fill: #7f8c8d;" text="No categories found" />
+                    </placeholder>
+                </ListView>
+            </VBox>
+
+            <!-- Status Bar -->
+            <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-padding: 10 0 0 0;" />
+        </VBox>
+    </center>
+</BorderPane>

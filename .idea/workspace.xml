@@ -5,35 +5,47 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="67f812a0-6c1d-4f08-bb79-468f0bf5180a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Services/AIDescriptionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Services/AIDescriptionService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AddCategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AddCategoryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AdminDashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AdminDashboardController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/CartViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/CartViewController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/CategoryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/DataHistoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/DataHistoryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/EditCategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/EditCategoryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/EditProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/EditProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/FavoritesViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/FavoritesViewController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ProductFrontController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ProductFrontController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/ListProduit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/ListProduit.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/add_category.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/add_category.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/admin_dashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/admin_dashboard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ViewCategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ViewCategoryController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/cart_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/cart_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/category.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/category.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/data_history_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data_history_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/edit_category.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/edit_category.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/edit_product.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/edit_product.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/favorites_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/favorites_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/product_client.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/product_client.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/view_categories.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/view_categories.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ListProduit.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/ListProduit.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/add_category.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/add_category.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/admin_dashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/admin_dashboard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Services/AIDescriptionService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Services/AIDescriptionService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/cart_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cart_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/category.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/category.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/CartViewController$TableButtonCell.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/CartViewController$TableButtonCell.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/AddCategoryController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/AddCategoryController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/AdminDashboardController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/AdminDashboardController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/CartViewController$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/CartViewController$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/CartViewController$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/CartViewController$TableButtonCell.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/controllers/CartViewController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/CartViewController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/CategoryController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/CategoryController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/EditCategoryController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/EditCategoryController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/EditProductController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/EditProductController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/EditProductController$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/EditProductController$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/EditProductController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/EditProductController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/FavoritesViewController$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/FavoritesViewController$TableButtonCell.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/FavoritesViewController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/FavoritesViewController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/controllers/ProductFrontController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ProductFrontController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/data_history_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/data_history_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/edit_category.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/edit_category.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/edit_product.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/edit_product.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ViewCategoryController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ViewCategoryController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ViewCategoryController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ViewCategoryController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/favorites_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/favorites_view.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/product_client.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/product_client.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/view_categories.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view_categories.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,8 +55,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="FxmlFile" />
         <option value="Class" />
+        <option value="FxmlFile" />
       </list>
     </option>
   </component>
@@ -96,7 +108,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
@@ -120,7 +132,7 @@
     <configuration name="produit" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="Main" />
       <module name="produit" />
-      <option name="VM_PARAMETERS" value=" --module-path &quot;C:\Users\nourm\OneDrive\Bureau\krayett zahy\javafx-sdk-17.0.14\lib&quot; --add-modules javafx.controls,javafx.fxml " />
+      <option name="VM_PARAMETERS" value=" --module-path &quot;C:\Users\nourm\OneDrive\Bureau\krayett zahy\javafx-sdk-17.0.14\lib&quot; --add-modules javafx.controls,javafx.fxml  --add-modules javafx.controls,javafx.fxml,javafx.web --add-exports javafx.graphics/com.sun.javafx.sg.prism=ALL-UNNAMED" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -194,7 +206,19 @@
       <workItem from="1744645870047" duration="3718000" />
       <workItem from="1744654464152" duration="10565000" />
       <workItem from="1744666136822" duration="347000" />
-      <workItem from="1744666647983" duration="409000" />
+      <workItem from="1744666647983" duration="3540000" />
+      <workItem from="1744701330224" duration="2845000" />
+      <workItem from="1744706692925" duration="5766000" />
+      <workItem from="1744724202065" duration="2491000" />
+      <workItem from="1744879149587" duration="76000" />
+      <workItem from="1744892773711" duration="601000" />
+      <workItem from="1744902715865" duration="199000" />
+      <workItem from="1744914270057" duration="1445000" />
+      <workItem from="1745003533094" duration="2400000" />
+      <workItem from="1745093328037" duration="1280000" />
+      <workItem from="1745098993961" duration="102000" />
+      <workItem from="1745264980438" duration="2516000" />
+      <workItem from="1745308508426" duration="506000" />
     </task>
     <servers />
   </component>
@@ -211,21 +235,6 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-method">
-          <url>file://$PROJECT_DIR$/src/main/java/controllers/ProductFrontController.java</url>
-          <line>292</line>
-          <properties class="controllers.ProductFrontController" method="toggleFavorite">
-            <option name="EMULATED" value="true" />
-            <option name="WATCH_EXIT" value="false" />
-          </properties>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

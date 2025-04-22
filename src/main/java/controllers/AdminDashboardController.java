@@ -107,7 +107,8 @@ public class AdminDashboardController {
         card.setPrefWidth(200);
         card.setPrefHeight(320);
         card.setStyle("-fx-background-color: white; " +
-                "-fx-border-color: #e0e0e0; " +
+                "-fx-border-color: black; " +
+                "-fx-border-width: 1.5; " +  // This sets a 2-pixel border width
                 "-fx-border-radius: 8; " +
                 "-fx-background-radius: 8; " +
                 "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);");
@@ -170,11 +171,9 @@ public class AdminDashboardController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/edit_product.fxml"));
             Parent root = loader.load();
 
-            // Get the controller and pass the product data
             EditProductController controller = loader.getController();
             controller.setProductToEdit(product);
 
-            // Replace current scene instead of creating a popup
             Stage stage = (Stage) productContainer.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Edit Product");
@@ -194,27 +193,20 @@ public class AdminDashboardController {
         try {
             String imagePath = product.getImagePath();
 
-            // Handle cases where path might be null or empty
             if (imagePath == null || imagePath.isEmpty()) {
                 setPlaceholderImage(imageView);
                 return;
             }
 
-            // Handle both absolute and relative paths
             Image image;
             if (imagePath.startsWith("/")) {
-                // Resource path (from JAR)
                 image = new Image(getClass().getResourceAsStream(imagePath));
             } else if (imagePath.startsWith("file:")) {
-                // Absolute file path
                 image = new Image(imagePath);
             } else {
-                // Relative path - try both resource and file system
                 try {
-                    // First try as resource
                     image = new Image(getClass().getResourceAsStream("/images/" + imagePath));
                 } catch (Exception e) {
-                    // Fall back to file system
                     image = new Image(new File(imagePath).toURI().toString());
                 }
             }
@@ -253,7 +245,6 @@ public class AdminDashboardController {
     @FXML
     private void handleFrontView() {
         try {
-            // Get the resource URL to verify it exists
             java.net.URL resourceUrl = getClass().getResource("/product_client.fxml");
 
             if (resourceUrl == null) {
@@ -267,7 +258,6 @@ public class AdminDashboardController {
             // Get the current stage
             Stage stage = (Stage) productContainer.getScene().getWindow();
 
-            // Set the new scene
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle("Front View");
@@ -295,7 +285,6 @@ public class AdminDashboardController {
     @FXML
     private void handleStatistics() {
         try {
-            // Get the resource URL to verify it exists
             java.net.URL resourceUrl = getClass().getResource("/statistics_view.fxml");
 
             if (resourceUrl == null) {
@@ -306,7 +295,6 @@ public class AdminDashboardController {
             FXMLLoader loader = new FXMLLoader(resourceUrl);
             Parent root = loader.load();
 
-            // Create a new stage for the statistics view
             Stage statisticsStage = new Stage();
             statisticsStage.setScene(new Scene(root));
             statisticsStage.setTitle("Product Statistics");
@@ -322,7 +310,6 @@ public class AdminDashboardController {
     @FXML
     private void handleDataHistory() {
         try {
-            // Get the resource URL to verify it exists
             java.net.URL resourceUrl = getClass().getResource("/data_history_view.fxml");
 
             if (resourceUrl == null) {
@@ -333,7 +320,6 @@ public class AdminDashboardController {
             FXMLLoader loader = new FXMLLoader(resourceUrl);
             Parent root = loader.load();
 
-            // Create a new stage for the data history view
             Stage historyStage = new Stage();
             historyStage.setScene(new Scene(root));
             historyStage.setTitle("Data History");
@@ -363,7 +349,6 @@ public class AdminDashboardController {
             // Get the current stage
             Stage stage = (Stage) productContainer.getScene().getWindow();
 
-            // Set the new scene
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle("View Categories");
@@ -376,7 +361,6 @@ public class AdminDashboardController {
     @FXML
     private void handleAddCategory() {
         try {
-            // Get the resource URL to verify it exists
             java.net.URL resourceUrl = getClass().getResource("/add_category.fxml");
 
             if (resourceUrl == null) {
@@ -387,10 +371,7 @@ public class AdminDashboardController {
             FXMLLoader loader = new FXMLLoader(resourceUrl);
             Parent root = loader.load();
 
-            // Get the current stage
             Stage stage = (Stage) productContainer.getScene().getWindow();
-
-            // Set the new scene
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle("Add Category");

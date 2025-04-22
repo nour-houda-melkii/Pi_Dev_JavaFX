@@ -2,6 +2,7 @@ package controllers;
 
 import entities.Category;
 import Services.CategoryServices;
+import Services.ProduitServices;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -9,24 +10,26 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 public class ViewCategoryController {
     @FXML private ListView<Category> categoryListView;
+    @FXML private Label categoryCountLabel;
 
     private final CategoryServices categoryService = new CategoryServices();
+    private final ProduitServices produitService = new ProduitServices();
     private final ObservableList<Category> categories = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-        // Set up custom cell factory for the ListView
+        // Set up custom cell factory for the ListView to display categories as cards with thick borders
         categoryListView.setCellFactory(param -> new ListCell<Category>() {
             @Override
             protected void updateItem(Category category, boolean empty) {
@@ -36,38 +39,86 @@ public class ViewCategoryController {
                     setText(null);
                     setGraphic(null);
                 } else {
-                    // Create components for each row
-                    Label nameLabel = new Label(category.getName());
-                    nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+                    // Create card container with THICK BORDERS
+                    VBox cardContainer = new VBox();
+                    cardContainer.getStyleClass().add("category-card");
+                    cardContainer.setStyle("-fx-background-color: white; " +
+                            "-fx-border-color: #33ccff; " + // Border color matching the back button
+                            "-fx-border-width: 3; " + // THICK border
+                            "-fx-border-radius: 8; " +
+                            "-fx-background-radius: 8; " +
+                            "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 8, 0, 0, 3); " +
+                            "-fx-padding: 18; " +
+                            "-fx-spacing: 12;");
 
+                    // Header with category name
+                    Label nameLabel = new Label(category.getName());
+                    nameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 20px; -fx-text-fill: #333333;");
+
+                    // Description
                     Label descLabel = new Label(category.getDescription());
-                    descLabel.setMaxWidth(300);
+                    descLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #666666;");
                     descLabel.setWrapText(true);
+                    descLabel.setMaxWidth(600);
+
+                    // Product count
+                    int productCount = 0;
+                    try {
+                        List<?> products = produitService.getByCategory(category.getId());
+                        productCount = products.size();
+                    } catch (SQLException e) {
+                        System.err.println("Error getting product count: " + e.getMessage());
+                    }
+
+                    HBox productCountBox = new HBox();
+                    productCountBox.setAlignment(Pos.CENTER_LEFT);
+                    productCountBox.setSpacing(5);
+                    productCountBox.setPadding(new Insets(5, 0, 5, 0));
+
+                    // Product count section with enhanced styling
+                    Label productIcon = new Label("📦");
+                    productIcon.setStyle("-fx-font-size: 18px;");
+
+                    Label productCountLabel = new Label(productCount + " Products");
+                    productCountLabel.setStyle("-fx-font-size: 15px; -fx-text-fill: #33ccff; -fx-font-weight: bold;");
+
+                    productCountBox.getChildren().addAll(productIcon, productCountLabel);
 
                     // Create a spacer
                     Region spacer = new Region();
                     HBox.setHgrow(spacer, Priority.ALWAYS);
 
-                    // Create buttons
+                    // Action buttons with consistent styling
                     Button editButton = new Button("Edit");
-                    editButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
+                    editButton.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; " +
+                            "-fx-background-radius: 4; -fx-padding: 8 15; -fx-font-weight: bold;");
                     editButton.setOnAction(event -> navigateToEditCategory(category));
 
                     Button deleteButton = new Button("Delete");
-                    deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
+                    deleteButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; " +
+                            "-fx-background-radius: 4; -fx-padding: 8 15; -fx-font-weight: bold;");
                     deleteButton.setOnAction(event -> confirmDeleteCategory(category));
 
-                    // Create details VBox
-                    VBox detailsBox = new VBox(5, nameLabel, descLabel);
+                    HBox buttonBox = new HBox(10, editButton, deleteButton);
+                    buttonBox.setAlignment(Pos.CENTER_RIGHT);
 
-                    // Create buttons HBox
-                    HBox buttonsBox = new HBox(10, editButton, deleteButton);
+                    // Add separator above the footer for visual separation
+                    Separator separator = new Separator();
+                    separator.setStyle("-fx-background-color: #e0e0e0;");
+                    separator.setPadding(new Insets(5, 0, 5, 0));
 
-                    // Main HBox for the cell
-                    HBox cellLayout = new HBox(15, detailsBox, spacer, buttonsBox);
-                    cellLayout.setStyle("-fx-padding: 10; -fx-alignment: center-left;");
+                    // Footer with buttons and product count
+                    HBox footer = new HBox();
+                    footer.setAlignment(Pos.CENTER_LEFT);
+                    footer.getChildren().addAll(productCountBox, spacer, buttonBox);
 
-                    setGraphic(cellLayout);
+                    // Add all elements to card
+                    cardContainer.getChildren().addAll(nameLabel, descLabel, separator, footer);
+
+                    // Set padding between cards
+                    setPadding(new Insets(8, 0, 8, 0));
+
+                    setGraphic(cardContainer);
                 }
             }
         });
@@ -83,6 +134,14 @@ public class ViewCategoryController {
     private void loadCategories() throws SQLException {
         categories.setAll(categoryService.showAll());
         categoryListView.setItems(categories);
+
+        // Update category count label
+        updateCategoryCountLabel();
+    }
+
+    private void updateCategoryCountLabel() {
+        int count = categories.size();
+        categoryCountLabel.setText("Showing " + count + " " + (count == 1 ? "category" : "categories"));
     }
 
     private void confirmDeleteCategory(Category category) {
@@ -139,8 +198,6 @@ public class ViewCategoryController {
             e.printStackTrace();
         }
     }
-
-
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

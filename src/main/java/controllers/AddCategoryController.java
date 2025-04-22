@@ -23,12 +23,10 @@ public class AddCategoryController {
 
     @FXML
     public void initialize() {
-        // Add listener to name field to enable generate button only when name is entered
         nameField.textProperty().addListener((observable, oldValue, newValue) -> {
             generateDescriptionButton.setDisable(newValue == null || newValue.trim().isEmpty());
         });
 
-        // Initially disable the generate button
         generateDescriptionButton.setDisable(true);
     }
 
@@ -36,15 +34,12 @@ public class AddCategoryController {
     private void generateAIDescription() {
         String categoryName = nameField.getText().trim();
         if (!categoryName.isEmpty()) {
-            // Show loading indicator
             descriptionField.setText("Generating description...");
 
-            // In a real application, you would want to do this in a background thread
-            // to avoid freezing the UI during API calls
+
             new Thread(() -> {
                 String generatedDescription = aiService.generateCategoryDescription(categoryName);
 
-                // Update UI on the JavaFX application thread
                 javafx.application.Platform.runLater(() -> {
                     descriptionField.setText(generatedDescription);
                 });
@@ -106,7 +101,6 @@ public class AddCategoryController {
             e.printStackTrace();
         }
     }
-
 
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

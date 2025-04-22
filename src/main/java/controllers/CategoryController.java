@@ -106,11 +106,8 @@ public class CategoryController {
     private void generateAIDescription() {
         String categoryName = nameField.getText().trim();
         if (!categoryName.isEmpty()) {
-            // Show loading indicator
             descriptionField.setText("Generating description...");
 
-            // In a real application, you would want to do this in a background thread
-            // to avoid freezing the UI during API calls
             new Thread(() -> {
                 String generatedDescription = aiService.generateCategoryDescription(categoryName);
 
@@ -213,7 +210,6 @@ public class CategoryController {
             // Get the current stage
             Stage stage = (Stage) categoryListView.getScene().getWindow();
 
-            // Set the new scene
             stage.setScene(new Scene(root));
             stage.setTitle("Edit Category");
             stage.show();

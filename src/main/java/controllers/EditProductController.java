@@ -60,12 +60,10 @@ public class EditProductController {
         try {
             loadCategories();
 
-            // Add listener to name field to enable generate button only when name is entered
             nameField.textProperty().addListener((observable, oldValue, newValue) -> {
                 generateDescriptionButton.setDisable(newValue == null || newValue.trim().isEmpty());
             });
 
-            // Initially disable the generate button
             generateDescriptionButton.setDisable(true);
 
         } catch (SQLException e) {
@@ -87,10 +85,8 @@ public class EditProductController {
         quantityField.setText(String.valueOf(produit.getQuantity()));
         imageField.setText(produit.getImagePath());
 
-        // Load the image preview
         loadImagePreview(produit.getImagePath());
 
-        // Set the category in the combo box
         try {
             for (Category category : categoryCombo.getItems()) {
                 if (category.getId() == produit.getCategoryId()) {
@@ -120,7 +116,6 @@ public class EditProductController {
             }
         });
 
-        // Same for the displayed value
         categoryCombo.setButtonCell(new ListCell<Category>() {
             @Override
             protected void updateItem(Category category, boolean empty) {
@@ -181,21 +176,17 @@ public class EditProductController {
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
             try {
-                // Create the target directory if it doesn't exist
                 File targetDir = new File("src/main/resources/images");
                 if (!targetDir.exists()) {
                     targetDir.mkdirs();
                 }
 
-                // Copy the file to the target directory
                 File destFile = new File(targetDir, selectedFile.getName());
                 Files.copy(selectedFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-                // Set the relative path in the image field
                 String imagePath = "src/main/resources/images/" + selectedFile.getName();
                 imageField.setText(imagePath);
 
-                // Update the image preview
                 loadImagePreview(imagePath);
 
             } catch (IOException e) {
@@ -209,15 +200,12 @@ public class EditProductController {
     void generateAIDescription() {
         String productName = nameField.getText().trim();
         if (!productName.isEmpty()) {
-            // Show loading indicator
             descriptionField.setText("Generating description...");
 
-            // In a real application, you would want to do this in a background thread
-            // to avoid freezing the UI during API calls
+
             new Thread(() -> {
                 String generatedDescription = aiService.generateProductDescription(productName);
 
-                // Update UI on the JavaFX application thread
                 javafx.application.Platform.runLater(() -> {
                     descriptionField.setText(generatedDescription);
                 });
@@ -230,13 +218,11 @@ public class EditProductController {
         if (!validateFields()) return;
 
         try {
-            // Check if we have a product to edit
             if (productToEdit == null) {
                 showAlert(Alert.AlertType.ERROR, "Error", "No product selected for editing!");
                 return;
             }
 
-            // Update the product object with form values
             productToEdit.setName(nameField.getText());
             productToEdit.setDescription(descriptionField.getText());
             productToEdit.setPrice(Double.parseDouble(priceField.getText()));
@@ -249,7 +235,6 @@ public class EditProductController {
 
             showSuccessAlert("Success", "Product updated successfully!");
 
-            // Go back to the admin dashboard
             navigateToAdminDashboard();
 
         } catch (SQLException e) {
@@ -259,7 +244,6 @@ public class EditProductController {
 
     @FXML
     void cancelEdit(ActionEvent event) {
-        // Go back to the admin dashboard without saving
         navigateToAdminDashboard();
     }
 
@@ -284,7 +268,6 @@ public class EditProductController {
             return false;
         }
 
-        // Check product name length - minimum 5 characters
         if (nameField.getText().trim().length() < 5) {
             showAlert(Alert.AlertType.ERROR, "Validation Error", "Product name must be at least 5 characters long!");
             return false;

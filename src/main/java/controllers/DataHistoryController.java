@@ -375,7 +375,7 @@ public class DataHistoryController {
         }
     }
 
-    // Inner class to represent a history entry item
+
     public static class HistoryEntryItem {
         private final String timestamp;
         private final String action;

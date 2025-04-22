@@ -60,7 +60,6 @@ public class AIDescriptionService {
         String prompt = "Generate a brief description for a product category named: " + categoryName;
         String result = generateDescription(prompt);
 
-        // If the result indicates an error, fall back to offline generation
         if (result.startsWith("Error generating description:") ||
                 result.startsWith("Failed to generate description")) {
             return generateOfflineCategoryDescription(categoryName);
@@ -85,7 +84,6 @@ public class AIDescriptionService {
             connection.setDoOutput(true);
             connection.setConnectTimeout(10000); // 10 second timeout
 
-            // Create request body with proper JSON escaping
             String escapedPrompt = prompt.replace("\\", "\\\\")
                     .replace("\"", "\\\"")
                     .replace("\n", "\\n");
@@ -154,7 +152,6 @@ public class AIDescriptionService {
                     }
 
                     if (content.length() > 0) {
-                        // Reset failed call counter on success
                         failedApiCallCount = 0;
                         return content.toString();
                     }

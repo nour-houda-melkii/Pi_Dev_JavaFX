@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.web.WebView?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.StripePaymentController">
+    <children>
+        <VBox layoutX="14.0" layoutY="14.0" prefHeight="572.0" prefWidth="772.0" spacing="15.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="20.0">
+                    <children>
+                        <Button mnemonicParsing="false" onAction="#handleCancel" prefHeight="30.0" prefWidth="100.0" style="-fx-background-color: #33ccff; -fx-text-fill: white;" text="Back" />
+                        <Label alignment="CENTER" prefHeight="40.0" prefWidth="600.0" text="Secure Payment" textFill="#3498db" HBox.hgrow="ALWAYS">
+                            <font>
+                                <Font name="System Bold" size="24.0" />
+                            </font>
+                        </Label>
+                    </children>
+                </HBox>
+
+                <!-- Order Summary Section -->
+                <VBox spacing="10.0" style="-fx-background-color: #f8f9fa; -fx-padding: 15; -fx-background-radius: 8;">
+                    <children>
+                        <Label text="Order Summary" textFill="#333333">
+                            <font>
+                                <Font name="System Bold" size="18.0" />
+                            </font>
+                        </Label>
+                        <HBox spacing="20.0">
+                            <children>
+                                <Label text="Order Reference:" textFill="#333333">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="orderReferenceLabel" text="ORD-00000000" textFill="#27ae60">
+                                    <font>
+                                        <Font name="System Bold" size="14.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </HBox>
+                        <HBox spacing="20.0">
+                            <children>
+                                <Label text="Total Amount:" textFill="#333333">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="totalAmountLabel" text="0.00 D" textFill="#27ae60">
+                                    <font>
+                                        <Font name="System Bold" size="14.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+
+                <!-- Payment Form Section -->
+                <VBox fx:id="paymentFormContainer" spacing="10.0" style="-fx-background-color: #f8f9fa; -fx-padding: 15; -fx-background-radius: 8;" VBox.vgrow="ALWAYS">
+                    <children>
+                        <Label text="Payment Information" textFill="#333333">
+                            <font>
+                                <Font name="System Bold" size="18.0" />
+                            </font>
+                        </Label>
+                        <Label text="Cardholder Name" textFill="#333333">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                        </Label>
+                        <TextField fx:id="cardholderNameField" promptText="Enter name as it appears on card" />
+
+                        <Label text="Card Details" textFill="#333333">
+                            <font>
+                                <Font size="14.0" />
+                            </font>
+                            <VBox.margin>
+                                <Insets top="10.0" />
+                            </VBox.margin>
+                        </Label>
+
+                        <!-- WebView will be used to display the Stripe Elements -->
+                        <WebView fx:id="paymentWebView" prefHeight="220.0" prefWidth="742.0" VBox.vgrow="ALWAYS" />
+                    </children>
+                </VBox>
+
+                <!-- Progress Indicator -->
+                <HBox alignment="CENTER">
+                    <children>
+                        <ProgressIndicator fx:id="progressIndicator" progress="-1.0" />
+                    </children>
+                </HBox>
+
+                <!-- Buttons Section -->
+                <HBox alignment="CENTER" prefHeight="50.0" prefWidth="772.0" spacing="20.0">
+                    <children>
+                        <Button mnemonicParsing="false" onAction="#handleCancel" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #e74c3c; -fx-text-fill: white;" text="Cancel" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </children>
+</AnchorPane>

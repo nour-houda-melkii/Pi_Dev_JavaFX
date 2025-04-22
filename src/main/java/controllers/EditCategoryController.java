@@ -24,7 +24,6 @@ public class EditCategoryController {
 
     @FXML
     public void initialize() {
-        // Add listener to name field to enable generate button only when name is entered
         nameField.textProperty().addListener((observable, oldValue, newValue) -> {
             generateDescriptionButton.setDisable(newValue == null || newValue.trim().isEmpty());
         });
@@ -40,7 +39,6 @@ public class EditCategoryController {
             nameField.setText(categoryToEdit.getName());
             descriptionField.setText(categoryToEdit.getDescription());
 
-            // Enable or disable the generate button based on whether the name is filled
             generateDescriptionButton.setDisable(nameField.getText() == null ||
                     nameField.getText().trim().isEmpty());
         }
@@ -50,15 +48,12 @@ public class EditCategoryController {
     private void generateAIDescription() {
         String categoryName = nameField.getText().trim();
         if (!categoryName.isEmpty()) {
-            // Show loading indicator
             descriptionField.setText("Generating description...");
 
-            // In a real application, you would want to do this in a background thread
-            // to avoid freezing the UI during API calls
+
             new Thread(() -> {
                 String generatedDescription = aiService.generateCategoryDescription(categoryName);
 
-                // Update UI on the JavaFX application thread
                 javafx.application.Platform.runLater(() -> {
                     descriptionField.setText(generatedDescription);
                 });
@@ -76,7 +71,6 @@ public class EditCategoryController {
             return;
         }
 
-        // Check category name length - minimum 5 characters
         if (newName.length() < 5) {
             showAlert("Input Error", "Category name must be at least 5 characters long");
             return;
@@ -105,13 +99,10 @@ public class EditCategoryController {
     @FXML
     private void navigateBack() {
         try {
-            // Load the category management FXML file
             Parent root = FXMLLoader.load(getClass().getResource("/view_categories.fxml"));
 
-            // Get the current stage
             Stage stage = (Stage) nameField.getScene().getWindow();
 
-            // Set the new scene
             stage.setScene(new Scene(root));
             stage.setTitle("Category Management");
             stage.show();

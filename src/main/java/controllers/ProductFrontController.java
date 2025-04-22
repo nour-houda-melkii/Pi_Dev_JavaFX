@@ -195,8 +195,8 @@ public class ProductFrontController {
         card.setPrefWidth(200);
         card.setPrefHeight(350);
         card.setStyle("-fx-background-color: white; " +
-                "-fx-border-color: #f0f0f0; " +
-                "-fx-border-radius: 8; " +
+                "-fx-border-color: black; " +
+                "-fx-border-width: 1.5; " +                 "-fx-border-radius: 8; " +
                 "-fx-background-radius: 8; " +
                 "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 3, 0, 0, 1);");
 
@@ -335,17 +335,17 @@ public class ProductFrontController {
             FavoritesViewController controller = loader.getController();
             controller.setFavoriteProducts(favoriteProducts);
 
-            Stage stage = new Stage();
+            // Replace the current scene instead of creating a new stage
+            Stage stage = (Stage) productContainer.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Favorites");
-            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            showAlert("Error", "Failed to open favorites view: " + e.getMessage());
+            showAlert("Error", "Failed to navigate to favorites view: " + e.getMessage());
         }
     }
 
-    @FXML
+        @FXML
     private void handleBackToAdmin() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin_dashboard.fxml"));
@@ -370,4 +370,6 @@ public class ProductFrontController {
         System.out.println("tesst");
     }
 
+    public void setCartProducts(List<Produit> cartProducts) {
+    }
 }
