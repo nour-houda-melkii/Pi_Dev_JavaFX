@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.controllers.UpdatePatientController"
+      spacing="20"
+      style="-fx-padding: 25; -fx-background-color: #f8f9fa;"
+      stylesheets="@/styles/styleUpdatePatient/updatePatient.css">
+
+    <!-- Title and description -->
+    <Label text="Update Patient" styleClass="title-label"/>
+    <Label text="Use this form to update the patient's information. Make sure to fill out all required fields."
+           styleClass="description-label"/>
+
+    <!-- Two-column form -->
+    <HBox spacing="30" alignment="TOP_LEFT">
+        <!-- Left column -->
+        <VBox spacing="15" prefWidth="300">
+            <!-- First Name -->
+            <VBox spacing="5">
+                <Label text="First Name" styleClass="form-label"/>
+                <TextField fx:id="firstNameField" styleClass="form-control"/>
+                <Label fx:id="firstNameError" styleClass="error-label" visible="false"/>
+            </VBox>
+
+            <!-- Email -->
+            <VBox spacing="5">
+                <Label text="Email" styleClass="form-label"/>
+                <TextField fx:id="emailField" styleClass="form-control"/>
+                <Label fx:id="emailError" styleClass="error-label" visible="false"/>
+            </VBox>
+
+            <!-- Address -->
+            <VBox spacing="5">
+                <Label text="Address" styleClass="form-label"/>
+                <TextField fx:id="addressField" styleClass="form-control"/>
+                <Label fx:id="addressError" styleClass="error-label" visible="false"/>
+            </VBox>
+
+            <!-- Age -->
+            <VBox spacing="5">
+                <Label text="Age" styleClass="form-label"/>
+                <TextField fx:id="ageField" styleClass="form-control"/>
+                <Label fx:id="ageError" styleClass="error-label" visible="false"/>
+            </VBox>
+        </VBox>
+
+        <!-- Right column -->
+        <VBox spacing="15" prefWidth="300">
+            <!-- Last Name -->
+            <VBox spacing="5">
+                <Label text="Last Name" styleClass="form-label"/>
+                <TextField fx:id="lastNameField" styleClass="form-control"/>
+                <Label fx:id="lastNameError" styleClass="error-label" visible="false"/>
+            </VBox>
+
+            <!-- Phone -->
+            <VBox spacing="5">
+                <Label text="Phone" styleClass="form-label"/>
+                <TextField fx:id="phoneField" styleClass="form-control"/>
+                <Label fx:id="phoneError" styleClass="error-label" visible="false"/>
+            </VBox>
+
+            <!-- Gender -->
+            <VBox spacing="5">
+                <Label text="Gender" styleClass="form-label"/>
+                <ComboBox fx:id="genderComboBox" styleClass="form-control"/>
+                <Label fx:id="genderError" styleClass="error-label" visible="false"/>
+            </VBox>
+
+            <!-- Buttons -->
+            <HBox spacing="10" style="-fx-padding: 20 0 0 0;">
+                <Button text="Back to List" onAction="#handleBackToList" styleClass="btn-secondary">
+                    <graphic>
+                        <Text styleClass="icon"/>
+                    </graphic>
+                </Button>
+                <Button text="Save" onAction="#handleUpdate" styleClass="btn-primary"/>
+            </HBox>
+        </VBox>
+    </HBox>
+</VBox>

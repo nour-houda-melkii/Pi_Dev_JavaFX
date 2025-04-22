@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.controllers.DetailsPatientController"
+      spacing="20"
+      style="-fx-padding: 25; -fx-background-color: #f8f9fa;"
+      stylesheets="@/styles/styleDetailsPatient/details.css">
+
+    <!-- Title and back button -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Button onAction="#handleBack" styleClass="btn-back">
+            <graphic>
+                <Text text="←" styleClass="back-icon"/>
+            </graphic>
+        </Button>
+        <Label text="Patient Details" styleClass="title-label"/>
+    </HBox>
+
+    <!-- Details card -->
+    <GridPane styleClass="detail-card" hgap="20" vgap="15">
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" minWidth="100"/>
+            <ColumnConstraints halignment="LEFT" minWidth="200"/>
+        </columnConstraints>
+
+        <!-- Row 1 -->
+        <Label text="Full Name:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="field-label"/>
+        <Label fx:id="fullNameField" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="value-label"/>
+
+        <!-- Row 2 -->
+        <Label text="Email:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="field-label"/>
+        <Label fx:id="emailField" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="value-label"/>
+
+        <!-- Row 3 -->
+        <Label text="Phone:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="field-label"/>
+        <Label fx:id="phoneField" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="value-label"/>
+
+        <!-- Row 4 -->
+        <Label text="Address:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="field-label"/>
+        <Label fx:id="addressField" GridPane.rowIndex="4" GridPane.columnIndex="1" styleClass="value-label"/>
+
+        <!-- Row 5 -->
+        <Label text="Age:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="field-label"/>
+        <Label fx:id="ageField" GridPane.rowIndex="5" GridPane.columnIndex="1" styleClass="value-label"/>
+
+        <!-- Row 6 -->
+        <Label text="Gender:" GridPane.rowIndex="6" GridPane.columnIndex="0" styleClass="field-label"/>
+        <Label fx:id="genderField" GridPane.rowIndex="6" GridPane.columnIndex="1" styleClass="value-label"/>
+
+        <Button text="View Medical File" onAction="#handleViewMedicalFile" styleClass="btn-medical-file"
+                GridPane.rowIndex="7" GridPane.columnSpan="2" alignment="CENTER"/>
+
+    </GridPane>
+</VBox>

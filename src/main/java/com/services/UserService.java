@@ -1,0 +1,416 @@
+package com.services;
+
+import com.models.User;
+import com.demo.enums.Role;
+import com.demo.enums.Specialite;
+import com.utils.DataSource;
+import com.utils.PasswordGenerator;
+import com.utils.PasswordHasher;
+import com.utils.WelcomeEmailService;
+import com.demo.enums.Gender;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.List;
+
+public class UserService implements IServiceUser<User> {
+
+    private final Connection connection;
+
+    public UserService() {
+        this.connection = DataSource.getInstance().getConnection();
+    }
+
+    // ============ MÉTHODES COMMUNES ============
+    @Override
+    public void ajouterUser(User user) {
+        String req = "INSERT INTO user (email, password, first_name, last_name, role, address, phone_number, age, gender, numero_licence, specialite) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement pst = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
+            setUserParameters(pst, user);
+            pst.executeUpdate();
+
+            try (ResultSet rs = pst.getGeneratedKeys()) {
+                if (rs.next()) {
+                    user.setId(rs.getInt(1));
+                }
+            }
+        } catch (SQLException e) {
+            handleSQLException("Erreur lors de l'ajout", e);
+        }
+    }
+
+    @Override
+    public void modifierUser(User user) {
+        String req = "UPDATE user SET email=?, password=?, first_name=?, last_name=?, role=?, "
+                + "address=?, phone_number=?, age=?, gender=?, numero_licence=?, specialite=? WHERE id=?";
+
+        try (PreparedStatement pst = connection.prepareStatement(req)) {
+            setUserParameters(pst, user);
+            pst.setInt(12, user.getId());
+            pst.executeUpdate();
+        } catch (SQLException e) {
+            handleSQLException("Erreur lors de la modification", e);
+        }
+    }
+
+    @Override
+    public void supprimerUser(User user) {
+        supprimerUserById(user.getId());
+    }
+
+    private void supprimerUserById(int id) {
+        String req = "DELETE FROM user WHERE id=?";
+        executeDelete(req, id, "Utilisateur");
+    }
+
+    @Override
+    public List<User> rechercherTousUsers() {
+        return executeUserQuery("SELECT * FROM user");
+    }
+
+    @Override
+    public User rechercherUserParId(int id) {
+        return executeSingleUserQuery("SELECT * FROM user WHERE id=?", id);
+    }
+
+    // ============ MÉTHODES MÉDECINS ============
+    @Override
+    public void ajouterMedecin(User medecin) {
+        try {
+            String plainPassword = PasswordGenerator.generateSecurePassword();
+            medecin.setPassword(PasswordHasher.hashPassword(plainPassword));
+            validateMedecin(medecin);
+            medecin.setRole(Role.MEDECIN);
+            ajouterUser(medecin);
+            WelcomeEmailService.sendWelcomeEmail(medecin, plainPassword);
+            System.out.println("✅ Médecin " + medecin.getFirstName() + " " + medecin.getLastName()
+                    + " ajouté avec succès. ID: " + medecin.getId());
+        } catch (Exception e) {
+            System.err.println("❌ Erreur lors de l'ajout du médecin: " + e.getMessage());
+            throw e; // Re-lancer l'exception pour la gestion d'erreur
+        }
+    }
+
+    @Override
+    public void modifierMedecin(User medecin) {
+        try {
+            validateMedecin(medecin);
+            if (!Role.MEDECIN.equals(medecin.getRole())) {
+                throw new IllegalArgumentException("Le rôle doit être MEDECIN");
+            }
+            modifierUser(medecin);
+            System.out.println("✅ Médecin ID " + medecin.getId() + " modifié avec succès");
+        } catch (Exception e) {
+            System.err.println("❌ Erreur modification médecin: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public void supprimerMedecin(int id) {
+        try {
+            executeDelete("DELETE FROM user WHERE id=? AND role='MEDECIN'", id, "Médecin");
+            System.out.println("✅ Médecin ID " + id + " supprimé avec succès");
+        } catch (Exception e) {
+            System.err.println("❌ Erreur suppression médecin: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    @Override
+    public List<User> rechercherTousMedecins() {
+        try {
+            List<User> medecins = executeUserQuery("SELECT * FROM user WHERE role='MEDECIN'");
+
+            System.out.println("🔍 " + medecins.size() + " medecin(s) trouvé(s)");
+
+            return medecins;
+
+        } catch (Exception e) {
+            System.err.println("❌ Erreur lors de la recherche des medecins: " + e.getMessage());
+            throw new RuntimeException("Erreur d'accès aux données des medecins", e);
+        }
+    }
+
+    @Override
+    public User rechercherMedecinParId(int id) {
+        try {
+            User user = executeSingleUserQuery("SELECT * FROM user WHERE id=? AND role='MEDECIN'", id);
+            if (user == null) {
+                throw new IllegalArgumentException("Aucun médecin trouvé avec l'ID: " + id);
+            }
+            System.out.println("🔍 Médecin trouvé: " + user.getFirstName() + " " + user.getLastName());
+            return user;
+        } catch (Exception e) {
+            System.err.println("❌ Erreur recherche médecin: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    // ============ MÉTHODES PATIENTS ============
+    @Override
+    public void ajouterPatient(User patient) {
+        try {
+            // 1. Génération du mot de passe sécurisé
+            String plainPassword = PasswordGenerator.generateSecurePassword();
+
+            // 2. Hashage et stockage du mot de passe
+            patient.setPassword(PasswordHasher.hashPassword(plainPassword)); // Hash le mdp généré
+
+            // 3. Configuration du patient
+            patient.setRole(Role.PATIENT);
+            patient.setNumeroLicence(null);
+            patient.setSpecialite(null);
+
+            // 4. Enregistrement en base
+            ajouterUser(patient);
+
+            // 5. Envoi de l'email avec le mot de passe en clair
+            WelcomeEmailService.sendWelcomeEmail(patient, plainPassword);
+
+            System.out.println("✅ Patient " + patient.getFirstName() + " ajouté. ID: " + patient.getId());
+        } catch (Exception e) {
+            System.err.println("❌ Erreur ajout patient: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    public boolean modifierPatient(User patient) {
+        try {
+            // Validation du rôle
+            if (!Role.PATIENT.equals(patient.getRole())) {
+                String errorMsg = "Tentative de modification avec un rôle incorrect. Rôle actuel: " + patient.getRole();
+                System.err.println("❌ " + errorMsg);
+                throw new IllegalArgumentException(errorMsg);
+            }
+
+            // Nettoyage des champs spécifiques aux médecins
+            patient.setNumeroLicence(null);
+            patient.setSpecialite(null);
+
+            // Modification effective
+            modifierUser(patient);
+
+            System.out.println("✅ Patient ID " + patient.getId() + " (" + patient.getFirstName()
+                    + " " + patient.getLastName() + ") modifié avec succès");
+
+            return true; // ← Retourner true en cas de succès
+
+        } catch (Exception e) {
+            System.err.println("❌ Échec de la modification du patient: " + e.getMessage());
+            e.printStackTrace();
+            return false; // ← Retourner false seulement en cas d'erreur
+        }
+    }
+
+    @Override
+    public void supprimerPatient(int id) {
+        try {
+            // D'abord récupérer le patient pour le log
+            User patient = rechercherPatientParId(id);
+
+            // Exécution de la suppression
+            executeDelete("DELETE FROM user WHERE id=? AND role='PATIENT'", id, "Patient");
+
+            System.out.println("✅ Patient ID " + id + " (" + patient.getFirstName()
+                    + " " + patient.getLastName() + ") supprimé avec succès");
+
+        } catch (IllegalArgumentException e) {
+            System.err.println("❌ Suppression impossible - " + e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            System.err.println("❌ Erreur inattendue lors de la suppression du patient ID " + id);
+            throw new RuntimeException("Erreur système lors de la suppression", e);
+        }
+    }
+
+    @Override
+    public List<User> rechercherTousPatients() {
+        try {
+            List<User> patients = executeUserQuery("SELECT * FROM user WHERE role='PATIENT'");
+
+            System.out.println("🔍 " + patients.size() + " patient(s) trouvé(s)");
+
+            return patients;
+
+        } catch (Exception e) {
+            System.err.println("❌ Erreur lors de la recherche des patients: " + e.getMessage());
+            throw new RuntimeException("Erreur d'accès aux données des patients", e);
+        }
+    }
+
+    @Override
+    public User rechercherPatientParId(int id) {
+        try {
+            User user = executeSingleUserQuery("SELECT * FROM user WHERE id=? AND role='PATIENT'", id);
+
+            if (user == null) {
+                String errorMsg = "Aucun patient trouvé avec l'ID: " + id;
+                System.err.println("🔍 " + errorMsg);
+                throw new IllegalArgumentException(errorMsg);
+            }
+
+            System.out.println("🔍 Patient trouvé: " + user.getFirstName()
+                    + " " + user.getLastName() + " (ID: " + id + ")");
+
+            return user;
+
+        } catch (IllegalArgumentException e) {
+            throw e; // On propage les erreurs métier
+        } catch (Exception e) {
+            System.err.println("❌ Erreur technique lors de la recherche du patient ID " + id);
+            throw new RuntimeException("Erreur système lors de la recherche", e);
+        }
+    }
+
+
+    // Dans UserService.java
+    /**
+     * Récupère le contenu du fichier médical d'un patient
+     * @param patientId ID du patient dont on veut récupérer le dossier médical
+     * @return Pair contenant le nom du fichier et son contenu en bytes
+     * @throws IOException Si erreur de lecture du fichier
+     * @throws IllegalArgumentException Si le patient n'existe pas ou n'a pas de fichier médical
+     */
+    public AbstractMap.SimpleEntry<String, byte[]> getMedicalFileContent(int patientId) throws IOException {
+        // 1. Vérifier que le patient existe
+        User patient = rechercherPatientParId(patientId);
+        if (patient == null) {
+            throw new IllegalArgumentException("Patient introuvable avec l'ID: " + patientId);
+        }
+
+        // 2. Vérifier si un fichier existe
+        if (patient.getMedicalFile() == null || patient.getMedicalFile().isEmpty()) {
+            throw new IllegalArgumentException("Aucun fichier médical trouvé pour ce patient");
+        }
+
+        // 3. Chemin du fichier
+        String medicalFilesDir = "uploads/medical_files/";
+        String filePath = medicalFilesDir + patient.getMedicalFile();
+
+        // 4. Vérifier que le fichier existe physiquement
+        File file = new File(filePath);
+        if (!file.exists()) {
+            throw new IOException("Fichier médical introuvable sur le serveur: " + filePath);
+        }
+
+        // 5. Lire le fichier
+        try (FileInputStream fis = new FileInputStream(filePath)) {
+            byte[] fileContent = fis.readAllBytes();
+            return new AbstractMap.SimpleEntry<>(patient.getMedicalFile(), fileContent);
+        }
+    }
+
+    // ============ MÉTHODES UTILITAIRES ============
+    private void setUserParameters(PreparedStatement pst, User user) throws SQLException {
+        pst.setString(1, user.getEmail());
+        pst.setString(2, user.getPassword());
+        pst.setString(3, user.getFirstName());
+        pst.setString(4, user.getLastName());
+        pst.setString(5, user.getRole().name());
+        pst.setString(6, user.getAddress());
+        pst.setString(7, user.getPhoneNumber());
+        pst.setInt(8, user.getAge());
+        pst.setString(9, user.getGender() != null ? user.getGender().name() : null);
+
+        if (Role.MEDECIN.equals(user.getRole())) {
+            pst.setString(10, user.getNumeroLicence());
+            pst.setString(11, user.getSpecialite() != null ? user.getSpecialite().name() : null);
+        } else {
+            pst.setNull(10, Types.VARCHAR);
+            pst.setNull(11, Types.VARCHAR);
+        }
+    }
+
+    private void validateMedecin(User medecin) {
+        if (medecin.getNumeroLicence() == null || medecin.getSpecialite() == null) {
+            throw new IllegalArgumentException("Un médecin doit avoir un numéro de licence et une spécialité");
+        }
+    }
+
+    private List<User> executeUserQuery(String query, Object... params) {
+        List<User> users = new ArrayList<>();
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            setParameters(pst, params);
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    users.add(mapResultSetToUser(rs));
+                }
+            }
+        } catch (SQLException e) {
+            handleSQLException("Erreur lors de la recherche", e);
+        }
+        return users;
+    }
+
+    private User executeSingleUserQuery(String query, Object... params) {
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            setParameters(pst, params);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToUser(rs);
+                }
+            }
+        } catch (SQLException e) {
+            handleSQLException("Erreur lors de la recherche", e);
+        }
+        return null;
+    }
+
+    private User mapResultSetToUser(ResultSet rs) throws SQLException {
+        User user = new User();
+        user.setId(rs.getInt("id"));
+        user.setEmail(rs.getString("email"));
+        user.setPassword(rs.getString("password"));
+        user.setFirstName(rs.getString("first_name"));
+        user.setLastName(rs.getString("last_name"));
+        user.setRole(Role.valueOf(rs.getString("role")));
+        user.setAddress(rs.getString("address"));
+        user.setPhoneNumber(rs.getString("phone_number"));
+        user.setAge(rs.getInt("age"));
+
+        String genderStr = rs.getString("gender");
+        user.setGender(genderStr != null ? Gender.valueOf(genderStr) : null);
+
+        user.setMedicalFile(rs.getString("medical_file"));
+
+        if (Role.MEDECIN.equals(user.getRole())) {
+            user.setNumeroLicence(rs.getString("numero_licence"));
+            String specialiteStr = rs.getString("specialite");
+            user.setSpecialite(specialiteStr != null ? Specialite.valueOf(specialiteStr) : null);
+        }
+
+        return user;
+    }
+
+    private void executeDelete(String query, int id, String entityName) {
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            pst.setInt(1, id);
+            int rows = pst.executeUpdate();
+            if (rows == 0) {
+                throw new IllegalArgumentException(entityName + " non trouvé avec l'ID: " + id);
+            }
+        } catch (SQLException e) {
+            handleSQLException("Erreur lors de la suppression", e);
+        }
+    }
+
+    private void setParameters(PreparedStatement pst, Object... params) throws SQLException {
+        for (int i = 0; i < params.length; i++) {
+            pst.setObject(i + 1, params[i]);
+        }
+    }
+
+    private void handleSQLException(String message, SQLException e) {
+        System.err.println(message + ": " + e.getMessage());
+        e.printStackTrace();
+        throw new RuntimeException("Erreur de base de données", e);
+    }
+}

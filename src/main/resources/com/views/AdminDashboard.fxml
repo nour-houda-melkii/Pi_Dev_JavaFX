@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            stylesheets="@/styles/admin.css"
+            fx:controller="com.controllers.AdminDashboardController">
+
+    <!-- Top - Header -->
+    <top>
+        <HBox style="-fx-background-color: #012970; -fx-padding: 15;">
+            <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                <Image url="@/assets/img/logo.png"/>
+            </ImageView>
+            <Label text="SAHATECK" styleClass="header-title"/>
+
+            <!-- Menu Button -->
+            <Button styleClass="menu-toggle-btn" onAction="#toggleSidebar">
+                <graphic>
+                    <ImageView fitWidth="20" fitHeight="20">
+
+                    </ImageView>
+                </graphic>
+            </Button>
+        </HBox>
+    </top>
+
+    <!-- Left - Sidebar -->
+    <left>
+        <VBox fx:id="sidebar" styleClass="sidebar" spacing="10">
+            <!-- Dashboard -->
+            <Button text="Dashboard" styleClass="sidebar-btn" onAction="#showDashboard">
+                <graphic>
+                    <ImageView fitWidth="20" fitHeight="20">
+
+                    </ImageView>
+                </graphic>
+            </Button>
+
+
+            <!-- User Management -->
+            <VBox spacing="5">
+                <Button text="User Management ▼" styleClass="menu-header-btn" onAction="#toggleUserMenu"/>
+                <VBox fx:id="userMenu" styleClass="submenu-container" spacing="5" managed="false" visible="false">
+                    <Button text="Doctors" styleClass="submenu-btn" onAction="#showDoctors"/>
+                    <Button text="Patients" styleClass="submenu-btn" onAction="#showPatients"/>
+                </VBox>
+            </VBox>
+
+            <!-- Profile & Logout -->
+            <Button text="Profile" styleClass="sidebar-btn" onAction="#showProfile"/>
+            <Button text="Sign Out" styleClass="sidebar-btn" onAction="#logout"/>
+        </VBox>
+    </left>
+
+    <!-- Center - Content Area -->
+    <center>
+        <StackPane fx:id="contentPane">
+            <!-- Default content -->
+            <Label text="Welcome to Admin Dashboard" styleClass="welcome-text"/>
+        </StackPane>
+    </center>
+</BorderPane>

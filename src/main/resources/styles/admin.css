@@ -1,0 +1,85 @@
+/* Main Styles */
+.root {
+    -fx-font-family: 'Poppins';
+}
+
+/* Header */
+.header-title {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 10px;
+}
+
+.menu-toggle-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+/* Sidebar */
+.sidebar {
+    -fx-background-color: #f8f9fa;
+    -fx-padding: 15px;
+    -fx-min-width: 250px;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 0 1px 0 0;
+}
+
+.sidebar-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #495057;
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10px 15px;
+    -fx-border-radius: 5px;
+}
+
+.sidebar-btn:hover {
+    -fx-background-color: #e9ecef;
+}
+
+.sidebar-accordion {
+    -fx-box-border: transparent;
+}
+
+.accordion-header {
+    -fx-font-weight: bold;
+}
+
+.submenu-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #6c757d;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 8px 15px 8px 30px;
+}
+
+.submenu-btn:hover {
+    -fx-text-fill: #0d6efd;
+}
+
+/* Content */
+.welcome-text {
+    -fx-font-size: 24px;
+    -fx-text-fill: #012970;
+}
+
+/* Ajoutez ces styles */
+.menu-header-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #495057;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10px 15px;
+    -fx-border-radius: 5px;
+    -fx-content-display: left;
+}
+
+.menu-header-btn:hover {
+    -fx-background-color: #e9ecef;
+}
+
+.submenu-container {
+    -fx-padding: 0 0 0 20px;
+}

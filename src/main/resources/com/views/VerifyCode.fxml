@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane prefHeight="600" prefWidth="1000" stylesheets="@/styles/styleLogin/login.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.VerifyCodeController">
+
+    <!-- Partie gauche bleue avec image -->
+    <left>
+        <StackPane style="-fx-background-color: #CAF0F8;" BorderPane.alignment="CENTER">
+            <ImageView fitHeight="350" fitWidth="350" preserveRatio="true">
+                <Image url="@/assets/img/undraw_verified_m721.png" />
+            </ImageView>
+        </StackPane>
+    </left>
+
+    <!-- Partie droite formulaire -->
+    <center>
+        <VBox alignment="TOP_CENTER" spacing="20" style="-fx-padding: 40; -fx-background-color: #f8f9fa;">
+            <!-- Logo -->
+            <ImageView fitHeight="80" fitWidth="100">
+                <Image url="@/assets/img/logo.png" />
+            </ImageView>
+
+            <!-- Titre -->
+            <Text styleClass="title" text="Reset Password" />
+
+            <!-- Message d'erreur -->
+            <Label fx:id="errorLabel" styleClass="error-message" visible="false" />
+
+            <!-- Formulaire -->
+            <VBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 20 0;">
+                <!-- Code de vérification -->
+                <VBox spacing="5">
+                    <Label styleClass="form-label" text="Code *" />
+                    <TextField fx:id="codeField" style="-fx-pref-width: 400px;" styleClass="form-control" />
+                    <Text style="-fx-fill: #6c757d; -fx-font-size: 12px;" text="Verify your email and enter your reset code." />
+                </VBox>
+
+                <!-- Bouton de validation -->
+                <Button onAction="#handleVerifyCode" style="-fx-pref-width: 400px;" styleClass="login-button" text="Enter reset code" />
+            </VBox>
+
+            <!-- Retour au login -->
+            <HBox alignment="CENTER_RIGHT">
+                <Button onAction="#handleBackToLogin" styleClass="forgot-password" text="Back to login" />
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

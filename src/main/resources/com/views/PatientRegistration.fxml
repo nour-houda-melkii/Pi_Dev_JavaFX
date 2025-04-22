@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.collections.FXCollections?>
+<?import java.net.URL?>
+
+<?import java.lang.String?>
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.controllers.PatientRegistrationController"
+            prefHeight="700.0" prefWidth="1200.0"
+            style="-fx-background-color: #ffffff;">
+
+    <stylesheets>
+        <URL value="@/styles/styleRegister/style.css" />
+    </stylesheets>
+
+    <HBox AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+
+        <!-- Left Side - Image -->
+        <VBox alignment="CENTER" prefWidth="600" style="-fx-background-color: #CAF0F8;">
+            <ImageView fitWidth="350" fitHeight="350">
+                <Image url="@/assets/img/undraw_hello_ccwj.png" />
+            </ImageView>
+        </VBox>
+
+        <!-- Right Side - Form -->
+        <VBox alignment="CENTER" spacing="20" style="-fx-background-color: #F5F5F5;" prefWidth="600">
+            <padding>
+                <Insets top="40" right="40" bottom="40" left="40"/>
+            </padding>
+
+            <!-- Logo and Title -->
+            <VBox alignment="CENTER" spacing="10">
+                <ImageView fitWidth="100" fitHeight="80">
+                    <Image url="@/assets/img/logo.png" />
+                </ImageView>
+                <Text text="Create your account as Patient" styleClass="title-text" />
+            </VBox>
+
+            <!-- Form Fields -->
+            <GridPane hgap="10" vgap="5">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="50" />
+                    <ColumnConstraints percentWidth="50" />
+                </columnConstraints>
+
+                <!-- First Name -->
+                <Label text="First Name" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                <TextField fx:id="firstNameField" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                <Label fx:id="firstNameError" textFill="red" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+
+                <!-- Last Name -->
+                <Label text="Last Name" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+                <TextField fx:id="lastNameField" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                <Label fx:id="lastNameError" textFill="red" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+                <!-- Email -->
+                <Label text="Email" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                <TextField fx:id="emailField" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+                <Label fx:id="emailError" textFill="red" GridPane.rowIndex="5" GridPane.columnIndex="0" />
+
+                <!-- Phone Number -->
+                <Label text="Phone Number" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+                <TextField fx:id="phoneField" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+                <Label fx:id="phoneError" textFill="red" GridPane.rowIndex="5" GridPane.columnIndex="1" />
+
+                <!-- Address -->
+                <Label text="Address" GridPane.rowIndex="6" GridPane.columnIndex="0" />
+                <TextField fx:id="addressField" GridPane.rowIndex="7" GridPane.columnIndex="0" />
+                <Label fx:id="addressError" textFill="red" GridPane.rowIndex="8" GridPane.columnIndex="0" />
+
+                <!-- Gender -->
+                <Label text="Gender" GridPane.rowIndex="6" GridPane.columnIndex="1" />
+                <ComboBox fx:id="genderComboBox" GridPane.rowIndex="7" GridPane.columnIndex="1">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Male" />
+                            <String fx:value="Female" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+                <Label fx:id="genderError" textFill="red" GridPane.rowIndex="8" GridPane.columnIndex="1" />
+
+                <!-- Age -->
+                <Label text="Age" GridPane.rowIndex="9" GridPane.columnIndex="0" />
+                <Spinner fx:id="ageSpinner" GridPane.rowIndex="10" GridPane.columnIndex="0" editable="true">
+                    <valueFactory>
+                        <SpinnerValueFactory.IntegerSpinnerValueFactory min="18" max="120" />
+                    </valueFactory>
+                </Spinner>
+
+                <!-- Password -->
+                <Label text="Password" GridPane.rowIndex="9" GridPane.columnIndex="1" />
+                <PasswordField fx:id="passwordField" GridPane.rowIndex="10" GridPane.columnIndex="1" />
+                <Label fx:id="passwordError" textFill="red" GridPane.rowIndex="11" GridPane.columnIndex="1" />
+
+                <!-- Terms and Conditions -->
+                <CheckBox fx:id="termsCheckBox" text="I agree to the terms and conditions"
+                          GridPane.rowIndex="12" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+                <Label fx:id="termsError" textFill="red"
+                       GridPane.rowIndex="13" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+            </GridPane>
+
+            <!-- Register Button -->
+            <Button text="Register" onAction="#handleRegistration" styleClass="register-btn" />
+
+            <!-- Login Link -->
+            <Hyperlink text="Already have an account? Sign in" onAction="#handleLoginLink" styleClass="login-link" />
+        </VBox>
+    </HBox>
+</AnchorPane>

@@ -1,0 +1,136 @@
+.root {
+    -fx-font-family: 'Poppins';
+}
+
+/* Division 50/50 */
+BorderPane > .left,
+BorderPane > .center {
+    -fx-pref-width: 50%;
+    -fx-min-width: 50%;
+}
+
+/* Partie gauche bleue */
+.left {
+    -fx-background-color: #CAF0F8;
+}
+
+/* Partie droite formulaire */
+.center {
+    -fx-background-color: #f8f9fa;
+}
+
+/* Titre */
+.title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-fill: #012970;
+}
+
+/* Message d'erreur */
+.error-message {
+    -fx-text-fill: #dc3545;
+    -fx-font-size: 14px;
+}
+
+/* Labels du formulaire */
+.form-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #495057;
+}
+
+/* Champs de formulaire */
+.form-control {
+    -fx-pref-height: 40px;
+    -fx-pref-width: 300px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: #ced4da;
+    -fx-padding: 0 10px;
+}
+
+.form-control:focused {
+    -fx-border-color: #00B4D8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,180,216,0.2), 0, 0, 0, 3);
+}
+
+/* Case à cocher */
+.remember-me {
+    -fx-text-fill: #6c757d;
+    -fx-font-size: 14px;
+}
+
+/* Bouton de connexion */
+.login-button {
+    -fx-background-color: #00B4D8;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-pref-height: 40px;
+    -fx-background-radius: 5px;
+    -fx-max-width: Infinity;
+}
+
+.login-button:hover {
+    -fx-background-color: #0096C7;
+}
+
+/* Mot de passe oublié */
+.forgot-password {
+    -fx-text-fill: #6c757d;
+    -fx-font-size: 14px;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.forgot-password:hover {
+    -fx-text-fill: #00B4D8;
+    -fx-underline: true;
+}
+
+/* Texte social */
+.social-text {
+    -fx-font-size: 14px;
+    -fx-fill: #6c757d;
+}
+
+/* Boutons sociaux */
+.social-button {
+    -fx-background-radius: 50%;
+    -fx-pref-width: 40px;
+    -fx-pref-height: 40px;
+    -fx-background-color: white;
+    -fx-border-color: #dee2e6;
+    -fx-border-radius: 50%;
+    -fx-border-width: 1px;
+    -fx-padding: 0;
+}
+
+.social-button:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 0, 0, 0, 3);
+}
+
+.google:hover {
+    -fx-background-color: #f8d7da;
+}
+
+.facebook:hover {
+    -fx-background-color: #e7f5ff;
+}
+
+
+/* Ajoutez ces règles à votre fichier CSS existant */
+
+/* Style pour le séparateur */
+.separator {
+    -fx-border-color: #dee2e6;
+    -fx-border-width: 1px;
+    -fx-padding: 10 0;
+}
+
+/* Style pour le texte d'information */
+.info-text {
+    -fx-fill: #6c757d;
+    -fx-font-size: 12px;
+}

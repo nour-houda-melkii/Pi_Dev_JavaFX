@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import java.net.URL?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.controllers.RegistrationChoice"
+            prefHeight="700.0" prefWidth="1000.0"
+            styleClass="root">
+
+    <stylesheets>
+        <URL value="@/styles/styleRegistrationChoice/style.css" />
+    </stylesheets>
+
+    <!-- Main Container -->
+    <HBox AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+
+        <!-- Left Side - Image Section -->
+        <VBox alignment="CENTER" prefWidth="500" style="-fx-background-color: #CAF0F8;">
+            <ImageView fitWidth="350" fitHeight="350">
+                <image>
+                    <Image url="@/assets/img/undraw_choice_dzxz.png" />
+                </image>
+            </ImageView>
+        </VBox>
+
+        <!-- Right Side - Form Section -->
+        <VBox alignment="CENTER" prefWidth="500" spacing="30" style="-fx-background-color: #F5F5F5;">
+
+            <!-- Logo and Title -->
+            <VBox alignment="CENTER" spacing="20">
+                <ImageView fitWidth="100" fitHeight="80">
+                    <image>
+                        <Image url="@/assets/img/logo.png" />
+                    </image>
+                </ImageView>
+                <Text text="Choose your space" styleClass="title-text" />
+            </VBox>
+
+            <!-- Choice Buttons -->
+            <VBox alignment="CENTER" spacing="25">
+                <Button text="Patient Space" onAction="#handlePatientRegistration" styleClass="patient-btn" />
+                <Button text="Doctor Space" onAction="#handleMedecinRegistration" styleClass="medecin-btn" />
+            </VBox>
+
+            <!-- Login Link -->
+            <Hyperlink fx:id="loginLink" text="Already have an account? Log in" onAction="#handleLoginLink" styleClass="login-link" />
+        </VBox>
+    </HBox>
+</AnchorPane>

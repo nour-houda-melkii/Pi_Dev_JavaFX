@@ -1,0 +1,126 @@
+.title-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #012970;
+}
+
+.detail-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+    -fx-padding: 20px;
+}
+
+.field-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #555555;
+}
+
+.value-label {
+    -fx-text-fill: #333333;
+}
+
+.btn-back {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+}
+
+.back-icon {
+    -fx-font-family: Arial;
+    -fx-font-size: 18px;
+    -fx-fill: #00B4D8;
+}
+
+
+/* Section dossier médical */
+.medical-file-section {
+    -fx-padding: 15;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);
+}
+
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.medical-file-text {
+    -fx-font-size: 14px;
+    -fx-background-color: #f8f9fa;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 3;
+    -fx-background-radius: 3;
+    -fx-padding: 5;
+}
+
+.edit-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 5 15;
+    -fx-background-radius: 3;
+}
+
+.edit-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.save-button {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 5 15;
+    -fx-background-radius: 3;
+}
+
+.save-button:hover {
+    -fx-background-color: #27ae60;
+}
+
+
+/* Medical File Section */
+.section-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+#medicalFileArea {
+    -fx-font-size: 14px;
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 10;
+}
+
+
+/* Style général pour les boutons */
+.btn-medical-file {
+    -fx-background-color: #007bff; /* Bleu clair */
+    -fx-text-fill: white; /* Texte blanc */
+    -fx-font-size: 14px; /* Taille de police */
+    -fx-font-weight: bold; /* Texte en gras */
+    -fx-padding: 10px 20px; /* Espacement interne */
+    -fx-border-radius: 5px; /* Coins arrondis */
+    -fx-background-radius: 5px; /* Coins arrondis pour le fond */
+    -fx-cursor: hand; /* Curseur en forme de main au survol */
+}
+
+/* Hover effect (quand l'utilisateur survole le bouton) */
+.btn-medical-file:hover {
+    -fx-background-color: #0056b3; /* Bleu foncé au survol */
+}
+
+/* Effet d'appui (quand l'utilisateur clique sur le bouton) */
+.btn-medical-file:pressed {
+    -fx-background-color: #004085; /* Bleu encore plus foncé lors du clic */
+}
