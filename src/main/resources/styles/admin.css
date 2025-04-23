@@ -83,3 +83,36 @@
 .submenu-container {
     -fx-padding: 0 0 0 20px;
 }
+
+
+/* Card Styles */
+.card {
+    -fx-background-color: white;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
+    -fx-padding: 15px;
+    -fx-spacing: 20px;
+}
+
+.card-icon-container {
+    -fx-background-color: #012970;
+    -fx-background-radius: 50%;
+    -fx-padding: 10px;
+}
+
+.card-content {
+    -fx-spacing: 5px;
+}
+
+.card-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+.card-value {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #012970;
+}

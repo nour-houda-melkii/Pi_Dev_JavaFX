@@ -413,4 +413,57 @@ public class UserService implements IServiceUser<User> {
         e.printStackTrace();
         throw new RuntimeException("Erreur de base de données", e);
     }
+
+
+    // ============ FONCTIONS DE COMPTAGE ============
+
+    /**
+     * Compte le nombre total de médecins dans la base de données
+     * @return Le nombre de médecins
+     */
+    public int countTotalMedecins() {
+        return countUsersByRole(Role.MEDECIN);
+    }
+
+    /**
+     * Compte le nombre total de patients dans la base de données
+     * @return Le nombre de patients
+     */
+    public int countTotalPatients() {
+        return countUsersByRole(Role.PATIENT);
+    }
+
+    /**
+     * Compte le nombre total d'utilisateurs dans la base de données
+     * @return Le nombre total d'utilisateurs (tous rôles confondus)
+     */
+    public int countTotalUsers() {
+        String query = "SELECT COUNT(*) FROM user";
+        try (PreparedStatement pst = connection.prepareStatement(query);
+             ResultSet rs = pst.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            handleSQLException("Erreur lors du comptage des utilisateurs", e);
+        }
+        return 0;
+    }
+
+    // Méthode utilitaire pour compter les utilisateurs par rôle
+    private int countUsersByRole(Role role) {
+        String query = "SELECT COUNT(*) FROM user WHERE role = ?";
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            pst.setString(1, role.name());
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            handleSQLException("Erreur lors du comptage des " + role.toString().toLowerCase(), e);
+        }
+        return 0;
+    }
+
 }

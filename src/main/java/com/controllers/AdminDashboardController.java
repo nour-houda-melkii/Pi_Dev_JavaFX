@@ -1,13 +1,14 @@
 package com.controllers;
 
 import com.services.AuthService;
+import com.services.UserService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Accordion;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -21,17 +22,39 @@ public class AdminDashboardController {
     @FXML private VBox productMenu;
     @FXML private VBox userMenu;
 
+    // Correction: Utiliser les mêmes noms que dans le FXML
+    @FXML private Label totalUsersLabel;
+    @FXML private Label totalDoctorsLabel;
+    @FXML private Label totalPatientsLabel;
+
     private String token;
     private AuthService authService = new AuthService();
+    private UserService userService = new UserService();
 
     public void setToken(String token) {
         this.token = token;
-        // Vous pouvez ajouter d'autres logiques si nécessaire
+        loadStats(); // Charger les stats quand le token est défini
     }
 
     @FXML
     private void initialize() {
-        // Initialization code
+        loadStats(); // Charger les stats à l'initialisation
+    }
+
+    private void loadStats() {
+        try {
+            int totalUsers = userService.countTotalUsers();
+            int totalDoctors = userService.countTotalMedecins();
+            int totalPatients = userService.countTotalPatients();
+
+            // Mettre à jour les labels
+            if (totalUsersLabel != null) totalUsersLabel.setText(String.valueOf(totalUsers));
+            if (totalDoctorsLabel != null) totalDoctorsLabel.setText(String.valueOf(totalDoctors));
+            if (totalPatientsLabel != null) totalPatientsLabel.setText(String.valueOf(totalPatients));
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement des statistiques: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -41,14 +64,29 @@ public class AdminDashboardController {
 
     @FXML
     private void showDashboard() {
-        loadContent("/com/views/DashboardContent.fxml");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/AdminDashboard.fxml"));
+            Parent content = loader.load();
+
+            // Obtenir la référence au contrôleur
+            AdminDashboardController controller = loader.getController();
+
+
+            // Mettre à jour les statistiques
+            controller.loadStats();
+
+            // Remplacer le contenu
+            contentPane.getChildren().setAll(content);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible de charger le dashboard", e.getMessage());
+        }
     }
 
     @FXML
     private void showAddProduct() {
         loadContent("/com/views/AddProduct.fxml");
     }
-
 
     @FXML
     private void showDoctors() {
@@ -60,24 +98,22 @@ public class AdminDashboardController {
         loadContent("/com/views/ListPatient.fxml");
     }
 
-    // Méthode pour charger la page AjouterMedecin
     @FXML
     private void showAddDoctor() {
         loadContent("/com/views/AjouterMedecin.fxml");
     }
 
-    // Méthode pour charger d'autres pages (exemple : liste des patients)
     @FXML
     private void showAddPatient() {
         loadContent("/com/views/AjouterPatient.fxml");
     }
+
     @FXML
     private void showProfile() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/profile.fxml"));
             Parent content = loader.load();
 
-            // Passez le token au ProfileController
             ProfileController profileController = loader.getController();
             profileController.setToken(this.token);
 
@@ -98,7 +134,6 @@ public class AdminDashboardController {
 
     @FXML
     private void logout() {
-        // Confirmation dialog
         Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
         confirmation.setTitle("Logout");
         confirmation.setHeaderText("Confirm Logout");
@@ -107,10 +142,7 @@ public class AdminDashboardController {
         Optional<ButtonType> result = confirmation.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
-                // Perform logout
                 authService.logout(token);
-
-                // Redirect to login
                 redirectToLogin();
             } catch (Exception e) {
                 showAlert("Error", "Logout failed", e.getMessage());
@@ -120,18 +152,13 @@ public class AdminDashboardController {
 
     private void redirectToLogin() {
         try {
-            // Get current window
             Stage currentStage = (Stage) sidebar.getScene().getWindow();
-
-            // Load login scene
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/Login.fxml"));
             Parent root = loader.load();
 
-            // Get login controller and set auth service
             LoginController loginController = loader.getController();
             loginController.setAuthService(authService);
 
-            // Replace current scene
             Scene scene = new Scene(root);
             currentStage.setScene(scene);
             currentStage.setTitle("Login");
