@@ -32,7 +32,7 @@ public class AuthController {
         }
     }
 
-    public boolean checkUserRole(User user, Role requiredRole) {
+    public boolean checkUserRole(User user, String requiredRole) {
         return authService.checkRole(user, requiredRole);
     }
 

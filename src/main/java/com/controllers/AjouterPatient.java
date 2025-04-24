@@ -115,10 +115,10 @@ public class AjouterPatient  {
         if (selectedGender != null) {
             switch (selectedGender) {
                 case "Male":
-                    patient.setGender(Gender.MALE);
+                    patient.setGender(Gender.male);
                     break;
                 case "Female":
-                    patient.setGender(Gender.FEMALE);
+                    patient.setGender(Gender.female);
                     break;
                 default:
             }

@@ -17,6 +17,8 @@ import javax.mail.MessagingException;
 import java.io.*;
 import java.sql.*;
 import java.util.AbstractMap;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import static com.fasterxml.jackson.databind.type.LogicalType.Map;
@@ -57,8 +59,24 @@ public class AuthService {
                     throw new AuthException("Email ou mot de passe incorrect");
                 }
 
-                // Vérifier le mot de passe
-                if (!PasswordHasher.checkPassword(password, rs.getString("password"))) {
+                String storedHash = rs.getString("password");
+                System.out.println("Stored hash: " + storedHash); // Log pour débogage
+
+                // Vérifier que le hash stocké est valide
+                if (storedHash == null || storedHash.isEmpty()) {
+                    throw new AuthException("Invalid password hash in database");
+                }
+
+                // Vérifier le mot de passe avec gestion d'erreur améliorée
+                boolean passwordValid;
+                try {
+                    passwordValid = PasswordHasher.checkPassword(password, storedHash);
+                } catch (Exception e) {
+                    System.err.println("Password verification error: " + e.getMessage());
+                    throw new AuthException("Erreur de vérification du mot de passe");
+                }
+
+                if (!passwordValid) {
                     incrementLoginAttempts(email);
                     throw new AuthException("Email ou mot de passe incorrect");
                 }
@@ -122,15 +140,15 @@ public class AuthService {
     }
 
     private void checkIfAccountIsLocked(String email) throws AuthException {
-        String query = "SELECT account_locked, lock_until FROM user WHERE email = ?";
+        String query = "SELECT is_blocked, blocked_until FROM user WHERE email = ?";
 
         try (PreparedStatement pst = connection.prepareStatement(query)) {
             pst.setString(1, email);
 
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
-                    boolean isLocked = rs.getBoolean("account_locked");
-                    Timestamp lockUntil = rs.getTimestamp("lock_until");
+                    boolean isLocked = rs.getBoolean("is_blocked");
+                    Timestamp lockUntil = rs.getTimestamp("blocked_until");
 
                     if (isLocked && lockUntil != null && lockUntil.after(new Timestamp(System.currentTimeMillis()))) {
                         throw new AuthException("Compte temporairement bloqué. Réessayez plus tard.");
@@ -146,7 +164,7 @@ public class AuthService {
     }
 
     private void incrementLoginAttempts(String email) throws AuthException {
-        String query = "UPDATE user SET login_attempts = login_attempts + 1 WHERE email = ?";
+        String query = "UPDATE user SET failed_login_attempts = failed_login_attempts + 1 WHERE email = ?";
 
         try (PreparedStatement pst = connection.prepareStatement(query)) {
             pst.setString(1, email);
@@ -160,7 +178,7 @@ public class AuthService {
     }
 
     private void checkAndLockAccountIfNeeded(String email) throws AuthException {
-        String query = "SELECT login_attempts FROM user WHERE email = ?";
+        String query = "SELECT failed_login_attempts FROM user WHERE email = ?";
 
         try (PreparedStatement pst = connection.prepareStatement(query)) {
             pst.setString(1, email);
@@ -179,7 +197,7 @@ public class AuthService {
     private void lockAccount(String email) throws SQLException {
         Timestamp lockUntil = new Timestamp(System.currentTimeMillis() + (LOCK_TIME_MINUTES * 60 * 1000));
 
-        String query = "UPDATE user SET account_locked = TRUE, lock_until = ? WHERE email = ?";
+        String query = "UPDATE user SET is_blocked = TRUE, blocked_until = ? WHERE email = ?";
 
         try (PreparedStatement pst = connection.prepareStatement(query)) {
             pst.setTimestamp(1, lockUntil);
@@ -189,7 +207,7 @@ public class AuthService {
     }
 
     private void unlockAccount(String email) throws SQLException {
-        String query = "UPDATE user SET account_locked = FALSE, lock_until = NULL, login_attempts = 0 WHERE email = ?";
+        String query = "UPDATE user SET is_blocked = FALSE, blocked_until = NULL, failed_login_attempts = 0 WHERE email = ?";
 
         try (PreparedStatement pst = connection.prepareStatement(query)) {
             pst.setString(1, email);
@@ -198,7 +216,7 @@ public class AuthService {
     }
 
     private void resetLoginAttempts(String email) throws SQLException {
-        String query = "UPDATE user SET login_attempts = 0 WHERE email = ?";
+        String query = "UPDATE user SET failed_login_attempts = 0 WHERE email = ?";
 
         try (PreparedStatement pst = connection.prepareStatement(query)) {
             pst.setString(1, email);
@@ -246,8 +264,11 @@ public class AuthService {
      * @param requiredRole Rôle requis
      * @return boolean true si le rôle correspond
      */
-    public boolean checkRole(User user, Role requiredRole) {
-        return user != null && user.getRole() == requiredRole;
+    public boolean checkRole(User user, String requiredRole) {
+        if (user == null || user.getRoles() == null) {
+            return false;
+        }
+        return user.getRoles().contains(requiredRole);
     }
 
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
@@ -257,19 +278,35 @@ public class AuthService {
         user.setPassword(rs.getString("password"));
         user.setFirstName(rs.getString("first_name"));
         user.setLastName(rs.getString("last_name"));
-        user.setRole(Role.valueOf(rs.getString("role")));
-        user.setAddress(rs.getString("address"));
+
+        user.setRolesFromJson(rs.getString("roles"));
+
+        user.setAddress(rs.getString("adress"));
         user.setPhoneNumber(rs.getString("phone_number"));
         user.setAge(rs.getInt("age"));
-        user.setGender(Gender.valueOf(rs.getString("gender")));
+
+        // Gestion du genre avec vérification de null
+        String genderStr = rs.getString("gender");
+        if (genderStr != null && !genderStr.isEmpty()) {
+            user.setGender(Gender.valueOf(genderStr));
+        }
+
         user.setVerificationCode(rs.getString("verification_code"));
         user.setVerificationCodeExpiration(rs.getTimestamp("verification_code_expiration"));
         user.setMedicalFile(rs.getString("medical_file"));
 
-        if (user.getRole() == Role.MEDECIN) {
+        // Gestion des champs spécifiques aux médecins
+        if (user.getRoles() != null && user.getRoles().contains(User.ROLE_MEDECIN)) {
             user.setNumeroLicence(rs.getString("numero_licence"));
-            user.setSpecialite(Specialite.valueOf(rs.getString("specialite")));
+
+            // Gestion de la spécialité avec vérification de null
+            String specialiteStr = rs.getString("specialite");
+            if (specialiteStr != null && !specialiteStr.isEmpty()) {
+                user.setSpecialite(Specialite.valueOf(specialiteStr));
+            }
         }
+        user.setVerified(rs.getBoolean("is_verified"));
+        user.setStatus(rs.getString("status"));
 
         return user;
     }
@@ -282,8 +319,9 @@ public class AuthService {
      * @throws SQLException Si l'email existe déjà ou erreur SQL
      */
     public User registerMedecin(User medecin) throws SQLException {
-        if (medecin.getRole() != Role.MEDECIN) {
-            throw new IllegalArgumentException("Le rôle doit être MEDECIN");
+        // Vérification du rôle
+        if (medecin.getRoles() == null || !medecin.getRoles().contains(User.ROLE_MEDECIN)) {
+            throw new IllegalArgumentException("L'utilisateur doit avoir le rôle ROLE_MEDECIN");
         }
 
         // Vérification des champs obligatoires
@@ -304,7 +342,7 @@ public class AuthService {
      * @throws SQLException Si l'email existe déjà ou erreur SQL
      */
     public User registerPatient(User patient) throws SQLException {
-        if (patient.getRole() != Role.PATIENT) {
+        if (patient.getRoles() == null || !patient.getRoles().contains(User.ROLE_USER)) {
             throw new IllegalArgumentException("Le rôle doit être PATIENT");
         }
 
@@ -315,6 +353,9 @@ public class AuthService {
      * Méthode commune d'enregistrement
      */
     private User registerUser(User user) throws SQLException {
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
+            user.setRoles(List.of(user.ROLE_USER)); // Valeur par défaut
+        }
         // Vérifier si l'email existe déjà
         if (emailExists(user.getEmail())) {
             throw new SQLException("This email is already in use.");
@@ -328,9 +369,9 @@ public class AuthService {
         String hashedPassword = PasswordHasher.hashPassword(user.getPassword());
         user.setPassword(hashedPassword);
 
-        String query = "INSERT INTO user (email, password, first_name, last_name, role, " +
-                "address, phone_number, age, gender, numero_licence, specialite) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO user (email, password, first_name, last_name, roles, " +
+                "adress, phone_number, age, gender, numero_licence, specialite, is_verified, status) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement pst = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             int paramIndex = 1;
@@ -338,7 +379,7 @@ public class AuthService {
             pst.setString(paramIndex++, user.getPassword());
             pst.setString(paramIndex++, user.getFirstName());
             pst.setString(paramIndex++, user.getLastName());
-            pst.setString(paramIndex++, user.getRole().toString());
+            pst.setString(paramIndex++, user.getRolesAsJson());
             pst.setString(paramIndex++, user.getAddress());
             pst.setString(paramIndex++, user.getPhoneNumber());
             pst.setInt(paramIndex++, user.getAge());
@@ -351,6 +392,8 @@ public class AuthService {
                 pst.setNull(paramIndex++, Types.VARCHAR); // numero_licence
                 pst.setNull(paramIndex++, Types.VARCHAR); // specialite
             }
+            pst.setBoolean(paramIndex++, false); // is_verified
+            pst.setString(paramIndex++, user.getStatus());
 
             int affectedRows = pst.executeUpdate();
             if (affectedRows == 0) {
@@ -588,7 +631,7 @@ public class AuthService {
         }
 
         if (userUpdates.getAddress() != null) {
-            queryBuilder.append("address = ?, ");
+            queryBuilder.append("adress = ?, ");
             params.add(userUpdates.getAddress());
         }
 

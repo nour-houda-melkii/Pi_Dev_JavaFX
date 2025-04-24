@@ -1,9 +1,12 @@
 package com.models;
 
 import java.sql.Timestamp;
-import com.demo.enums.Role;
+import java.util.ArrayList;
+import java.util.List;
 import com.demo.enums.Specialite;
 import com.demo.enums.Gender;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class User {
     private int id;
@@ -11,7 +14,7 @@ public class User {
     private String password;
     private String firstName;
     private String lastName;
-    private Role role;
+    private List<String> roles = new ArrayList<>();
     private String address;
     private String phoneNumber;
     private String numeroLicence;
@@ -20,17 +23,27 @@ public class User {
     private Gender gender;
     private String verificationCode;
     private Timestamp verificationCodeExpiration;
-    private int loginAttempts;          // Nouveau champ pour le nombre de tentatives
-    private boolean accountLocked;      // Nouveau champ pour le statut de verrouillage
+    private int loginAttempts;
+    private boolean accountLocked;
     private Timestamp lockUntil;
-    private  String medicalFile;// Nouveau champ pour la durée de verrouillage
+    private String medicalFile;
+    private boolean isVerified = false;
+    private String status = "non_verifie";
+
+    // Constantes pour les rôles
+    public static final String ROLE_USER = "ROLE_USER";    // Patient
+    public static final String ROLE_MEDECIN = "ROLE_MEDECIN"; // Médecin
+    public static final String ROLE_ADMIN = "ROLE_ADMIN";   // Admin
 
     // Constructeurs
-    public User() {}
+    public User() {
+        // Par défaut, chaque utilisateur est un patient (ROLE_USER)
+        this.roles.add(ROLE_USER);
+    }
 
     // Constructeur complet
     public User(int id, String email, String password, String firstName, String lastName,
-                Role role, String address, String phoneNumber, String numeroLicence,
+                List<String> roles, String address, String phoneNumber, String numeroLicence,
                 int age, Specialite specialite, Gender gender, String verificationCode,
                 Timestamp verificationCodeExpiration, int loginAttempts,
                 boolean accountLocked, Timestamp lockUntil) {
@@ -39,7 +52,7 @@ public class User {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.role = role;
+        this.roles = new ArrayList<>(roles);
         this.address = address;
         this.phoneNumber = phoneNumber;
         this.numeroLicence = numeroLicence;
@@ -56,7 +69,7 @@ public class User {
     // Constructeur pour les patients
     public User(int id, String email, String password, String firstName, String lastName,
                 String address, String phoneNumber, int age, Gender gender) {
-        this(id, email, password, firstName, lastName, Role.PATIENT,
+        this(id, email, password, firstName, lastName, List.of(ROLE_USER),
                 address, phoneNumber, null, age, null, gender, null, null, 0, false, null);
     }
 
@@ -64,17 +77,44 @@ public class User {
     public User(int id, String email, String password, String firstName, String lastName,
                 String address, String phoneNumber, int age, Gender gender,
                 String numeroLicence, Specialite specialite) {
-        this(id, email, password, firstName, lastName, Role.MEDECIN,
+        this(id, email, password, firstName, lastName, List.of(ROLE_MEDECIN),
                 address, phoneNumber, numeroLicence, age, specialite, gender, null, null, 0, false, null);
     }
 
-    // Méthodes de vérification
+    // Constructeur pour les admins
+    public User(int id, String email, String password, String firstName, String lastName,
+                String address, String phoneNumber, int age, Gender gender,
+                boolean isAdmin) {
+        this(id, email, password, firstName, lastName, List.of(ROLE_ADMIN),
+                address, phoneNumber, null, age, null, gender, null, null, 0, false, null);
+    }
+
+    // Méthodes de vérification des rôles
     public boolean isMedecin() {
-        return Role.MEDECIN.equals(this.role);
+        return this.roles.contains(ROLE_MEDECIN);
     }
 
     public boolean isPatient() {
-        return Role.PATIENT.equals(this.role);
+        return this.roles.contains(ROLE_USER);
+    }
+
+    public boolean isAdmin() {
+        return this.roles.contains(ROLE_ADMIN);
+    }
+
+    // Méthodes utilitaires pour les rôles
+    public void addRole(String role) {
+        if (!this.roles.contains(role)) {
+            this.roles.add(role);
+        }
+    }
+
+    public void removeRole(String role) {
+        this.roles.remove(role);
+    }
+
+    public boolean hasRole(String role) {
+        return this.roles.contains(role);
     }
 
     // Méthode pour vérifier si le code est valide
@@ -118,8 +158,13 @@ public class User {
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
 
-    public Role getRole() { return role; }
-    public void setRole(Role role) { this.role = role; }
+    public List<String> getRoles() {
+        return new ArrayList<>(roles);
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = new ArrayList<>(roles);
+    }
 
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
@@ -136,13 +181,8 @@ public class User {
     public Specialite getSpecialite() { return specialite; }
     public void setSpecialite(Specialite specialite) { this.specialite = specialite; }
 
-    public Gender getGender() {
-        return gender;
-    }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-    }
+    public Gender getGender() { return gender; }
+    public void setGender(Gender gender) { this.gender = gender; }
 
     public String getVerificationCode() { return verificationCode; }
     public void setVerificationCode(String verificationCode) { this.verificationCode = verificationCode; }
@@ -155,7 +195,7 @@ public class User {
     public int getLoginAttempts() { return loginAttempts; }
     public void setLoginAttempts(int loginAttempts) { this.loginAttempts = loginAttempts; }
 
-    public boolean isAccountLocked() { return isAccountLocked(); }
+    public boolean isAccountLocked() { return accountLocked; }
     public void setAccountLocked(boolean accountLocked) { this.accountLocked = accountLocked; }
 
     public Timestamp getLockUntil() { return lockUntil; }
@@ -164,6 +204,45 @@ public class User {
     public String getMedicalFile() { return medicalFile; }
     public void setMedicalFile(String medicalFile) { this.medicalFile = medicalFile; }
 
+    public boolean isVerified() {
+        return isVerified;
+    }
+
+    public void setVerified(boolean verified) {
+        isVerified = verified;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+
+    // Dans la classe User, modifiez le getter pour les rôles
+    public String getRolesAsJson() {
+        return new Gson().toJson(this.roles);
+    }
+
+    // Et le setter correspondant
+    public void setRolesFromJson(String jsonRoles) {
+        if (jsonRoles == null || jsonRoles.isEmpty()) {
+            this.roles = new ArrayList<>();
+            return;
+        }
+
+        try {
+            // Essayez d'abord de parser comme List<String>
+            this.roles = new Gson().fromJson(jsonRoles, new TypeToken<List<String>>(){}.getType());
+        } catch (Exception e) {
+            // Si échec, essayez comme String simple
+            this.roles = new ArrayList<>();
+            this.roles.add(jsonRoles.replace("\"", "").trim());
+        }
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -171,7 +250,7 @@ public class User {
                 ", email='" + email + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", role=" + role +
+                ", roles=" + roles +
                 ", loginAttempts=" + loginAttempts +
                 ", accountLocked=" + accountLocked +
                 ", lockUntil=" + lockUntil +
@@ -179,5 +258,4 @@ public class User {
                 ", verificationCodeExpiration=" + verificationCodeExpiration +
                 '}';
     }
-
 }

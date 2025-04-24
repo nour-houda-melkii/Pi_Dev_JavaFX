@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 public class PatientRegistrationController {
 
@@ -62,13 +63,13 @@ public class PatientRegistrationController {
             String genderText = genderComboBox.getValue();
             Gender gender;
             switch (genderText) {
-                case "Male" -> gender = Gender.MALE;
-                case "Female" -> gender = Gender.FEMALE;
+                case "Male" -> gender = Gender.male;
+                case "Female" -> gender = Gender.female;
                 default -> throw new IllegalArgumentException("Invalid gender");
             }
             patient.setGender(gender);
             patient.setPassword(passwordField.getText());
-            patient.setRole(Role.PATIENT);
+            patient.setRoles(List.of(User.ROLE_USER));
 
             authService.registerPatient(patient);
 

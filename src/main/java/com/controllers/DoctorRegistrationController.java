@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class DoctorRegistrationController implements Initializable {
@@ -87,14 +88,14 @@ public class DoctorRegistrationController implements Initializable {
             // Conversion du genre
             String genderText = genderComboBox.getValue();
             Gender gender = switch (genderText) {
-                case "Male" -> Gender.MALE;
-                case "Female" -> Gender.FEMALE;
+                case "Male" -> Gender.male;
+                case "Female" -> Gender.female;
                 default -> throw new IllegalArgumentException("Invalid gender");
             };
             doctor.setGender(gender);
 
             doctor.setPassword(passwordField.getText());
-            doctor.setRole(Role.MEDECIN);
+            doctor.setRoles(List.of(User.ROLE_MEDECIN));
             doctor.setSpecialite(specialtyComboBox.getValue());
             doctor.setNumeroLicence(licenseField.getText());
 

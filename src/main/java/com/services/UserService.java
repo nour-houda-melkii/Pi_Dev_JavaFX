@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class UserService implements IServiceUser<User> {
@@ -29,12 +30,14 @@ public class UserService implements IServiceUser<User> {
     // ============ MÉTHODES COMMUNES ============
     @Override
     public void ajouterUser(User user) {
-        String req = "INSERT INTO user (email, password, first_name, last_name, role, address, phone_number, age, gender, numero_licence, specialite) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String req = "INSERT INTO user (email, password, first_name, last_name, roles, adress, phone_number, age, gender, numero_licence, specialite, is_verified, status) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement pst = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
             setUserParameters(pst, user);
             pst.executeUpdate();
+            user.setVerified(true); // ← Ceci est important
+            user.setStatus("verifie");
 
             try (ResultSet rs = pst.getGeneratedKeys()) {
                 if (rs.next()) {
@@ -48,11 +51,28 @@ public class UserService implements IServiceUser<User> {
 
     @Override
     public void modifierUser(User user) {
-        String req = "UPDATE user SET email=?, password=?, first_name=?, last_name=?, role=?, "
-                + "address=?, phone_number=?, age=?, gender=?, numero_licence=?, specialite=? WHERE id=?";
+        String req = "UPDATE user SET email=?, password=?, first_name=?, last_name=?, roles=?, "
+                + "adress=?, phone_number=?, age=?, gender=?, numero_licence=?, specialite=? WHERE id=?";
 
         try (PreparedStatement pst = connection.prepareStatement(req)) {
-            setUserParameters(pst, user);
+            pst.setString(1, user.getEmail());
+            pst.setString(2, user.getPassword());
+            pst.setString(3, user.getFirstName());
+            pst.setString(4, user.getLastName());
+            pst.setString(5, user.getRolesAsJson());
+            pst.setString(6, user.getAddress());
+            pst.setString(7, user.getPhoneNumber());
+            pst.setInt(8, user.getAge());
+            pst.setString(9, user.getGender() != null ? user.getGender().name() : null);
+
+            if (user.getRoles().contains(User.ROLE_MEDECIN)) {
+                pst.setString(10, user.getNumeroLicence());
+                pst.setString(11, user.getSpecialite() != null ? user.getSpecialite().name() : null);
+            } else {
+                pst.setNull(10, Types.VARCHAR);
+                pst.setNull(11, Types.VARCHAR);
+            }
+
             pst.setInt(12, user.getId());
             pst.executeUpdate();
         } catch (SQLException e) {
@@ -87,7 +107,10 @@ public class UserService implements IServiceUser<User> {
             String plainPassword = PasswordGenerator.generateSecurePassword();
             medecin.setPassword(PasswordHasher.hashPassword(plainPassword));
             validateMedecin(medecin);
-            medecin.setRole(Role.MEDECIN);
+
+            // Remplacer setRole() par setRoles() avec la liste des rôles
+            medecin.setRoles(List.of(User.ROLE_MEDECIN));
+
             ajouterUser(medecin);
             WelcomeEmailService.sendWelcomeEmail(medecin, plainPassword);
             System.out.println("✅ Médecin " + medecin.getFirstName() + " " + medecin.getLastName()
@@ -102,8 +125,9 @@ public class UserService implements IServiceUser<User> {
     public void modifierMedecin(User medecin) {
         try {
             validateMedecin(medecin);
-            if (!Role.MEDECIN.equals(medecin.getRole())) {
-                throw new IllegalArgumentException("Le rôle doit être MEDECIN");
+            System.out.println(medecin.getRoles());
+            if (!medecin.isMedecin()) {
+                throw new IllegalArgumentException("L'utilisateur doit avoir le rôle ROLE_MEDECIN");
             }
             modifierUser(medecin);
             System.out.println("✅ Médecin ID " + medecin.getId() + " modifié avec succès");
@@ -116,7 +140,7 @@ public class UserService implements IServiceUser<User> {
     @Override
     public void supprimerMedecin(int id) {
         try {
-            executeDelete("DELETE FROM user WHERE id=? AND role='MEDECIN'", id, "Médecin");
+            executeDelete("DELETE FROM user WHERE id=? AND roles LIKE '%\"ROLE_MEDECIN\"%'", id, "Médecin");
             System.out.println("✅ Médecin ID " + id + " supprimé avec succès");
         } catch (Exception e) {
             System.err.println("❌ Erreur suppression médecin: " + e.getMessage());
@@ -127,7 +151,7 @@ public class UserService implements IServiceUser<User> {
     @Override
     public List<User> rechercherTousMedecins() {
         try {
-            List<User> medecins = executeUserQuery("SELECT * FROM user WHERE role='MEDECIN'");
+            List<User> medecins = executeUserQuery("SELECT * FROM user WHERE roles LIKE '%\"ROLE_MEDECIN\"%'");
 
             System.out.println("🔍 " + medecins.size() + " medecin(s) trouvé(s)");
 
@@ -142,7 +166,7 @@ public class UserService implements IServiceUser<User> {
     @Override
     public User rechercherMedecinParId(int id) {
         try {
-            User user = executeSingleUserQuery("SELECT * FROM user WHERE id=? AND role='MEDECIN'", id);
+            User user = executeSingleUserQuery("SELECT * FROM user WHERE id=? AND roles LIKE '%\"ROLE_MEDECIN\"%'", id);
             if (user == null) {
                 throw new IllegalArgumentException("Aucun médecin trouvé avec l'ID: " + id);
             }
@@ -165,7 +189,7 @@ public class UserService implements IServiceUser<User> {
             patient.setPassword(PasswordHasher.hashPassword(plainPassword)); // Hash le mdp généré
 
             // 3. Configuration du patient
-            patient.setRole(Role.PATIENT);
+            patient.setRoles(List.of(User.ROLE_USER));
             patient.setNumeroLicence(null);
             patient.setSpecialite(null);
 
@@ -185,8 +209,8 @@ public class UserService implements IServiceUser<User> {
     public boolean modifierPatient(User patient) {
         try {
             // Validation du rôle
-            if (!Role.PATIENT.equals(patient.getRole())) {
-                String errorMsg = "Tentative de modification avec un rôle incorrect. Rôle actuel: " + patient.getRole();
+            if (!patient.getRoles().contains(User.ROLE_USER)) {
+                String errorMsg = "Tentative de modification avec un rôle incorrect. Rôle actuel: " + patient.getRoles();
                 System.err.println("❌ " + errorMsg);
                 throw new IllegalArgumentException(errorMsg);
             }
@@ -217,7 +241,7 @@ public class UserService implements IServiceUser<User> {
             User patient = rechercherPatientParId(id);
 
             // Exécution de la suppression
-            executeDelete("DELETE FROM user WHERE id=? AND role='PATIENT'", id, "Patient");
+            executeDelete("DELETE FROM user WHERE id=? AND roles LIKE '%\"ROLE_USER\"%'", id, "Patient");
 
             System.out.println("✅ Patient ID " + id + " (" + patient.getFirstName()
                     + " " + patient.getLastName() + ") supprimé avec succès");
@@ -234,7 +258,7 @@ public class UserService implements IServiceUser<User> {
     @Override
     public List<User> rechercherTousPatients() {
         try {
-            List<User> patients = executeUserQuery("SELECT * FROM user WHERE role='PATIENT'");
+            List<User> patients = executeUserQuery("SELECT * FROM user WHERE roles LIKE '%\"ROLE_USER\"%'");
 
             System.out.println("🔍 " + patients.size() + " patient(s) trouvé(s)");
 
@@ -249,7 +273,7 @@ public class UserService implements IServiceUser<User> {
     @Override
     public User rechercherPatientParId(int id) {
         try {
-            User user = executeSingleUserQuery("SELECT * FROM user WHERE id=? AND role='PATIENT'", id);
+            User user = executeSingleUserQuery("SELECT * FROM user WHERE id=? AND roles LIKE '%\"ROLE_USER\"%'", id);
 
             if (user == null) {
                 String errorMsg = "Aucun patient trouvé avec l'ID: " + id;
@@ -272,11 +296,13 @@ public class UserService implements IServiceUser<User> {
 
 
     // Dans UserService.java
+
     /**
      * Récupère le contenu du fichier médical d'un patient
+     *
      * @param patientId ID du patient dont on veut récupérer le dossier médical
      * @return Pair contenant le nom du fichier et son contenu en bytes
-     * @throws IOException Si erreur de lecture du fichier
+     * @throws IOException              Si erreur de lecture du fichier
      * @throws IllegalArgumentException Si le patient n'existe pas ou n'a pas de fichier médical
      */
     public AbstractMap.SimpleEntry<String, byte[]> getMedicalFileContent(int patientId) throws IOException {
@@ -314,19 +340,25 @@ public class UserService implements IServiceUser<User> {
         pst.setString(2, user.getPassword());
         pst.setString(3, user.getFirstName());
         pst.setString(4, user.getLastName());
-        pst.setString(5, user.getRole().name());
+
+        // Conversion de la liste des rôles en String (format JSON ou séparé par des virgules)
+        pst.setString(5, user.getRolesAsJson());
+
         pst.setString(6, user.getAddress());
         pst.setString(7, user.getPhoneNumber());
         pst.setInt(8, user.getAge());
         pst.setString(9, user.getGender() != null ? user.getGender().name() : null);
 
-        if (Role.MEDECIN.equals(user.getRole())) {
+        // Vérification si l'utilisateur est un médecin
+        if (user.getRoles().contains(User.ROLE_MEDECIN)) {
             pst.setString(10, user.getNumeroLicence());
             pst.setString(11, user.getSpecialite() != null ? user.getSpecialite().name() : null);
         } else {
             pst.setNull(10, Types.VARCHAR);
             pst.setNull(11, Types.VARCHAR);
         }
+        pst.setBoolean(12, user.isVerified());
+        pst.setString(13, user.getStatus());
     }
 
     private void validateMedecin(User medecin) {
@@ -371,8 +403,10 @@ public class UserService implements IServiceUser<User> {
         user.setPassword(rs.getString("password"));
         user.setFirstName(rs.getString("first_name"));
         user.setLastName(rs.getString("last_name"));
-        user.setRole(Role.valueOf(rs.getString("role")));
-        user.setAddress(rs.getString("address"));
+        String rolesStr = rs.getString("roles");
+        user.setRolesFromJson(rolesStr);
+
+        user.setAddress(rs.getString("adress"));
         user.setPhoneNumber(rs.getString("phone_number"));
         user.setAge(rs.getInt("age"));
 
@@ -380,15 +414,18 @@ public class UserService implements IServiceUser<User> {
         user.setGender(genderStr != null ? Gender.valueOf(genderStr) : null);
 
         user.setMedicalFile(rs.getString("medical_file"));
-
-        if (Role.MEDECIN.equals(user.getRole())) {
+        // Vérification si c'est un médecin
+        if (user.getRoles().contains(User.ROLE_MEDECIN)) {
             user.setNumeroLicence(rs.getString("numero_licence"));
             String specialiteStr = rs.getString("specialite");
-            user.setSpecialite(specialiteStr != null ? Specialite.valueOf(specialiteStr) : null);
+            user.setSpecialite(specialiteStr != null && !specialiteStr.isEmpty()
+                    ? Specialite.valueOf(specialiteStr)
+                    : null);
         }
 
         return user;
     }
+
 
     private void executeDelete(String query, int id, String entityName) {
         try (PreparedStatement pst = connection.prepareStatement(query)) {
@@ -419,49 +456,62 @@ public class UserService implements IServiceUser<User> {
 
     /**
      * Compte le nombre total de médecins dans la base de données
+     *
      * @return Le nombre de médecins
      */
     public int countTotalMedecins() {
-        return countUsersByRole(Role.MEDECIN);
+        return countUsersByRole(User.ROLE_MEDECIN);
     }
 
     /**
      * Compte le nombre total de patients dans la base de données
+     *
      * @return Le nombre de patients
      */
     public int countTotalPatients() {
-        return countUsersByRole(Role.PATIENT);
+        return countUsersByRole(User.ROLE_USER);
     }
 
     /**
      * Compte le nombre total d'utilisateurs dans la base de données
+     *
      * @return Le nombre total d'utilisateurs (tous rôles confondus)
      */
     public int countTotalUsers() {
-        String query = "SELECT COUNT(*) FROM user";
-        try (PreparedStatement pst = connection.prepareStatement(query);
-             ResultSet rs = pst.executeQuery()) {
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-        } catch (SQLException e) {
-            handleSQLException("Erreur lors du comptage des utilisateurs", e);
-        }
-        return 0;
-    }
+        String query = "SELECT COUNT(*) FROM user " +
+                "WHERE (roles LIKE ? OR roles LIKE ?) " +
+                "AND status = ? " +
+                "AND is_verified = 1";
 
-    // Méthode utilitaire pour compter les utilisateurs par rôle
-    private int countUsersByRole(Role role) {
-        String query = "SELECT COUNT(*) FROM user WHERE role = ?";
         try (PreparedStatement pst = connection.prepareStatement(query)) {
-            pst.setString(1, role.name());
+            pst.setString(1, "%\"" + User.ROLE_USER + "\"%");
+            pst.setString(2, "%\"" + User.ROLE_MEDECIN + "\"%");
+            pst.setString(3, "verifie");
+
             try (ResultSet rs = pst.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt(1);
                 }
             }
         } catch (SQLException e) {
-            handleSQLException("Erreur lors du comptage des " + role.toString().toLowerCase(), e);
+            handleSQLException("Erreur lors du comptage des utilisateurs vérifiés", e);
+        }
+        return 0;
+    }
+
+    // Méthode utilitaire pour compter les utilisateurs par rôle
+    private int countUsersByRole(String role) {
+        String query = "SELECT COUNT(*) FROM user WHERE roles LIKE ? AND status = ? AND is_verified = 1";
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            pst.setString(1, "%\"" + role + "\"%");
+            pst.setString(2, "verifie");
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            handleSQLException("Erreur lors du comptage des utilisateurs vérifiés avec le rôle " + role, e);
         }
         return 0;
     }

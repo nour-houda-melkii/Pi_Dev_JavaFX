@@ -28,8 +28,8 @@ public class DetailsMedecinController {
             phoneLabel.setText(medecin.getPhoneNumber());
             ageLabel.setText(String.valueOf(medecin.getAge()));
             genderLabel.setText(medecin.getGender().toString());
-            specialiteLabel.setText(medecin.getSpecialite().toString());
-            licenceLabel.setText(medecin.getNumeroLicence());
+            specialiteLabel.setText(medecin.getSpecialite() != null ? medecin.getSpecialite().toString() : "Non spécifiée");
+            licenceLabel.setText(medecin.getNumeroLicence() != null ? medecin.getNumeroLicence() : "Non spécifié");
             addressLabel.setText(medecin.getAddress());
         }
     }

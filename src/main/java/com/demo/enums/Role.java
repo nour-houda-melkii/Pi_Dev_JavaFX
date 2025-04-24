@@ -1,7 +1,7 @@
 package com.demo.enums;
 
 public enum Role {
-    ADMIN,
-    PATIENT,
-    MEDECIN
+    ROEL_ADMIN,
+    ROLE_USER,
+    ROLE_MEDECIN
 }

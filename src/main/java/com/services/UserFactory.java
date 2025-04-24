@@ -4,6 +4,8 @@ import com.models.User;
 import com.demo.enums.Role;
 import com.demo.enums.Specialite;
 
+import java.util.List;
+
 public class UserFactory {
 
     public static User createMedecin(String email, String password, String firstName,
@@ -17,7 +19,7 @@ public class UserFactory {
         user.setAddress(address);
         user.setPhoneNumber(phoneNumber);
         user.setAge(age);
-        user.setRole(Role.MEDECIN);
+        user.setRoles(List.of(User.ROLE_MEDECIN));
         user.setNumeroLicence(numeroLicence);
         user.setSpecialite(specialite);
         return user;
@@ -34,7 +36,7 @@ public class UserFactory {
         user.setAddress(address);
         user.setPhoneNumber(phoneNumber);
         user.setAge(age);
-        user.setRole(Role.PATIENT);
+        user.setRoles(List.of(User.ROLE_USER));
         return user;
     }
 }
