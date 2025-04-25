@@ -516,4 +516,53 @@ public class UserService implements IServiceUser<User> {
         return 0;
     }
 
+
+    /**
+     * Recherche tous les médecins non vérifiés (avec status = "non_verifie")
+     * @return Liste des médecins non vérifiés
+     */
+    public List<User> rechercherMedecinsNonVerifies() {
+        try {
+            String query = "SELECT * FROM user WHERE roles LIKE ? AND status = ?";
+            List<User> medecins = executeUserQuery(query,
+                    "%\"ROLE_MEDECIN\"%",
+                    "non_verifie");
+
+            System.out.println("🔍 " + medecins.size() + " médecin(s) non vérifié(s) trouvé(s)");
+            return medecins;
+        } catch (Exception e) {
+            System.err.println("❌ Erreur lors de la recherche des médecins non vérifiés: " + e.getMessage());
+            throw new RuntimeException("Erreur d'accès aux données des médecins non vérifiés", e);
+        }
+    }
+
+
+    /**
+     * Vérifie un médecin en mettant à jour son statut à "verifie" et is_verified à true
+     * @param medecinId ID du médecin à vérifier
+     * @return true si la vérification a réussi, false sinon
+     */
+    public boolean verifierMedecin(int medecinId) {
+        String req = "UPDATE user SET status=? WHERE id=? AND roles LIKE ?";
+
+        try (PreparedStatement pst = connection.prepareStatement(req)) {
+            pst.setString(1, "verifie");
+            pst.setInt(2, medecinId);
+            pst.setString(3, "%\"ROLE_MEDECIN\"%");
+
+            int rowsAffected = pst.executeUpdate();
+
+            if (rowsAffected > 0) {
+                System.out.println("✅ Médecin ID " + medecinId + " vérifié avec succès");
+                return true;
+            } else {
+                System.out.println("⚠️ Aucun médecin trouvé avec l'ID " + medecinId + " ou déjà vérifié");
+                return false;
+            }
+        } catch (SQLException e) {
+            handleSQLException("Erreur lors de la vérification du médecin", e);
+            return false;
+        }
+    }
+
 }

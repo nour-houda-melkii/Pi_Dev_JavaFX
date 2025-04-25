@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<?import java.net.URL?>
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.controllers.UnverifiedDoctorsController"
+      spacing="15"
+      fx:id="mainContainer">
+
+    <!-- Titre et bouton de retour -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Button text="← Back" onAction="#handleBackToList"
+                style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-family: 'Poppins';"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="titleLabel" text="Unverified Doctors"/>
+    </HBox>
+
+    <!-- ListView des médecins non vérifiés -->
+    <ListView fx:id="unverifiedDoctorsListView" VBox.vgrow="ALWAYS">
+        <placeholder>
+            <Label text="No unverified doctors found." style="-fx-text-fill: #6c757d; -fx-font-family: 'Poppins';"/>
+        </placeholder>
+    </ListView>
+
+</VBox>

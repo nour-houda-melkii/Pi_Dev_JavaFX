@@ -23,6 +23,7 @@
         <TextField fx:id="searchField" prefWidth="400"/>
         <Button fx:id="searchButton" text="Search" onAction="#handleSearch"/>
         <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="unverifiedButton" text="Unverified Doctors" onAction="#handleShowUnverified"/>
         <Button fx:id="addButton" text="+ Add a Doctor" onAction="#handleAddMedecin"/>
     </HBox>
 

@@ -285,4 +285,28 @@ public class ListMedecin implements Initializable {
 
     public void setUserService(UserService userService) {
     }
+
+    @FXML
+    private void handleShowUnverified() {
+        try {
+            // Charger le fichier FXML de la page des médecins non vérifiés
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/UnverifiedDoctors.fxml"));
+            Parent root = loader.load();
+
+            // Créer une nouvelle scène
+            Scene scene = new Scene(root);
+
+            // Obtenir la fenêtre actuelle
+            Stage stage = (Stage) addButton.getScene().getWindow();
+
+            // Changer la scène
+            stage.setScene(scene);
+            stage.setTitle("Unverified Doctors");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "Unable to open the unverified doctors page.");
+        }
+    }
+
 }
