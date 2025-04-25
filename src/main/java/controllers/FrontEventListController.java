@@ -33,6 +33,8 @@ import javafx.scene.image.Image;
 
 import models.Event;
 import services.EventService;
+import models.User;
+import utils.SessionManager;
 
 public class FrontEventListController {
     @FXML
@@ -48,8 +50,10 @@ public class FrontEventListController {
     private AnchorPane mapContainer;
     
     private WebEngine webEngine;
+    
     private EventService eventService;
     private DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    private User user;
 
     @FXML
     public void initialize() {
@@ -61,6 +65,11 @@ public class FrontEventListController {
             
             // Initialiser le service et charger les événements
             eventService = new EventService();
+            
+            // Récupérer l'utilisateur depuis le SessionManager si disponible
+            user = SessionManager.getCurrentUser();
+            System.out.println("FrontEventListController initialisé avec utilisateur: " + 
+                (user != null ? user.getEmail() + " (rôle: " + user.getRole() + ")" : "null"));
             
             // Initialiser la carte
             initializeMap();
@@ -79,6 +88,7 @@ public class FrontEventListController {
         }
     }
 
+    @FXML
     private void initializeMap() {
         webEngine = mapView.getEngine();
         
@@ -176,7 +186,8 @@ public class FrontEventListController {
     }
 
     private boolean isEventExpired(Event event) {
-        return event.getEndDate().isBefore(LocalDateTime.now());
+        // Un événement est considéré comme expiré s'il est archivé ou si sa date est passée
+        return event.isArchived() || event.getEndDate().isBefore(LocalDateTime.now());
     }
 
     // Méthode JavaScript peut appeler cette méthode
@@ -342,6 +353,7 @@ public class FrontEventListController {
         
         LocalDateTime now = LocalDateTime.now();
         boolean isExpired = event.getEndDate().isBefore(now);
+        boolean isFull = event.getPlacesDisponibles() <= 0;
         
         if (isExpired) {
             statusBadge.setText("EXPIRÉ");
@@ -396,12 +408,27 @@ public class FrontEventListController {
         descriptionLabel.getStyleClass().add("description-text");
         descriptionLabel.setWrapText(true);
 
-        // Bouton Détails
-        Button detailsButton = new Button("Voir les détails");
-        detailsButton.getStyleClass().addAll("details-button", 
-            isExpired ? "button-expired" : "button-active");
+        // Bouton Détails ou état (Terminé/Complet)
+        Button detailsButton;
         
-        detailsButton.setOnAction(e -> showEventDetails(event));
+        if (isFull) {
+            // Événement complet -> Bouton "Complet" désactivé
+            detailsButton = new Button("Complet");
+            detailsButton.getStyleClass().addAll("details-button", "button-expired");  // Utiliser le style rouge pour indiquer indisponible
+            detailsButton.setDisable(true);
+        } else {
+            // Pour tous les événements (actifs ou expirés) -> Bouton "Voir les détails" actif
+            detailsButton = new Button("Voir les détails");
+            
+            // Appliquer un style différent selon si l'événement est expiré ou actif
+            if (isExpired) {
+                detailsButton.getStyleClass().addAll("details-button", "button-expired");
+            } else {
+                detailsButton.getStyleClass().addAll("details-button", "button-active");
+            }
+            
+            detailsButton.setOnAction(e -> showEventDetails(event));
+        }
 
         // Ajout des éléments à la carte
         content.getChildren().addAll(
@@ -418,32 +445,43 @@ public class FrontEventListController {
 
     private void showEventDetails(Event event) {
         try {
+            System.out.println("Ouverture des détails pour l'événement: " + event.getTitle());
+            System.out.println("Utilisateur actuel (via SessionManager): " + 
+                (utils.SessionManager.getCurrentUser() != null ? 
+                utils.SessionManager.getCurrentUser().getEmail() + " (rôle: " + 
+                utils.SessionManager.getCurrentUser().getRole() + ")" : "null"));
+            
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/event_details.fxml"));
             Parent root = loader.load();
             
-            Stage stage = new Stage();
+            EventDetailsController controller = loader.getController();
+            controller.setEvent(event);
+            System.out.println("Événement transmis au contrôleur de détails");
+            
+            // Si c'est nécessaire, passer la fenêtre actuelle
+            Stage currentStage = (Stage) activeEventsContainer.getScene().getWindow();
+            controller.setPreviousStage(currentStage);
+            
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/styles/style.css").toExternalForm());
             
-            stage.setScene(scene);
-            stage.setTitle("Détails de l'événement: " + event.getTitle());
+            Stage detailsStage = new Stage();
+            detailsStage.setTitle("Détails de l'événement: " + event.getTitle());
+            detailsStage.setScene(scene);
+            detailsStage.setWidth(800);
+            detailsStage.setHeight(700);
+            detailsStage.centerOnScreen();
+            detailsStage.show();
             
-            // Configurer pour plein écran
-            Screen screen = Screen.getPrimary();
-            Rectangle2D bounds = screen.getVisualBounds();
-            stage.setX(bounds.getMinX());
-            stage.setY(bounds.getMinY());
-            stage.setWidth(bounds.getWidth());
-            stage.setHeight(bounds.getHeight());
-            
-            // Récupérer le contrôleur et passer l'événement
-            EventDetailsController controller = loader.getController();
-            controller.setEvent(event);
-            controller.setPreviousStage((Stage) activeEventsContainer.getScene().getWindow());
-            
-            stage.show();
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
+            System.err.println("Erreur lors de l'affichage des détails de l'événement: " + e.getMessage());
         }
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+        // Rafraîchir les événements quand on définit l'utilisateur
+        loadEvents();
     }
 }

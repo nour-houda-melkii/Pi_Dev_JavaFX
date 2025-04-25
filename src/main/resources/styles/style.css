@@ -489,28 +489,54 @@
 }
 
 .details-button {
-    -fx-background-radius: 4;
-    -fx-padding: 8 16;
+    -fx-background-color: linear-gradient(to bottom, #2196F3, #1976D2);
+    -fx-text-fill: white;
+    -fx-background-radius: 5px;
     -fx-font-weight: bold;
+    -fx-padding: 10px 15px;
     -fx-cursor: hand;
 }
 
+.details-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #2196F3, #0D47A1);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
 .button-active {
-    -fx-background-color: #28a745;
+    -fx-background-color: linear-gradient(to bottom, #2196F3, #1976D2);
     -fx-text-fill: white;
+    -fx-border-width: 0;
 }
 
 .button-active:hover {
-    -fx-background-color: #218838;
+    -fx-background-color: linear-gradient(to bottom, #1E88E5, #1565C0);
+    -fx-effect: dropshadow(three-pass-box, rgba(33,150,243,0.4), 8, 0, 0, 2);
+    -fx-translate-y: -1px;
+}
+
+.button-active:pressed {
+    -fx-background-color: #1565C0;
+    -fx-translate-y: 0px;
+    -fx-effect: dropshadow(three-pass-box, rgba(33,150,243,0.2), 2, 0, 0, 0);
 }
 
 .button-expired {
-    -fx-background-color: #dc3545;
+    -fx-background-color: #9E9E9E;
     -fx-text-fill: white;
+    -fx-background-radius: 5px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 15px;
+    -fx-opacity: 0.8;
 }
 
-.button-expired:hover {
-    -fx-background-color: #c82333;
+.button-full {
+    -fx-background-color: #FF9800;
+    -fx-text-fill: white;
+    -fx-opacity: 0.9;
+}
+
+.button-full:hover {
+    -fx-background-color: #F57C00;
 }
 
 .status-badge {
@@ -542,41 +568,6 @@
     -fx-translate-y: -100;
     -fx-min-width: 350;
     -fx-alignment: center;
-}
-
-.back-button {
-    -fx-background-color: #f8f9fa;
-    -fx-border-color: #dee2e6;
-    -fx-border-radius: 4;
-    -fx-background-radius: 4;
-    -fx-padding: 8 16;
-    -fx-graphic: url('../images/refresh.png');
-    -fx-content-display: LEFT;
-    -fx-alignment: CENTER;
-}
-
-.back-button:hover {
-    -fx-background-color: #e9ecef;
-    -fx-cursor: hand;
-}
-
-.badge {
-    -fx-padding: 4 8;
-    -fx-background-radius: 4;
-    -fx-font-size: 12px;
-    -fx-text-fill: white;
-}
-
-.badge-category {
-    -fx-background-color: #2196F3;
-}
-
-.badge-active {
-    -fx-background-color: #4CAF50;
-}
-
-.badge-expired {
-    -fx-background-color: #F44336;
 }
 
 /* ========== STYLES FRONTEND ========== */
@@ -993,4 +984,151 @@
     -fx-background-color: #f0f0f0;
     -fx-background-radius: 8px;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 4);
+}
+
+.danger-button {
+    -fx-background-color: linear-gradient(to bottom, #f44336, #d32f2f);
+    -fx-text-fill: white;
+    -fx-background-radius: 5px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 15px;
+    -fx-cursor: hand;
+}
+
+.danger-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #f44336, #b71c1c);
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.button-expired {
+    -fx-background-color: #9E9E9E;
+    -fx-text-fill: white;
+    -fx-background-radius: 5px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 15px;
+    -fx-opacity: 0.8;
+}
+
+/* Bouton Retour amélioré */
+.back-button {
+    -fx-background-color: #f8f9fa;
+    -fx-text-fill: #495057;
+    -fx-font-weight: bold;
+    -fx-border-color: #dee2e6;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-padding: 10 20;
+    -fx-font-size: 14px;
+    -fx-content-display: LEFT;
+    -fx-alignment: CENTER;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 1);
+    -fx-transition: all 0.2s ease;
+}
+
+.back-button:hover {
+    -fx-background-color: #e9ecef;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
+    -fx-translate-y: -1px;
+}
+
+.back-button:pressed {
+    -fx-background-color: #dee2e6;
+    -fx-translate-y: 0px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 2, 0, 0, 0);
+}
+
+/* Styles pour les boutons d'inscription et désinscription */
+.details-button.button-active {
+    -fx-background-color: linear-gradient(to bottom, #2196F3, #1976D2);
+    -fx-text-fill: white;
+    -fx-background-radius: 5px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 15px;
+    -fx-cursor: hand;
+}
+
+.details-button.button-active:hover {
+    -fx-background-color: linear-gradient(to bottom, #1E88E5, #1565C0);
+    -fx-effect: dropshadow(three-pass-box, rgba(33,150,243,0.4), 5, 0, 0, 2);
+    -fx-translate-y: -1px;
+}
+
+.details-button.danger-button {
+    -fx-background-color: linear-gradient(to bottom, #f44336, #d32f2f);
+    -fx-text-fill: white;
+    -fx-background-radius: 5px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 15px;
+    -fx-cursor: hand;
+}
+
+.details-button.danger-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #e53935, #b71c1c);
+    -fx-effect: dropshadow(three-pass-box, rgba(244,67,54,0.4), 5, 0, 0, 2);
+    -fx-translate-y: -1px;
+}
+
+.details-button.button-expired {
+    -fx-background-color: #9E9E9E;
+    -fx-text-fill: white;
+    -fx-background-radius: 5px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 15px;
+    -fx-opacity: 0.8;
+    -fx-cursor: default;
+}
+
+.badge {
+    -fx-padding: 3px 8px;
+    -fx-background-radius: 12px;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.badge-category {
+    -fx-background-color: #2196F3;
+}
+
+.badge-active {
+    -fx-background-color: #4CAF50;
+}
+
+.badge-expired {
+    -fx-background-color: #F44336;
+}
+
+/* Styles pour les notifications dans la navbar */
+.notification-container {
+    -fx-padding: 0;
+}
+
+.notification-badge {
+    -fx-translate-y: -5;
+    -fx-translate-x: 5;
+}
+
+/* Animation du badge de notification */
+.badge-circle {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 3, 0, 0, 0);
+    -fx-animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        -fx-opacity: 1;
+        -fx-scale-x: 1;
+        -fx-scale-y: 1;
+    }
+    50% {
+        -fx-opacity: 0.8;
+        -fx-scale-x: 1.1;
+        -fx-scale-y: 1.1;
+    }
+    100% {
+        -fx-opacity: 1;
+        -fx-scale-x: 1;
+        -fx-scale-y: 1;
+    }
 }

@@ -2,110 +2,115 @@ package controllers;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.BorderPane;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.application.Platform;
-import javafx.stage.WindowEvent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import java.io.IOException;
+import javafx.scene.layout.BorderPane;
+import services.UserSession;
+import models.User;
 
-public class FrontMainController {
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.scene.Node;
+
+public class FrontMainController implements Initializable {
     
     @FXML
     private BorderPane mainContainer;
     
-    private FrontEventListController eventListController;
+    private User currentUser;
     
-    @FXML
-    public void initialize() {
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // Récupérer l'utilisateur connecté
         try {
-            // Chargement initial de la page d'événements avec accès au contrôleur
+            this.currentUser = UserSession.getInstance().getLoggedInUser();
+            System.out.println("FrontMainController initialisé avec utilisateur: " + 
+                    currentUser.getEmail() + " (rôle: " + currentUser.getRole() + ")");
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la récupération de l'utilisateur: " + e.getMessage());
+        }
+        
+        loadDefaultContent();
+        loadNavbar();
+    }
+    
+    /**
+     * Charge le contenu par défaut (liste des événements)
+     */
+    private void loadDefaultContent() {
+        try {
+            if (mainContainer == null) {
+                System.err.println("ERREUR: mainContainer est null dans loadDefaultContent");
+                return;
+            }
+            
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/front_event_list.fxml"));
-            Parent page = loader.load();
-            eventListController = loader.getController();
-            mainContainer.setCenter(page);
+            Parent eventList = loader.load();
             
-            // Configurer un rafraîchissement périodique
-            setupPeriodicRefresh();
+            // Transmettre l'utilisateur au contrôleur
+            FrontEventListController controller = loader.getController();
+            if (currentUser != null) {
+                controller.setUser(currentUser);
+                System.out.println("Utilisateur transmis au contrôleur d'événements depuis FrontMainController");
+            }
             
-            // Configurer le rafraîchissement lors de la réactivation de la fenêtre
-            setupWindowFocusListener();
+            mainContainer.setCenter(eventList);
         } catch (IOException e) {
+            System.err.println("Erreur lors du chargement du contenu par défaut: " + e.getMessage());
             e.printStackTrace();
-            System.err.println("Erreur lors du chargement de la page initiale: " + e.getMessage());
         }
     }
     
     /**
-     * Configure un rafraîchissement périodique des événements (toutes les 30 secondes)
+     * Charge la barre de navigation
      */
-    private void setupPeriodicRefresh() {
-        Thread refreshThread = new Thread(() -> {
-            while (true) {
-                try {
-                    // Attendre 30 secondes
-                    Thread.sleep(30000);
-                    
-                    // Rafraîchir sur le thread JavaFX
-                    Platform.runLater(this::refreshEvents);
-                } catch (InterruptedException e) {
-                    break;
+    private void loadNavbar() {
+        try {
+            if (mainContainer == null) {
+                System.err.println("ERREUR: mainContainer est null dans loadNavbar");
+                return;
+            }
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/front_navbar.fxml"));
+            Parent navbar = loader.load();
+            
+            // Stocker le contrôleur de la barre de navigation dans les userData pour y accéder plus tard
+            FrontNavbarController navController = loader.getController();
+            navbar.setUserData(navController);
+            
+            mainContainer.setTop(navbar);
+        } catch (IOException e) {
+            System.err.println("Erreur lors du chargement de la barre de navigation: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Met à jour le badge de notification dans la barre de navigation
+     */
+    public void updateNotificationBadge() {
+        try {
+            Node navbar = mainContainer.getTop();
+            if (navbar != null) {
+                FrontNavbarController navController = (FrontNavbarController) navbar.getUserData();
+                if (navController != null) {
+                    navController.updateNotificationBadge();
                 }
             }
-        });
-        refreshThread.setDaemon(true);
-        refreshThread.start();
-    }
-    
-    /**
-     * Configure un écouteur pour rafraîchir quand la fenêtre reprend le focus
-     */
-    private void setupWindowFocusListener() {
-        Platform.runLater(() -> {
-            Scene scene = mainContainer.getScene();
-            if (scene != null) {
-                Stage stage = (Stage) scene.getWindow();
-                stage.addEventHandler(WindowEvent.WINDOW_SHOWN, event -> refreshEvents());
-                stage.focusedProperty().addListener((obs, oldVal, newVal) -> {
-                    if (newVal) {
-                        // La fenêtre a repris le focus
-                        refreshEvents();
-                    }
-                });
-            }
-        });
-    }
-    
-    /**
-     * Rafraîchit la liste des événements
-     */
-    public void refreshEvents() {
-        if (eventListController != null) {
-            System.out.println("Rafraîchissement de la liste des événements...");
-            eventListController.refreshEvents();
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la mise à jour du badge de notification: " + e.getMessage());
         }
     }
     
     /**
-     * Charge une page dans le conteneur central
+     * Définit l'utilisateur actuel
+     * 
+     * @param user L'utilisateur connecté
      */
-    public void loadPage(String fxmlPath) {
-        try {
-            // Si c'est la page des événements, utiliser l'instance existante pour permettre le rafraîchissement
-            if ("/views/front_event_list.fxml".equals(fxmlPath) && eventListController != null) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-                Parent page = loader.load();
-                eventListController = loader.getController();
-                mainContainer.setCenter(page);
-            } else {
-                // Pour les autres pages
-                Parent page = FXMLLoader.load(getClass().getResource(fxmlPath));
-                mainContainer.setCenter(page);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("Erreur lors du chargement de la page: " + fxmlPath);
-        }
+    public void setUser(User user) {
+        this.currentUser = user;
+        System.out.println("Utilisateur défini dans FrontMainController: " + 
+                (user != null ? user.getEmail() + " (rôle: " + user.getRole() + ")" : "null"));
     }
 } 

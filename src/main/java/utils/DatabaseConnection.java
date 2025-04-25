@@ -5,11 +5,28 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    private static final String URL = "jdbc:mysql://localhost:3306/your_database_name";
-    private static final String USER = "your_username";
-    private static final String PASSWORD = "your_password";
+    // Paramètres de connexion pour la base de données pi_data_base1
+    private static final String URL = "jdbc:mysql://localhost:3306/pi_data_base1";
+    private static final String USER = "root";
+    private static final String PASSWORD = "";
+    
+    private static boolean warnedAboutDefaults = false;
 
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+        // Vérifier si les paramètres sont ceux attendus
+        if (!warnedAboutDefaults && 
+            (!URL.contains("pi_data_base1") || 
+             !USER.equals("root"))) {
+            
+            System.out.println("AVERTISSEMENT: Vous pourriez avoir besoin de configurer DatabaseConnection.java avec vos propres informations de connexion.");
+            warnedAboutDefaults = true;
+        }
+        
+        try {
+            return DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (SQLException e) {
+            System.err.println("Erreur de connexion à la base de données: " + e.getMessage());
+            throw e;
+        }
     }
 } 

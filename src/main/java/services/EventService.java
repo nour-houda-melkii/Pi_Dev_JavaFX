@@ -102,4 +102,49 @@ public class EventService {
         
         return null;
     }
+    
+    /**
+     * Met à jour le nombre de places disponibles pour un événement spécifique
+     * @param eventId L'identifiant de l'événement
+     * @param placesDisponibles Le nouveau nombre de places disponibles
+     * @return true si la mise à jour a réussi, false sinon
+     */
+    public boolean updatePlacesDisponibles(int eventId, int placesDisponibles) {
+        String query = "UPDATE event SET places_disponibles = ? WHERE id = ?";
+        
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, placesDisponibles);
+            preparedStatement.setInt(2, eventId);
+            
+            int rowsAffected = preparedStatement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Récupère le titre d'un événement à partir de son ID
+     * @param eventId L'identifiant de l'événement
+     * @return Le titre de l'événement ou null si non trouvé
+     */
+    public String getEventTitle(int eventId) {
+        String query = "SELECT title FROM event WHERE id = ?";
+        
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, eventId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            
+            if (resultSet.next()) {
+                return resultSet.getString("title");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
 } 

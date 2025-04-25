@@ -7,96 +7,320 @@
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.control.ProgressIndicator?>
 
-<AnchorPane prefHeight="800" prefWidth="800" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="controllers.EventFormController">
-    <ScrollPane fitToWidth="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" styleClass="transparent-scroll">
-        <VBox spacing="10" styleClass="form-container">
-            <padding>
-                <Insets bottom="20" left="20" right="20" top="20" />
-            </padding>
+<AnchorPane prefHeight="800" prefWidth="1000" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="controllers.EventFormController">
+    <StackPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <ScrollPane fitToWidth="true" styleClass="transparent-scroll-pane">
+            <VBox spacing="30" style="-fx-background-color: linear-gradient(to bottom right, #f8f9fb, #eef1f8); -fx-padding: 40 40 50 40;">
+                
+                <!-- En-tête du formulaire avec effet neumorphique -->
+                <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: white; -fx-background-radius: 18px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 20, 0, 0, 4), innershadow(gaussian, rgba(255,255,255,0.95), 5, 0, 0, 0); -fx-padding: 26px;">
+                    <StackPane minWidth="60" maxWidth="60" minHeight="60" maxHeight="60">
+                        <Circle radius="30" style="-fx-fill: linear-gradient(to bottom right, #4568dc, #b06ab3);"/>
+                        <Text text="+" style="-fx-fill: white; -fx-font-size: 32px; -fx-font-weight: bold;"/>
+                    </StackPane>
+                    <VBox spacing="6">
+                        <Label text="Créer un événement" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                        <Label text="Complétez le formulaire pour ajouter un nouvel événement" style="-fx-text-fill: #718096; -fx-font-size: 15px;"/>
+                    </VBox>
+                </HBox>
+                
+                <!-- Barre de progression -->
+                <HBox spacing="8" alignment="CENTER">
+                    <StackPane styleClass="progress-step" style="-fx-background-color: #4568dc; -fx-background-radius: 50%; -fx-min-width: 40px; -fx-min-height: 40px; -fx-max-width: 40px; -fx-max-height: 40px; -fx-effect: dropshadow(gaussian, rgba(69,104,220,0.3), 10, 0, 0, 0);">
+                        <Text text="1" style="-fx-fill: white; -fx-font-weight: bold;"/>
+                    </StackPane>
+                    <Rectangle width="100" height="3" style="-fx-fill: #4568dc; -fx-opacity: 0.7;"/>
+                    <StackPane styleClass="progress-step" style="-fx-background-color: #4568dc; -fx-background-radius: 50%; -fx-min-width: 40px; -fx-min-height: 40px; -fx-max-width: 40px; -fx-max-height: 40px; -fx-effect: dropshadow(gaussian, rgba(69,104,220,0.3), 10, 0, 0, 0);">
+                        <Text text="2" style="-fx-fill: white; -fx-font-weight: bold;"/>
+                    </StackPane>
+                    <Rectangle width="100" height="3" style="-fx-fill: #4568dc; -fx-opacity: 0.7;"/>
+                    <StackPane styleClass="progress-step" style="-fx-background-color: #4568dc; -fx-background-radius: 50%; -fx-min-width: 40px; -fx-min-height: 40px; -fx-max-width: 40px; -fx-max-height: 40px; -fx-effect: dropshadow(gaussian, rgba(69,104,220,0.3), 10, 0, 0, 0);">
+                        <Text text="3" style="-fx-fill: white; -fx-font-weight: bold;"/>
+                    </StackPane>
+                    <Rectangle width="100" height="3" style="-fx-fill: #4568dc; -fx-opacity: 0.7;"/>
+                    <StackPane styleClass="progress-step" style="-fx-background-color: #4568dc; -fx-background-radius: 50%; -fx-min-width: 40px; -fx-min-height: 40px; -fx-max-width: 40px; -fx-max-height: 40px; -fx-effect: dropshadow(gaussian, rgba(69,104,220,0.3), 10, 0, 0, 0);">
+                        <Text text="4" style="-fx-fill: white; -fx-font-weight: bold;"/>
+                    </StackPane>
+                </HBox>
 
-            <Label styleClass="required-field" text="Titre *" />
-            <TextField fx:id="fieldTitre" promptText="Entrez un titre" />
-            <Label fx:id="titreError" styleClass="error-message" managed="false" visible="false" />
+                <!-- Section Informations de base -->
+                <VBox spacing="25" style="-fx-background-color: white; -fx-background-radius: 18px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 20, 0, 0, 4); -fx-padding: 30px;">
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <StackPane styleClass="section-icon" style="-fx-background-color: rgba(69,104,220,0.1); -fx-background-radius: 12px; -fx-min-width: 50px; -fx-min-height: 50px; -fx-max-width: 50px; -fx-max-height: 50px;">
+                            <Text text="i" style="-fx-fill: #4568dc; -fx-font-size: 22px; -fx-font-weight: bold;"/>
+                        </StackPane>
+                        <VBox spacing="4">
+                            <Label text="Informations générales" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                            <Label text="Définissez les informations principales de votre événement" style="-fx-text-fill: #718096; -fx-font-size: 14px;"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <Separator style="-fx-background-color: #e2e8f0; -fx-opacity: 0.6;"/>
+                    
+                    <GridPane hgap="25" vgap="20">
+                        <columnConstraints>
+                            <javafx.scene.layout.ColumnConstraints percentWidth="50" />
+                            <javafx.scene.layout.ColumnConstraints percentWidth="50" />
+                        </columnConstraints>
+                        
+                        <!-- Titre -->
+                        <VBox spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <HBox alignment="CENTER_LEFT" spacing="5">
+                                <Label text="Titre" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                                <Label text="*" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #4568dc;"/>
+                            </HBox>
+                            <TextField fx:id="fieldTitre" promptText="Entrez un titre captivant" style="-fx-background-color: #f7fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 12px; -fx-font-size: 14px; -fx-effect: innershadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);"/>
+                            <Label fx:id="titreError" managed="false" visible="false" style="-fx-text-fill: #e53e3e; -fx-font-size: 12px; -fx-font-style: italic;"/>
+                        </VBox>
 
-            <Label styleClass="required-field" text="Description *" />
-            <TextArea fx:id="fieldDescription" prefRowCount="3" promptText="Entrez une description" wrapText="true" />
-            <Label fx:id="descriptionError" styleClass="error-message" managed="false" visible="false" />
+                        <!-- Catégorie -->
+                        <VBox spacing="8" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <HBox alignment="CENTER_LEFT" spacing="5">
+                                <Label text="Catégorie" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                                <Label text="*" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #4568dc;"/>
+                            </HBox>
+                            <ComboBox fx:id="comboCategorie" promptText="Sélectionnez une catégorie" maxWidth="Infinity" style="-fx-background-color: #f7fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 5px; -fx-font-size: 14px; -fx-effect: innershadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList" />
+                                </items>
+                            </ComboBox>
+                            <Label fx:id="categorieError" managed="false" visible="false" style="-fx-text-fill: #e53e3e; -fx-font-size: 12px; -fx-font-style: italic;"/>
+                        </VBox>
+                        
+                        <!-- Places disponibles -->
+                        <VBox spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                            <HBox alignment="CENTER_LEFT" spacing="5">
+                                <Label text="Places disponibles" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                                <Label text="*" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #4568dc;"/>
+                            </HBox>
+                            <TextField fx:id="fieldPlaces" promptText="ex: 100" style="-fx-background-color: #f7fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 12px; -fx-font-size: 14px; -fx-effect: innershadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);"/>
+                            <Label fx:id="placesError" managed="false" visible="false" style="-fx-text-fill: #e53e3e; -fx-font-size: 12px; -fx-font-style: italic;"/>
+                        </VBox>
+                        
+                        <!-- Description -->
+                        <VBox spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2">
+                            <HBox alignment="CENTER_LEFT" spacing="5">
+                                <Label text="Description" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                                <Label text="*" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #4568dc;"/>
+                            </HBox>
+                            <TextArea fx:id="fieldDescription" prefRowCount="5" promptText="Décrivez votre événement de manière attrayante..." wrapText="true" style="-fx-background-color: #f7fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 12px; -fx-font-size: 14px; -fx-effect: innershadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);"/>
+                            <Label fx:id="descriptionError" managed="false" visible="false" style="-fx-text-fill: #e53e3e; -fx-font-size: 12px; -fx-font-style: italic;"/>
+                        </VBox>
+                    </GridPane>
+                </VBox>
+                
+                <!-- Section Dates -->
+                <VBox spacing="25" style="-fx-background-color: white; -fx-background-radius: 18px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 20, 0, 0, 4); -fx-padding: 30px;">
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <StackPane styleClass="section-icon" style="-fx-background-color: rgba(76,175,80,0.1); -fx-background-radius: 12px; -fx-min-width: 50px; -fx-min-height: 50px; -fx-max-width: 50px; -fx-max-height: 50px;">
+                            <Text text="📅" style="-fx-fill: #4CAF50; -fx-font-size: 22px;"/>
+                        </StackPane>
+                        <VBox spacing="4">
+                            <Label text="Dates &amp; Horaires" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                            <Label text="Précisez quand votre événement aura lieu" style="-fx-text-fill: #718096; -fx-font-size: 14px;"/>
+                        </VBox>
+                    </HBox>
+                    
+                    <Separator style="-fx-background-color: #e2e8f0; -fx-opacity: 0.6;"/>
+                    
+                    <GridPane hgap="25" vgap="20">
+                        <columnConstraints>
+                            <javafx.scene.layout.ColumnConstraints percentWidth="50" />
+                            <javafx.scene.layout.ColumnConstraints percentWidth="50" />
+                        </columnConstraints>
+                        
+                        <!-- Date de début -->
+                        <VBox spacing="15" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                            <HBox alignment="CENTER_LEFT" spacing="5">
+                                <Label text="Date de début" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                                <Label text="*" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #4CAF50;"/>
+                            </HBox>
+                            <DatePicker fx:id="dateDebut" maxWidth="Infinity" style="-fx-background-color: #f7fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 5px; -fx-font-size: 14px;"/>
+                            
+                            <HBox spacing="15" alignment="CENTER_LEFT">
+                                <VBox spacing="8" HBox.hgrow="ALWAYS" style="-fx-background-color: #f7fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;">
+                                    <HBox alignment="CENTER" spacing="10">
+                                        <Label text="Heure" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #4a5568;"/>
+                                        <Spinner fx:id="hourStartSpinner" maxWidth="Infinity" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-effect: innershadow(gaussian, rgba(0,0,0,0.04), 2, 0, 0, 1);"/>
+                                    </HBox>
+                                </VBox>
+                                
+                                <VBox spacing="8" HBox.hgrow="ALWAYS" style="-fx-background-color: #f7fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;">
+                                    <HBox alignment="CENTER" spacing="10">
+                                        <Label text="Minute" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #4a5568;"/>
+                                        <Spinner fx:id="minuteStartSpinner" maxWidth="Infinity" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-effect: innershadow(gaussian, rgba(0,0,0,0.04), 2, 0, 0, 1);"/>
+                                    </HBox>
+                                </VBox>
+        </HBox>
+                            <Label fx:id="dateDebutError" managed="false" visible="false" style="-fx-text-fill: #e53e3e; -fx-font-size: 12px; -fx-font-style: italic;"/>
+                        </VBox>
+                        
+                        <!-- Date de fin -->
+                        <VBox spacing="15" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <HBox alignment="CENTER_LEFT" spacing="5">
+                                <Label text="Date de fin" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                                <Label text="*" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #4CAF50;"/>
+        </HBox>
+                            <DatePicker fx:id="dateFin" maxWidth="Infinity" style="-fx-background-color: #f7fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 5px; -fx-font-size: 14px;"/>
+                            
+                            <HBox spacing="15" alignment="CENTER_LEFT">
+                                <VBox spacing="8" HBox.hgrow="ALWAYS" style="-fx-background-color: #f7fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;">
+                                    <HBox alignment="CENTER" spacing="10">
+                                        <Label text="Heure" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #4a5568;"/>
+                                        <Spinner fx:id="hourEndSpinner" maxWidth="Infinity" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-effect: innershadow(gaussian, rgba(0,0,0,0.04), 2, 0, 0, 1);"/>
+                                    </HBox>
+                                </VBox>
+                                
+                                <VBox spacing="8" HBox.hgrow="ALWAYS" style="-fx-background-color: #f7fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 10px;">
+                                    <HBox alignment="CENTER" spacing="10">
+                                        <Label text="Minute" style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #4a5568;"/>
+                                        <Spinner fx:id="minuteEndSpinner" maxWidth="Infinity" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-effect: innershadow(gaussian, rgba(0,0,0,0.04), 2, 0, 0, 1);"/>
+                                    </HBox>
+                                </VBox>
+                            </HBox>
+                            <Label fx:id="dateFinError" managed="false" visible="false" style="-fx-text-fill: #e53e3e; -fx-font-size: 12px; -fx-font-style: italic;"/>
+                        </VBox>
+                    </GridPane>
+            </VBox>
+                
+                <!-- Section Localisation -->
+                <VBox spacing="25" style="-fx-background-color: white; -fx-background-radius: 18px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 20, 0, 0, 4); -fx-padding: 30px;">
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <StackPane styleClass="section-icon" style="-fx-background-color: rgba(236,86,70,0.1); -fx-background-radius: 12px; -fx-min-width: 50px; -fx-min-height: 50px; -fx-max-width: 50px; -fx-max-height: 50px;">
+                            <Text text="📍" style="-fx-fill: #ec5646; -fx-font-size: 22px;"/>
+                        </StackPane>
+                        <VBox spacing="4">
+                            <Label text="Localisation" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                            <Label text="Indiquez où se déroulera votre événement" style="-fx-text-fill: #718096; -fx-font-size: 14px;"/>
+            </VBox>
+        </HBox>
 
-            <Label styleClass="required-field" text="Date de début *" />
-            <HBox spacing="10">
-                <DatePicker fx:id="dateDebut" />
-                <Spinner fx:id="hourStartSpinner" prefWidth="70" />
-                <Spinner fx:id="minuteStartSpinner" prefWidth="70" />
+                    <Separator style="-fx-background-color: #e2e8f0; -fx-opacity: 0.6;"/>
+                    
+                    <VBox spacing="15">
+                        <HBox alignment="CENTER_LEFT" spacing="5">
+                            <Label text="Adresse" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                            <Label text="*" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #ec5646;"/>
+                        </HBox>
+                        <TextField fx:id="fieldLieu" promptText="Entrez une adresse précise" style="-fx-background-color: #f7fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-padding: 12px; -fx-font-size: 14px; -fx-effect: innershadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);"/>
+                        <Label fx:id="lieuError" managed="false" visible="false" style="-fx-text-fill: #e53e3e; -fx-font-size: 12px; -fx-font-style: italic;"/>
+                    </VBox>
+                    
+                    <VBox spacing="15" style="-fx-background-color: #f7fafc; -fx-background-radius: 12px; -fx-border-color: #e2e8f0; -fx-border-radius: 12px; -fx-padding: 20px; -fx-effect: innershadow(gaussian, rgba(0,0,0,0.02), 7, 0, 0, 2);">
+                        <HBox alignment="CENTER_LEFT" spacing="5">
+                            <Label text="Position sur la carte" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                            <Label text="*" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #ec5646;"/>
+                            <Label text="(cliquez pour sélectionner)" style="-fx-font-size: 13px; -fx-text-fill: #718096; -fx-font-style: italic;"/>
+                        </HBox>
+                        
+                        <AnchorPane style="-fx-background-color: white; -fx-background-radius: 12px; -fx-border-color: #e2e8f0; -fx-border-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 2);" minHeight="380">
+                            <WebView fx:id="mapView" 
+                                    AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" 
+                                    AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                        </AnchorPane>
+                        
+                        <Label fx:id="selectedLocationLabel" text="Position sélectionnée : Aucune" 
+                               style="-fx-text-fill: #2d3748; -fx-background-color: rgba(236,86,70,0.05); -fx-background-radius: 8px; -fx-padding: 12px; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: rgba(236,86,70,0.2); -fx-border-radius: 8px;"/>
+                        
+                        <!-- Champs latitude/longitude masqués pour être remplis automatiquement -->
+                        <TextField fx:id="fieldLatitude" visible="false" managed="false" />
+                        <TextField fx:id="fieldLongitude" visible="false" managed="false" />
+                        <Label fx:id="latitudeError" styleClass="error-message" managed="false" visible="false" style="-fx-text-fill: #e53e3e;" />
+                        <Label fx:id="longitudeError" styleClass="error-message" managed="false" visible="false" style="-fx-text-fill: #e53e3e;" />
+                    </VBox>
+                </VBox>
+
+                <!-- Section Image -->
+                <VBox spacing="25" style="-fx-background-color: white; -fx-background-radius: 18px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.07), 20, 0, 0, 4); -fx-padding: 30px;">
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <StackPane styleClass="section-icon" style="-fx-background-color: rgba(145,85,253,0.1); -fx-background-radius: 12px; -fx-min-width: 50px; -fx-min-height: 50px; -fx-max-width: 50px; -fx-max-height: 50px;">
+                            <Text text="🖼️" style="-fx-fill: #9155fd; -fx-font-size: 22px;"/>
+                        </StackPane>
+                        <VBox spacing="4">
+                            <Label text="Visuel de l'événement" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                            <Label text="Ajoutez une image attractive pour votre événement" style="-fx-text-fill: #718096; -fx-font-size: 14px;"/>
+                    </VBox>
+                </HBox>
+
+                    <Separator style="-fx-background-color: #e2e8f0; -fx-opacity: 0.6;"/>
+                    
+                    <HBox spacing="25" alignment="CENTER_LEFT">
+                        <VBox spacing="15" HBox.hgrow="ALWAYS">
+                            <Label text="Affiche (JPEG ou PNG, max 5MB)" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                            
+        <HBox spacing="10">
+                                <Button onAction="#handleChooseImage" text="Parcourir mon ordinateur" style="-fx-background-color: #f7fafc; -fx-text-fill: #4a5568; -fx-border-color: #cbd5e0; -fx-border-width: 1px; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-padding: 10px 15px; -fx-font-weight: bold; -fx-font-size: 13px;">
+                                    <graphic>
+                                        <StackPane minWidth="20" minHeight="20" maxWidth="20" maxHeight="20" style="-fx-background-color: #e2e8f0; -fx-background-radius: 4px;">
+                                            <Text text="+" style="-fx-fill: #4a5568; -fx-font-size: 16px;"/>
+                                        </StackPane>
+                                    </graphic>
+                                </Button>
+                                
+                                <Button onAction="#handleGenerateImageButton" text="Générer une image IA" style="-fx-background-color: linear-gradient(to right, #9155fd, #b06ab3); -fx-text-fill: white; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-padding: 10px 15px; -fx-font-weight: bold; -fx-font-size: 13px; -fx-effect: dropshadow(gaussian, rgba(145,85,253,0.3), 10, 0, 0, 2);">
+                                    <graphic>
+                                        <StackPane minWidth="20" minHeight="20" maxWidth="20" maxHeight="20" style="-fx-background-color: rgba(255,255,255,0.2); -fx-background-radius: 4px;">
+                                            <Text text="✨" style="-fx-fill: white; -fx-font-size: 14px;"/>
+                                        </StackPane>
+                                    </graphic>
+                                </Button>
             </HBox>
-            <Label fx:id="dateDebutError" styleClass="error-message" managed="false" visible="false" />
 
-            <Label styleClass="required-field" text="Date de fin *" />
-            <HBox spacing="10">
-                <DatePicker fx:id="dateFin" />
-                <Spinner fx:id="hourEndSpinner" prefWidth="70" />
-                <Spinner fx:id="minuteEndSpinner" prefWidth="70" />
-            </HBox>
-            <Label fx:id="dateFinError" styleClass="error-message" managed="false" visible="false" />
-
-            <Label styleClass="required-field" text="Lieu *" />
-            <TextField fx:id="fieldLieu" promptText="Entrez un lieu" />
-            <Label fx:id="lieuError" styleClass="error-message" managed="false" visible="false" />
-
-            <VBox spacing="5" styleClass="map-section" VBox.vgrow="ALWAYS">
-                <Label styleClass="map-title" text="Sélectionnez l'emplacement sur la carte *" />
-                <AnchorPane styleClass="map-container" VBox.vgrow="ALWAYS" prefHeight="400">
-                    <WebView fx:id="mapView" prefHeight="350" 
-                            AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" 
-                            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
-                </AnchorPane>
-                <Label fx:id="selectedLocationLabel" text="Latitude sélectionnée : Aucune | Longitude sélectionnée : Aucune" 
-                       styleClass="location-label" />
-                <!-- Champs latitude/longitude masqués pour être remplis automatiquement -->
-                <TextField fx:id="fieldLatitude" visible="false" managed="false" />
-                <TextField fx:id="fieldLongitude" visible="false" managed="false" />
-                <Label fx:id="latitudeError" styleClass="error-message" managed="false" visible="false" />
-                <Label fx:id="longitudeError" styleClass="error-message" managed="false" visible="false" />
+                        <Label fx:id="labelImagePath" text="Aucune image sélectionnée" style="-fx-text-fill: #718096; -fx-font-size: 13px; -fx-font-style: italic;"/>
+                        <Label fx:id="imageError" managed="false" visible="false" style="-fx-text-fill: #e53e3e; -fx-font-size: 12px; -fx-font-style: italic;"/>
+                    </VBox>
+                    
+                    <StackPane minWidth="200" maxWidth="200" minHeight="200" maxHeight="200" style="-fx-background-color: #f7fafc; -fx-border-color: #e2e8f0; -fx-border-style: dashed; -fx-border-width: 2px; -fx-border-radius: 12px; -fx-background-radius: 12px; -fx-padding: 10px;">
+                        <Rectangle width="180" height="180" style="-fx-fill: transparent; -fx-stroke: #cbd5e0; -fx-stroke-width: 1; -fx-stroke-dash-array: 5 5; -fx-stroke-dash-offset: 10; -fx-stroke-line-cap: round; -fx-arc-width: 10; -fx-arc-height: 10;"/>
+                        <ImageView fx:id="imagePreview" fitWidth="180" fitHeight="180" preserveRatio="true"/>
+                        <Label text="Aperçu de l'image" style="-fx-text-fill: #a0aec0; -fx-font-size: 12px;" StackPane.alignment="BOTTOM_CENTER"/>
+                    </StackPane>
+        </HBox>
             </VBox>
 
-            <Label styleClass="required-field" text="Places disponibles *" />
-            <TextField fx:id="fieldPlaces" promptText="ex: 30" />
-            <Label fx:id="placesError" styleClass="error-message" managed="false" visible="false" />
+            <!-- Boutons d'action avec effet de parallaxe au survol -->
+            <HBox alignment="CENTER_RIGHT" spacing="15" style="-fx-padding: 15px 0 0 0;">
+                <Button onAction="#handleRetourListe" text="Annuler" style="-fx-background-color: transparent; -fx-text-fill: #718096; -fx-border-color: #cbd5e0; -fx-border-width: 1px; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-padding: 12px 25px; -fx-font-weight: bold; -fx-font-size: 14px;"/>
+                
+                <Button fx:id="btnSave" onAction="#handleSave" text="Publier l'événement" style="-fx-background-color: linear-gradient(to right, #4568dc, #b06ab3); -fx-text-fill: white; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-padding: 12px 25px; -fx-font-weight: bold; -fx-font-size: 14px; -fx-effect: dropshadow(gaussian, rgba(69,104,220,0.4), 10, 0, 0, 2);">
+                    <graphic>
+                        <StackPane minWidth="20" minHeight="20" maxWidth="20" maxHeight="20">
+                            <Circle radius="10" style="-fx-fill: rgba(255,255,255,0.2);"/>
+                            <Text text="✓" style="-fx-fill: white; -fx-font-size: 14px;"/>
+                        </StackPane>
+                    </graphic>
+                </Button>
+        </HBox>
 
-            <Label styleClass="required-field" text="Catégorie *" />
-            <ComboBox fx:id="comboCategorie" promptText="Sélectionnez une catégorie">
-                <items>
-                    <FXCollections fx:factory="observableArrayList">
-                        <!-- Les catégories seront ajoutées dynamiquement dans le contrôleur -->
-                    </FXCollections>
-                </items>
-            </ComboBox>
-            <Label fx:id="categorieError" styleClass="error-message" managed="false" visible="false" />
-
-            <Label text="Affiche de l'événement (JPEG ou PNG, max 5MB)" />
-            <HBox spacing="10">
-                <Button onAction="#handleChooseImage" text="Choisir une image" styleClass="file-chooser-button" />
-                <Button onAction="#handleGenerateImage" text="Générer une image" styleClass="generate-image-button" />
-                <Label fx:id="labelImagePath" text="Aucune image sélectionnée" />
-            </HBox>
-            <Label fx:id="imageError" styleClass="error-message" managed="false" visible="false" />
-
-            <HBox alignment="CENTER_RIGHT" spacing="10">
-                <Button fx:id="btnSave" minWidth="100" onAction="#handleSave" styleClass="primary-button" text="Enregistrer" />
-                <Button onAction="#handleRetourListe" styleClass="button-secondary" text="Retour à la liste" />
-            </HBox>
-
-            <ImageView fx:id="imagePreview" fitHeight="150" fitWidth="150" preserveRatio="true" />
-
-            <Label fx:id="errorLabel" styleClass="error-label" wrapText="true" />
+            <Label fx:id="errorLabel" wrapText="true" style="-fx-text-fill: #e53e3e;"/>
         </VBox>
-    </ScrollPane>
+        </ScrollPane>
+        
+        <!-- Overlay de chargement -->
+        <StackPane fx:id="loadingOverlay" style="-fx-background-color: rgba(0,0,0,0.5);" visible="false">
+            <VBox alignment="CENTER" style="-fx-background-color: white; -fx-background-radius: 12px; -fx-padding: 30px; -fx-max-width: 300px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 20, 0, 0, 10);">
+                <ProgressIndicator progress="-1.0" style="-fx-min-width: 60px; -fx-min-height: 60px;"/>
+                <Label text="Génération de l'image en cours..." style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2d3748; -fx-padding: 20 0 0 0;"/>
+                <Label text="Cela peut prendre quelques instants..." style="-fx-font-size: 13px; -fx-text-fill: #718096; -fx-padding: 10 0 0 0;"/>
+    </VBox>
+        </StackPane>
+    </StackPane>
 </AnchorPane>

@@ -65,7 +65,7 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
       <option name="MAIN_CLASS_NAME" value="org.example.App" />
       <module name="gestion_event" />
-      <option name="VM_PARAMETERS" value="--module-path &quot;C:\Program Files\Java\javafx-sdk-17\lib&quot; --add-modules javafx.controls,javafx.fxml" />
+      <option name="VM_PARAMETERS" value="--module-path &quot;C:\Program Files\Java\javafx-sdk-17\lib&quot; --add-modules javafx.controls,javafx.fxml,javafx.web    --add-exports javafx.graphics/com.sun.javafx.sg.prism=ALL-UNNAMED    --add-exports javafx.controls/com.sun.javafx.scene.control.behavior=ALL-UNNAMED    --add-exports javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED    --add-exports javafx.base/com.sun.javafx.binding=ALL-UNNAMED    --add-exports javafx.base/com.sun.javafx.event=ALL-UNNAMED    --add-exports javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -100,6 +100,8 @@
       <workItem from="1744591042040" duration="40000" />
       <workItem from="1744688748396" duration="1092000" />
       <workItem from="1744707138529" duration="2474000" />
+      <workItem from="1745310259386" duration="3872000" />
+      <workItem from="1745415306856" duration="463000" />
     </task>
     <servers />
   </component>

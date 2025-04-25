@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.concurrent.Worker;
@@ -21,8 +22,10 @@ import models.CategorieEvent;
 import models.Event;
 import services.CategorieEventDAO;
 import services.EventDAO;
+import services.LlamaService;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.*;
 import java.time.LocalDate;
@@ -33,6 +36,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.Locale;
+import java.time.format.DateTimeFormatter;
+import javafx.application.Platform;
 
 public class EventFormController {
 
@@ -66,6 +71,7 @@ public class EventFormController {
     @FXML private Label imageError;
     @FXML private WebView mapView;
     @FXML private Label selectedLocationLabel;
+    @FXML private StackPane loadingOverlay;
 
     private final EventDAO eventDAO = new EventDAO();
     private final CategorieEventDAO categorieDAO = new CategorieEventDAO();
@@ -75,6 +81,7 @@ public class EventFormController {
     private File selectedImageFile;
     private final String IMAGE_DIR = "src/main/resources/affiches/";
     private WebEngine webEngine;
+    private LlamaService llamaService;
 
     @FXML
     public void initialize() {
@@ -97,6 +104,12 @@ public class EventFormController {
         // Forcer l'affichage des boutons
         if (btnSave != null) btnSave.setVisible(true);
         if (btnCancel != null) btnCancel.setVisible(true);
+
+        llamaService = new LlamaService();
+        
+        if (loadingOverlay != null) {
+            loadingOverlay.setVisible(false);
+        }
     }
 
     private void initMap() {
@@ -454,10 +467,55 @@ public class EventFormController {
             }
 
             // Sauvegarder dans la base de données
-            if (event.getId() == 0) {
+            boolean isNewEvent = event.getId() == 0;
+            if (isNewEvent) {
                 eventDAO.insert(event);
+                System.out.println("Nouvel événement créé avec ID: " + event.getId());
+                
+                // Inscrire automatiquement l'utilisateur actuel pour qu'il puisse recevoir des notifications
+                try {
+                    services.InscriptionService inscriptionService = new services.InscriptionService();
+                    services.UserSession userSession = services.UserSession.getInstance();
+                    
+                    if (userSession.isLoggedIn()) {
+                        models.User currentUser = userSession.getLoggedInUser();
+                        int userId = currentUser.getId();
+                        
+                        System.out.println("Tentative d'inscription automatique de l'utilisateur " + userId + 
+                                " à l'événement " + event.getId());
+                        
+                        boolean inscriptionSuccess = inscriptionService.inscrireUtilisateur(userId, event.getId());
+                        
+                        if (inscriptionSuccess) {
+                            System.out.println("Inscription automatique réussie pour l'événement " + event.getId());
+                        } else {
+                            System.err.println("Échec de l'inscription automatique pour l'événement " + event.getId());
+                        }
+                    } else {
+                        System.out.println("Aucun utilisateur connecté pour l'inscription automatique");
+                    }
+                } catch (Exception ex) {
+                    System.err.println("Erreur lors de l'inscription automatique: " + ex.getMessage());
+                    ex.printStackTrace();
+                }
             } else {
                 eventDAO.update(event);
+            }
+            
+            // Forcer la vérification des notifications pour le nouvel événement
+            try {
+                // Récupérer le planificateur depuis l'app principale et forcer une vérification
+                org.example.App.getNotificationScheduler().forceCheck();
+                
+                // Afficher une notification de création réussie
+                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                successAlert.setTitle("Événement créé");
+                successAlert.setHeaderText("Création réussie");
+                successAlert.setContentText("L'événement a été créé avec succès. Les notifications seront envoyées automatiquement 24h avant le début de l'événement.");
+                successAlert.showAndWait();
+            } catch (Exception ex) {
+                System.err.println("Erreur lors de la vérification des notifications: " + ex.getMessage());
+                // Ne pas bloquer le flux principal en cas d'erreur
             }
 
             // Notifier le callback et retourner à la liste
@@ -528,6 +586,92 @@ public class EventFormController {
             }
         } catch (IOException ex) {
             showError("Erreur lors de la création du répertoire d'images: " + ex.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleGenerateImageButton(ActionEvent event) {
+        String title = fieldTitre.getText();
+        LocalDate startDate = dateDebut.getValue();
+        LocalDate endDate = dateFin.getValue();
+        
+        if (title.isEmpty() || startDate == null || endDate == null) {
+            showAlert(Alert.AlertType.WARNING, "Données manquantes", 
+                    "Veuillez remplir le titre et les dates avant de générer une image.");
+            return;
+        }
+        
+        // Disable the button during generation
+        btnSave.setDisable(true);
+        btnSave.setText("Génération en cours...");
+        
+        // Format dates for the prompt
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String formattedStartDate = startDate.format(formatter);
+        String formattedEndDate = endDate.format(formatter);
+        
+        // Show loading spinner or progress indicator
+        loadingOverlay.setVisible(true);
+        
+        try {
+            // Check if Llama is available
+            if (llamaService.isLlamaAvailable()) {
+                // Use Llama to generate the poster asynchronously
+                llamaService.generateEventPoster(title, formattedStartDate, formattedEndDate)
+                    .thenAccept(imageName -> {
+                        Platform.runLater(() -> {
+                            loadImage(imageName);
+                            loadingOverlay.setVisible(false);
+                            btnSave.setDisable(false);
+                            btnSave.setText("Générer une affiche");
+                        });
+                    })
+                    .exceptionally(ex -> {
+                        Platform.runLater(() -> {
+                            handleGenerationError(ex, title);
+                        });
+                        return null;
+                    });
+            } else {
+                // Fallback to placeholder if Llama is not available
+                Platform.runLater(() -> {
+                    try {
+                        String placeholderImageName = llamaService.generatePlaceholderImage(title);
+                        loadImage(placeholderImageName);
+                        showAlert(Alert.AlertType.INFORMATION, "Mode d'urgence", 
+                                "Llama n'est pas disponible. Une image de substitution a été générée.");
+                    } catch (IOException e) {
+                        handleGenerationError(e, title);
+                    } finally {
+                        loadingOverlay.setVisible(false);
+                        btnSave.setDisable(false);
+                        btnSave.setText("Générer une affiche");
+                    }
+                });
+            }
+        } catch (Exception e) {
+            handleGenerationError(e, title);
+        }
+    }
+    
+    private void handleGenerationError(Throwable ex, String title) {
+        System.err.println("Error generating image: " + ex.getMessage());
+        ex.printStackTrace();
+        
+        try {
+            // Try to generate a placeholder as fallback
+            String placeholderImageName = llamaService.generatePlaceholderImage(title);
+            loadImage(placeholderImageName);
+            showAlert(Alert.AlertType.ERROR, "Erreur de génération", 
+                    "Une erreur s'est produite lors de la génération de l'image. Une image de substitution a été créée.");
+        } catch (IOException e) {
+            System.err.println("Failed to generate placeholder: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Erreur", 
+                    "Impossible de générer l'image ou une image de substitution.");
+        } finally {
+            loadingOverlay.setVisible(false);
+            btnSave.setDisable(false);
+            btnSave.setText("Générer une affiche");
         }
     }
 
@@ -684,5 +828,40 @@ public class EventFormController {
     private void closeForm(ActionEvent e) {
         Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         stage.close();
+    }
+
+    /**
+     * Charge une image à partir de son nom de fichier
+     * @param imageName Le nom du fichier image à charger
+     */
+    private void loadImage(String imageName) {
+        try {
+            File imgFile = new File(IMAGE_DIR + imageName);
+            if (imgFile.exists()) {
+                Image image = new Image(imgFile.toURI().toString());
+                imagePreview.setImage(image);
+                labelImagePath.setText(imageName);
+                selectedImageFile = imgFile;
+            } else {
+                throw new FileNotFoundException("Image file not found: " + imageName);
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading image: " + e.getMessage());
+            showError("Erreur lors du chargement de l'image: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Affiche une alerte avec le type, titre et message spécifiés
+     * @param alertType Le type d'alerte
+     * @param title Le titre de l'alerte
+     * @param message Le message de l'alerte
+     */
+    private void showAlert(Alert.AlertType alertType, String title, String message) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

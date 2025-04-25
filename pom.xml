@@ -67,6 +67,18 @@
           <options>
             <option>--add-modules</option>
             <option>javafx.controls,javafx.fxml,javafx.web</option>
+            <option>--add-exports</option>
+            <option>javafx.graphics/com.sun.javafx.sg.prism=ALL-UNNAMED</option>
+            <option>--add-exports</option>
+            <option>javafx.controls/com.sun.javafx.scene.control.behavior=ALL-UNNAMED</option>
+            <option>--add-exports</option>
+            <option>javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED</option>
+            <option>--add-exports</option>
+            <option>javafx.base/com.sun.javafx.binding=ALL-UNNAMED</option>
+            <option>--add-exports</option>
+            <option>javafx.base/com.sun.javafx.event=ALL-UNNAMED</option>
+            <option>--add-exports</option>
+            <option>javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED</option>
           </options>
         </configuration>
       </plugin>
