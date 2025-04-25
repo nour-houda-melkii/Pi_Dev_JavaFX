@@ -30,14 +30,14 @@ public class UserService implements IServiceUser<User> {
     // ============ MÉTHODES COMMUNES ============
     @Override
     public void ajouterUser(User user) {
+        user.setVerified(true); // ← Ceci est important
+        user.setStatus("verifie");
         String req = "INSERT INTO user (email, password, first_name, last_name, roles, adress, phone_number, age, gender, numero_licence, specialite, is_verified, status) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement pst = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
             setUserParameters(pst, user);
             pst.executeUpdate();
-            user.setVerified(true); // ← Ceci est important
-            user.setStatus("verifie");
 
             try (ResultSet rs = pst.getGeneratedKeys()) {
                 if (rs.next()) {

@@ -59,6 +59,14 @@ public class AuthService {
                     throw new AuthException("Email ou mot de passe incorrect");
                 }
 
+                // Vérifier le statut de vérification
+                boolean isVerified = rs.getBoolean("is_verified");
+                String status = rs.getString("status");
+
+                if (!isVerified || !"verifie".equals(status)) {
+                    throw new AuthException("Votre compte n'est pas encore vérifié. Veuillez vérifier votre email ou contacter l'administrateur.");
+                }
+
                 String storedHash = rs.getString("password");
                 System.out.println("Stored hash: " + storedHash); // Log pour débogage
 
@@ -369,6 +377,15 @@ public class AuthService {
         String hashedPassword = PasswordHasher.hashPassword(user.getPassword());
         user.setPassword(hashedPassword);
 
+        // Définir le statut de vérification selon le rôle
+        if (user.isMedecin()) {
+            // Médecins doivent être vérifiés manuellement
+            user.setStatus("non_verifie");
+        } else {
+            // Autres utilisateurs sont vérifiés automatiquement
+            user.setStatus("verifie");
+        }
+
         String query = "INSERT INTO user (email, password, first_name, last_name, roles, " +
                 "adress, phone_number, age, gender, numero_licence, specialite, is_verified, status) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -392,7 +409,7 @@ public class AuthService {
                 pst.setNull(paramIndex++, Types.VARCHAR); // numero_licence
                 pst.setNull(paramIndex++, Types.VARCHAR); // specialite
             }
-            pst.setBoolean(paramIndex++, false); // is_verified
+            pst.setBoolean(paramIndex++, true); // is_verified
             pst.setString(paramIndex++, user.getStatus());
 
             int affectedRows = pst.executeUpdate();
