@@ -5,47 +5,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="67f812a0-6c1d-4f08-bb79-468f0bf5180a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Services/AIDescriptionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Services/AIDescriptionService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AddCategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AddCategoryController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AdminDashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AdminDashboardController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/CartViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/CartViewController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/CategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/CategoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/DataHistoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/DataHistoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/EditCategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/EditCategoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/EditProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/EditProductController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/FavoritesViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/FavoritesViewController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ProductFrontController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ProductFrontController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ViewCategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ViewCategoryController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/StatisticsViewController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/StripePaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/StripePaymentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/entities/Order.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/entities/OrderItem.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/admin_dashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/admin_dashboard.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/cart_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/cart_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/favorites_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/favorites_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/view_categories.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/view_categories.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Services/AIDescriptionService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Services/AIDescriptionService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/confirmation_purchase.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/confirmation_purchase.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/product_client.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/product_client.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/statistics_view.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/admin_dashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/admin_dashboard.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/cart_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/cart_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/AddCategoryController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/AddCategoryController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/AdminDashboardController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/AdminDashboardController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/CartViewController$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/CartViewController$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/CartViewController$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/CartViewController$TableButtonCell.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/confirmation_purchase.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/confirmation_purchase.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/controllers/CartViewController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/CartViewController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/CategoryController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/CategoryController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/EditCategoryController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/EditCategoryController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/EditProductController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/EditProductController$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/EditProductController$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/EditProductController$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/EditProductController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/EditProductController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/FavoritesViewController$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/FavoritesViewController$TableButtonCell.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/FavoritesViewController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/FavoritesViewController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/controllers/ProductFrontController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ProductFrontController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ViewCategoryController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ViewCategoryController$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ViewCategoryController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ViewCategoryController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/favorites_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/favorites_view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/StatisticsViewController.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/StripePaymentController$JavaConnector.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/StripePaymentController$JavaConnector.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/StripePaymentController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/StripePaymentController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/Order.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/entities/OrderItem.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/product_client.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/product_client.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/view_categories.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/view_categories.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/statistics_view.fxml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,6 +40,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Kotlin Class" />
         <option value="Class" />
         <option value="FxmlFile" />
       </list>
@@ -218,7 +204,13 @@
       <workItem from="1745093328037" duration="1280000" />
       <workItem from="1745098993961" duration="102000" />
       <workItem from="1745264980438" duration="2516000" />
-      <workItem from="1745308508426" duration="506000" />
+      <workItem from="1745308508426" duration="6129000" />
+      <workItem from="1745327309412" duration="930000" />
+      <workItem from="1745345810060" duration="4097000" />
+      <workItem from="1745435890382" duration="1302000" />
+      <workItem from="1745520552847" duration="342000" />
+      <workItem from="1745571344616" duration="1957000" />
+      <workItem from="1745608554138" duration="6166000" />
     </task>
     <servers />
   </component>

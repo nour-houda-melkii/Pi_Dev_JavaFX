@@ -110,6 +110,8 @@ public class CartViewController {
         card.setStyle("-fx-background-color: white; " +
                 "-fx-border-color: #f0f0f0; " +
                 "-fx-border-radius: 8; " +
+                "-fx-border-color: black; " +
+                "-fx-border-width: 1.5; " +
                 "-fx-background-radius: 8; " +
                 "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 3, 0, 0, 1);");
 

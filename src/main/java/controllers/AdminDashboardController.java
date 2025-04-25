@@ -381,5 +381,28 @@ public class AdminDashboardController {
             showAlert("Error", "Failed to load add category view: " + e.getMessage());
         }
     }
+    @FXML
+    private void handleFavoritesStatistics() {
+        try {
+            java.net.URL resourceUrl = getClass().getResource("/favorites_statistics_view.fxml");
+
+            if (resourceUrl == null) {
+                showAlert("Error", "Could not find resource: /favorites_statistics_view.fxml");
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(resourceUrl);
+            Parent root = loader.load();
+
+            // Get the current stage and navigate to the statistics view
+            Stage stage = (Stage) productContainer.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Favorites Statistics");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "Failed to load favorites statistics view: " + e.getMessage());
+        }
+    }
 
 }

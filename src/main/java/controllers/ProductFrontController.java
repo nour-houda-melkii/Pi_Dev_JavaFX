@@ -1,9 +1,11 @@
 package controllers;
 
+import Services.FavoriServices;
 import entities.Produit;
 import Services.ProduitServices;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -16,6 +18,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.animation.PauseTransition;
@@ -29,6 +32,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import Services.FavoriServices;
+import entities.Favori;
 
 public class ProductFrontController {
     @FXML
@@ -47,12 +52,12 @@ public class ProductFrontController {
     private Label favoritesCountLabel;
 
     @FXML
-    private ImageView logoImageView; // Add this line to reference the logo ImageView
+    private ImageView logoImageView;
 
     // Lists to keep track of cart and favorites
     private List<Produit> cartProducts = new ArrayList<>();
     private List<Produit> favoriteProducts = new ArrayList<>();
-    private List<Produit> allProducts = new ArrayList<>(); // Store all products for filtering
+    private List<Produit> allProducts = new ArrayList<>();
 
     @FXML
     public void initialize() {
@@ -62,59 +67,28 @@ public class ProductFrontController {
                 "Name (A-Z)",
                 "Name (Z-A)",
                 "Price (Low-High)",
-                "Price (High-Low)"
+                "Price (High-low)"
         ));
         sortComboBox.setValue("Default");
 
         // Add listener for sorting
         sortComboBox.setOnAction(event -> applySortingAndFiltering());
 
-        // Load the SahaTech logo
-        loadLogo();
-
         setupSearchListener();
         loadProductsInCardView();
         updateCounters();
-    }
-
-    private void loadLogo() {
-        try {
-            // Try to load the logo from the resources folder
-            URL logoUrl = getClass().getResource("/images/sahatech_logo.png");
-            if (logoUrl != null) {
-                Image logoImage = new Image(logoUrl.toString());
-
-                // Find the ImageView in the scene and set the image
-                // This assumes the ImageView is accessible after FXML loading
-                ImageView logoImageView = (ImageView) productContainer.getScene().lookup("#logoImageView");
-                if (logoImageView != null) {
-                    logoImageView.setImage(logoImage);
-                } else {
-                    System.err.println("Logo ImageView not found in the scene");
-                }
-            } else {
-                System.err.println("SahaTech logo file not found in resources");
-            }
-        } catch (Exception e) {
-            System.err.println("Error loading SahaTech logo: " + e.getMessage());
-            e.printStackTrace();
-        }
+        loadUserFavorites();
     }
 
     private void setupSearchListener() {
-        // Add a delay to prevent searching on every keystroke
         PauseTransition pause = new PauseTransition(Duration.millis(300));
-
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            pause.setOnFinished(event -> {
-                applySortingAndFiltering();
-            });
+            pause.setOnFinished(event -> applySortingAndFiltering());
             pause.playFromStart();
         });
     }
 
     private void applySortingAndFiltering() {
-        // First filter the products
         String searchText = searchField.getText().toLowerCase();
         List<Produit> filteredProducts;
 
@@ -129,7 +103,6 @@ public class ProductFrontController {
                     .collect(Collectors.toList());
         }
 
-        // Then sort the filtered products
         String sortOption = sortComboBox.getValue();
         switch (sortOption) {
             case "Name (A-Z)":
@@ -145,29 +118,9 @@ public class ProductFrontController {
                 filteredProducts.sort(Comparator.comparing(Produit::getPrice).reversed());
                 break;
             default:
-                // Default sorting (by ID or as returned from database)
                 filteredProducts.sort(Comparator.comparing(Produit::getId));
                 break;
         }
-
-        // Display the filtered and sorted products
-        displayProducts(filteredProducts);
-    }
-
-    private void filterProducts(String searchText) {
-        if (searchText == null || searchText.isEmpty()) {
-            // If search is empty, show all products but maintain sorting
-            applySortingAndFiltering();
-            return;
-        }
-
-        // Filter products based on search text (case insensitive)
-        List<Produit> filteredProducts = allProducts.stream()
-                .filter(product ->
-                        product.getName().toLowerCase().contains(searchText) ||
-                                product.getDescription().toLowerCase().contains(searchText)
-                )
-                .collect(Collectors.toList());
 
         displayProducts(filteredProducts);
     }
@@ -196,7 +149,8 @@ public class ProductFrontController {
         card.setPrefHeight(350);
         card.setStyle("-fx-background-color: white; " +
                 "-fx-border-color: black; " +
-                "-fx-border-width: 1.5; " +                 "-fx-border-radius: 8; " +
+                "-fx-border-width: 1.5; " +
+                "-fx-border-radius: 8; " +
                 "-fx-background-radius: 8; " +
                 "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 3, 0, 0, 1);");
 
@@ -217,8 +171,27 @@ public class ProductFrontController {
         nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333; -fx-padding: 0 10 0 10;");
         nameLabel.setWrapText(true);
 
-        Label priceLabel = new Label(String.format("$%.2f", product.getPrice()));
-        priceLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #33ccff; -fx-padding: 0 10 5 10;");
+        // Price display with discount if favorite
+        boolean isFav = isFavorite(product);
+        double discountedPrice = product.getPrice() * 0.95;
+
+        HBox priceBox = new HBox(5);
+        priceBox.setAlignment(Pos.CENTER_LEFT);
+        priceBox.setStyle("-fx-padding: 0 10 5 10;");
+
+        if (isFav) {
+            Label originalPriceLabel = new Label(String.format("$%.2f", product.getPrice()));
+            originalPriceLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #7f8c8d; -fx-strikethrough: true;");
+
+            Label discountedPriceLabel = new Label(String.format("$%.2f", discountedPrice));
+            discountedPriceLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #e74c3c; -fx-font-weight: bold;");
+
+            priceBox.getChildren().addAll(originalPriceLabel, discountedPriceLabel);
+        } else {
+            Label priceLabel = new Label(String.format("$%.2f", product.getPrice()));
+            priceLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #33ccff;");
+            priceBox.getChildren().add(priceLabel);
+        }
 
         Label descLabel = new Label(product.getDescription());
         descLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #7f8c8d; -fx-padding: 0 10 0 10;");
@@ -243,18 +216,18 @@ public class ProductFrontController {
 
         // Favorite Button
         Button favoriteButton = new Button("♥");
-        favoriteButton.setStyle("-fx-background-color: " + (isFavorite(product) ? "#ff3366" : "#f0f0f0") +
+        favoriteButton.setStyle("-fx-background-color: " + (isFav ? "#ff3366" : "#f0f0f0") +
                 "; -fx-text-fill: white; -fx-background-radius: 20; -fx-min-width: 40px; -fx-min-height: 40px; -fx-font-size: 18px;");
         favoriteButton.setOnAction(e -> {
             toggleFavorite(product);
-            favoriteButton.setStyle("-fx-background-color: " + (isFavorite(product) ? "#e74c3c" : "#ecf0f1") +
-                    "; -fx-text-fill: white; -fx-background-radius: 20; -fx-min-width: 40px; -fx-min-height: 40px; -fx-font-size: 18px;");
+            // Refresh the card to show updated price
+            displayProducts(allProducts);
         });
 
         // Add components to card
         buttonBox.getChildren().add(addToCartButton);
         favoriteBox.getChildren().add(favoriteButton);
-        card.getChildren().addAll(imageContainer, nameLabel, priceLabel, descLabel, buttonBox, favoriteBox);
+        card.getChildren().addAll(imageContainer, nameLabel, priceBox, descLabel, buttonBox, favoriteBox);
 
         return card;
     }
@@ -280,7 +253,6 @@ public class ProductFrontController {
         try {
             imageView.setImage(new Image(getClass().getResourceAsStream("/images/placeholder.png")));
         } catch (Exception ex) {
-            // If placeholder can't be loaded, leave it empty
             System.err.println("Error loading placeholder image: " + ex.getMessage());
         }
     }
@@ -291,16 +263,50 @@ public class ProductFrontController {
     }
 
     private void toggleFavorite(Produit product) {
-        if (isFavorite(product)) {
-            favoriteProducts.removeIf(p -> p.getId() == product.getId());
-        } else {
-            favoriteProducts.add(product);
+        try {
+            FavoriServices favoriService = new FavoriServices();
+            int currentUserId = 1; // Replace with actual user ID
+
+            if (isFavorite(product)) {
+                favoriService.delete(new Favori(currentUserId, product.getId()));
+                favoriteProducts.removeIf(p -> p.getId() == product.getId());
+            } else {
+                favoriService.add(new Favori(currentUserId, product.getId()));
+                favoriteProducts.add(product);
+            }
+            updateCounters();
+        } catch (SQLException e) {
+            showAlert("Error", "Failed to update favorites: " + e.getMessage());
+            e.printStackTrace();
         }
-        updateCounters();
     }
 
     private boolean isFavorite(Produit product) {
-        return favoriteProducts.stream().anyMatch(p -> p.getId() == product.getId());
+        try {
+            int currentUserId = 1; // Replace with actual user ID
+            FavoriServices favoriService = new FavoriServices();
+            return favoriService.isProductInFavorites(currentUserId, product.getId());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @FXML
+    private void handleShowFavoritesStatistics() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/favorites_statistics_view.fxml"));
+            Parent root = loader.load();
+
+            Stage statisticsStage = new Stage();
+            statisticsStage.setScene(new Scene(root));
+            statisticsStage.setTitle("Favorites Statistics");
+            statisticsStage.initModality(Modality.APPLICATION_MODAL);
+            statisticsStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "Failed to load favorites statistics view: " + e.getMessage());
+        }
     }
 
     private void updateCounters() {
@@ -317,7 +323,6 @@ public class ProductFrontController {
             CartViewController controller = loader.getController();
             controller.setCartProducts(cartProducts);
 
-            // Replace the current scene instead of creating a new stage
             Stage stage = (Stage) productContainer.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Shopping Cart");
@@ -326,6 +331,7 @@ public class ProductFrontController {
             e.printStackTrace();
         }
     }
+
     @FXML
     private void handleViewFavorites() {
         try {
@@ -335,7 +341,6 @@ public class ProductFrontController {
             FavoritesViewController controller = loader.getController();
             controller.setFavoriteProducts(favoriteProducts);
 
-            // Replace the current scene instead of creating a new stage
             Stage stage = (Stage) productContainer.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Favorites");
@@ -345,7 +350,7 @@ public class ProductFrontController {
         }
     }
 
-        @FXML
+    @FXML
     private void handleBackToAdmin() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/admin_dashboard.fxml"));
@@ -356,7 +361,6 @@ public class ProductFrontController {
             showAlert("Error", "Failed to return to admin dashboard");
         }
     }
-
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -365,9 +369,16 @@ public class ProductFrontController {
         alert.showAndWait();
     }
 
-    @FXML
-    void test() {
-        System.out.println("tesst");
+    private void loadUserFavorites() {
+        try {
+            int currentUserId = 1; // Replace with actual user ID
+            FavoriServices favoriService = new FavoriServices();
+            favoriteProducts = favoriService.getFavoriteProducts(currentUserId);
+            updateCounters();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert("Error", "Failed to load favorites: " + e.getMessage());
+        }
     }
 
     public void setCartProducts(List<Produit> cartProducts) {
