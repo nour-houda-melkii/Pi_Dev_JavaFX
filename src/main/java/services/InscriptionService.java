@@ -28,7 +28,45 @@ public class InscriptionService {
         }
     }
     
+    /**
+     * Vérifie que la connexion à la base de données est active
+     * @return true si la connexion est active, false sinon
+     */
+    public boolean checkConnection() {
+        try {
+            if (connection == null || connection.isClosed()) {
+                connection = DatabaseConnection.getConnection();
+                System.out.println("🔄 Connexion à la base de données réinitialisée dans InscriptionService");
+                return connection != null && !connection.isClosed();
+            }
+            
+            // Tester la connexion avec une requête simple
+            try (PreparedStatement stmt = connection.prepareStatement("SELECT 1")) {
+                stmt.executeQuery();
+            } catch (SQLException e) {
+                System.out.println("🔄 Connexion à la base de données perdue, tentative de reconnexion");
+                connection = DatabaseConnection.getConnection();
+            }
+            
+            return connection != null && !connection.isClosed();
+        } catch (SQLException e) {
+            System.err.println("❌ Échec de connexion à la base de données dans InscriptionService: " + e.getMessage());
+            try {
+                connection = DatabaseConnection.getConnection();
+                return connection != null && !connection.isClosed();
+            } catch (SQLException ex) {
+                System.err.println("❌ Échec de reconnexion à la base de données: " + ex.getMessage());
+                return false;
+            }
+        }
+    }
+    
     public boolean inscrireUtilisateur(int userId, int eventId) {
+        if (!checkConnection()) {
+            System.err.println("Impossible d'inscrire l'utilisateur: connexion à la base de données fermée");
+            return false;
+        }
+        
         String sql = "INSERT INTO inscription (user_id, event_id, date_inscription, has_unsubscribed) VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, userId);
@@ -36,10 +74,68 @@ public class InscriptionService {
             statement.setObject(3, LocalDateTime.now());
             statement.setBoolean(4, false);
             int rowsInserted = statement.executeUpdate();
+            
+            if (rowsInserted > 0) {
+                // Inscription réussie, stocker une notification de rappel (à envoyer 24h avant l'événement)
+                System.out.println("✅ Inscription réussie, stockage d'une notification de rappel pour envoi 24h avant l'événement");
+                
+                try {
+                    // Récupérer le titre de l'événement
+                    Event event = eventService.findById(eventId);
+                    if (event != null) {
+                        // Créer une notification de rappel
+                        NotificationService notificationService = new NotificationService();
+                        
+                        // Préparer un message de rappel
+                        String reminderDetails = "RAPPEL: L'événement \"" + event.getTitle() + "\" commence " + 
+                                               "le " + event.getStartDate().toLocalDate() + 
+                                               " à " + event.getStartDate().getHour() + "h" + 
+                                               (event.getStartDate().getMinute() > 0 ? event.getStartDate().getMinute() : "") +
+                                               ". Lieu: " + event.getLocation();
+                        
+                        // Stocker la notification de rappel sans la date d'envoi (sera envoyée 24h avant l'événement)
+                        notificationService.storeScheduledReminder(userId, eventId, reminderDetails, event.getStartDate());
+                        System.out.println("📝 Notification de rappel stockée pour envoi 24h avant l'événement");
+                        
+                        // Déclencher également un check immédiat via le planificateur global
+                        try {
+                            if (org.example.App.getNotificationScheduler() != null) {
+                                org.example.App.getNotificationScheduler().checkSpecificEvent(eventId);
+                            }
+                        } catch (Exception ex) {
+                            System.err.println("Erreur lors de la vérification des notifications après inscription: " + ex.getMessage());
+                        }
+                    }
+                } catch (Exception e) {
+                    System.err.println("Erreur lors du stockage de notification de rappel: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+            
             return rowsInserted > 0;
         } catch (SQLException e) {
             System.err.println("Erreur lors de l'inscription à l'événement: " + e.getMessage());
             return false;
+        }
+    }
+    
+    /**
+     * Obtient une description textuelle du temps avant un événement
+     */
+    private String getTimeDescription(LocalDateTime eventTime) {
+        LocalDateTime now = LocalDateTime.now();
+        long hours = java.time.temporal.ChronoUnit.HOURS.between(now, eventTime);
+        
+        if (hours < 1) {
+            return "très bientôt";
+        } else if (hours < 2) {
+            return "dans moins d'une heure";
+        } else if (hours < 24) {
+            return "aujourd'hui";
+        } else if (hours < 48) {
+            return "demain";
+        } else {
+            return "bientôt";
         }
     }
     
@@ -57,6 +153,34 @@ public class InscriptionService {
             statement.setObject(3, inscription.getDateInscription());
             statement.setBoolean(4, inscription.isHasUnsubscribed());
             int rowsInserted = statement.executeUpdate();
+            
+            if (rowsInserted > 0) {
+                // Appeler la méthode d'inscription qui gère les notifications
+                try {
+                    // Récupérer les IDs
+                    int userId = inscription.getUserId();
+                    int eventId = inscription.getEventId();
+                    
+                    // Créer une notification de rappel
+                    Event event = eventService.findById(eventId);
+                    if (event != null) {
+                        // Préparer un message de rappel
+                        NotificationService notificationService = new NotificationService();
+                        String reminderDetails = "RAPPEL: L'événement \"" + event.getTitle() + "\" commence " + 
+                                               "le " + event.getStartDate().toLocalDate() + 
+                                               " à " + event.getStartDate().getHour() + "h" + 
+                                               (event.getStartDate().getMinute() > 0 ? event.getStartDate().getMinute() : "") +
+                                               ". Lieu: " + event.getLocation();
+                        
+                        // Stocker la notification de rappel sans la date d'envoi
+                        notificationService.storeScheduledReminder(userId, eventId, reminderDetails, event.getStartDate());
+                        System.out.println("📝 Notification de rappel stockée pour envoi 24h avant l'événement");
+                    }
+                } catch (Exception e) {
+                    System.err.println("Erreur lors du stockage de notification de rappel: " + e.getMessage());
+                }
+            }
+            
             return rowsInserted > 0;
         } catch (SQLException e) {
             System.err.println("Erreur lors de l'ajout de l'inscription: " + e.getMessage());

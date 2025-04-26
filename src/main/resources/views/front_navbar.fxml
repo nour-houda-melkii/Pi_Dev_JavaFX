@@ -8,6 +8,9 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.shape.Circle?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
 
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
@@ -15,8 +18,7 @@
       styleClass="front-navbar"
       alignment="CENTER_LEFT"
       spacing="20"
-      prefHeight="70.0"
-      stylesheets="@../styles/navbar.css">
+      prefHeight="70.0">
     
     <padding>
         <Insets top="10" right="20" bottom="10" left="20" />
@@ -42,45 +44,17 @@
     <Button text="À propos" styleClass="front-nav-button" onAction="#handleAbout" />
     <Button text="Contact" styleClass="front-nav-button" onAction="#handleContact" />
     
-    <!-- Conteneur des notifications avec menu déroulant -->
-    <StackPane styleClass="notification-container">
-        <!-- Bouton de notification avec icône de cloche -->
-        <Button fx:id="notificationButton" styleClass="front-nav-button" onAction="#toggleNotificationMenu">
-            <graphic>
-                <HBox spacing="5" alignment="CENTER">
-                    <ImageView fitHeight="16" fitWidth="16" preserveRatio="true">
-                        <Image url="@../images/bell-icon.png" />
-                    </ImageView>
-                    <Label text="Notifications" textFill="white" />
-                </HBox>
-            </graphic>
-        </Button>
-        
-        <!-- Badge de notification (nombre) -->
-        <StackPane fx:id="notificationBadge" visible="false" StackPane.alignment="TOP_RIGHT" styleClass="notification-badge">
-            <Circle radius="10" fill="#e74c3c" styleClass="badge-circle" />
-            <Label fx:id="notificationCount" text="0" textFill="white" style="-fx-font-size: 11px; -fx-font-weight: bold;" />
+    <!-- Bouton Notifications avec icône de badge -->
+    <StackPane fx:id="notificationContainer">
+        <MenuButton fx:id="notificationMenuButton" text="🔔" styleClass="front-nav-button" 
+                   popupSide="BOTTOM" onMouseClicked="#handleNotificationClick"
+                   style="-fx-cursor: hand; -fx-background-color: transparent; -fx-padding: 5;">
+            <!-- items populated dynamically -->
+        </MenuButton>
+        <StackPane fx:id="notificationBadge" visible="false" StackPane.alignment="TOP_RIGHT" mouseTransparent="true">
+            <Circle radius="8" fill="red" />
+            <Label fx:id="notificationCount" text="0" textFill="white" style="-fx-font-size: 10px;" />
         </StackPane>
-        
-        <!-- Menu déroulant des notifications -->
-        <VBox fx:id="notificationDropdown" visible="false" managed="false" styleClass="notification-dropdown" 
-              StackPane.alignment="BOTTOM_RIGHT">
-            <HBox alignment="CENTER_LEFT" spacing="10" styleClass="notification-dropdown-header">
-                <Label text="Notifications" styleClass="notification-dropdown-title" />
-                <Pane HBox.hgrow="ALWAYS" />
-                <Button text="Tout voir" styleClass="notification-view-all" onAction="#handleNotifications" />
-            </HBox>
-            
-            <!-- Liste des notifications -->
-            <ScrollPane fitToWidth="true" styleClass="notification-scroll-pane" maxHeight="400">
-                <VBox fx:id="notificationList" styleClass="notification-list" spacing="5" />
-            </ScrollPane>
-            
-            <!-- Pied du menu notifications -->
-            <HBox alignment="CENTER" styleClass="notification-dropdown-footer">
-                <Button text="Marquer tout comme lu" styleClass="mark-all-read" onAction="#markAllAsRead" />
-            </HBox>
-        </VBox>
     </StackPane>
     
 </HBox> 

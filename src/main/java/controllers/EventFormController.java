@@ -498,24 +498,55 @@ public class EventFormController {
                     System.err.println("Erreur lors de l'inscription automatique: " + ex.getMessage());
                     ex.printStackTrace();
                 }
+                
+                // Vérifier spécifiquement ce nouvel événement pour créer des notifications
+                try {
+                    // Obtenir le planificateur et vérifier spécifiquement cet événement
+                    if (org.example.App.getNotificationScheduler() != null) {
+                        System.out.println("Vérification des notifications pour l'événement #" + event.getId());
+                        
+                        // Force une vérification immédiate des notifications pour cet événement
+                        org.example.App.getNotificationScheduler().checkSpecificEvent(event.getId());
+                        
+                        // Pour les événements qui débutent dans moins de 24h, forcer un refresh complet
+                        if (event.getStartDate() != null) {
+                            LocalDateTime now = LocalDateTime.now();
+                            long hoursUntilStart = java.time.temporal.ChronoUnit.HOURS.between(now, event.getStartDate());
+                            
+                            if (hoursUntilStart <= 24 && hoursUntilStart >= 0) {
+                                System.out.println("L'événement commence bientôt, force une vérification complète");
+                                org.example.App.getNotificationScheduler().forceCheck();
+                            }
+                        }
+                    } else {
+                        System.err.println("Le planificateur de notifications n'est pas initialisé");
+                    }
+                    
+                    // Afficher une notification de création réussie
+                    Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                    successAlert.setTitle("Événement créé");
+                    successAlert.setHeaderText("Création réussie");
+                    successAlert.setContentText("L'événement a été créé avec succès. Les notifications seront envoyées automatiquement aux participants 24h avant le début de l'événement.");
+                    successAlert.showAndWait();
+                } catch (Exception ex) {
+                    System.err.println("Erreur lors de la vérification des notifications pour le nouvel événement: " + ex.getMessage());
+                    ex.printStackTrace();
+                }
             } else {
                 eventDAO.update(event);
-            }
-            
-            // Forcer la vérification des notifications pour le nouvel événement
-            try {
-                // Récupérer le planificateur depuis l'app principale et forcer une vérification
-                org.example.App.getNotificationScheduler().forceCheck();
                 
-                // Afficher une notification de création réussie
-                Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                successAlert.setTitle("Événement créé");
-                successAlert.setHeaderText("Création réussie");
-                successAlert.setContentText("L'événement a été créé avec succès. Les notifications seront envoyées automatiquement 24h avant le début de l'événement.");
-                successAlert.showAndWait();
-            } catch (Exception ex) {
-                System.err.println("Erreur lors de la vérification des notifications: " + ex.getMessage());
-                // Ne pas bloquer le flux principal en cas d'erreur
+                // Forcer la vérification des notifications pour l'événement mis à jour aussi
+                try {
+                    if (org.example.App.getNotificationScheduler() != null) {
+                        System.out.println("Vérification des notifications pour l'événement mis à jour #" + event.getId());
+                        org.example.App.getNotificationScheduler().checkSpecificEvent(event.getId());
+                    } else {
+                        System.err.println("Le planificateur de notifications n'est pas initialisé");
+                    }
+                } catch (Exception ex) {
+                    System.err.println("Erreur lors de la vérification des notifications pour l'événement mis à jour: " + ex.getMessage());
+                    ex.printStackTrace();
+                }
             }
 
             // Notifier le callback et retourner à la liste

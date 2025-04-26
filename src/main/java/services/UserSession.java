@@ -30,6 +30,8 @@ public class UserSession {
      */
     public void setLoggedInUser(User user) {
         this.loggedInUser = user;
+        System.out.println("UserSession: utilisateur défini - " + 
+            (user != null ? user.getEmail() + " (rôle: " + user.getRole() + ")" : "null"));
     }
 
     /**
@@ -52,6 +54,18 @@ public class UserSession {
      * @return true si un utilisateur est connecté, false sinon
      */
     public boolean isLoggedIn() {
-        return loggedInUser != null;
+        return loggedInUser != null && loggedInUser.getEmail() != null && !loggedInUser.getEmail().isEmpty();
+    }
+    
+    /**
+     * Crée un utilisateur invité temporaire
+     * Utilisé pour éviter les erreurs quand aucun utilisateur n'est connecté
+     */
+    public User createGuestUser() {
+        User guest = new User();
+        guest.setId(-1);  // ID négatif pour indiquer qu'il s'agit d'un invité
+        guest.setEmail("guest@temp.com");
+        guest.setRole("GUEST");
+        return guest;
     }
 } 

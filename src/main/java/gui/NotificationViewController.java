@@ -28,9 +28,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.util.Duration;
 
 public class NotificationViewController implements Initializable {
     private static final Logger LOGGER = Logger.getLogger(NotificationViewController.class.getName());
@@ -84,7 +81,6 @@ public class NotificationViewController implements Initializable {
     private EventService eventService;
     private ObservableList<NotificationHistory> notificationsList;
     private boolean showUnreadOnly = false;
-    private Timeline refreshTimeline;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -117,38 +113,6 @@ public class NotificationViewController implements Initializable {
         
         // Charger les notifications
         loadNotifications();
-        
-        // Configurer la mise à jour automatique périodique (toutes les 30 secondes)
-        setupAutoRefresh();
-    }
-    
-    /**
-     * Configure un rafraîchissement automatique des notifications toutes les 30 secondes
-     */
-    private void setupAutoRefresh() {
-        // Arrêter le précédent Timeline s'il existe
-        if (refreshTimeline != null) {
-            refreshTimeline.stop();
-        }
-        
-        // Créer un nouveau Timeline
-        refreshTimeline = new Timeline(
-            new KeyFrame(Duration.seconds(30), e -> {
-                LOGGER.info("Rafraîchissement automatique des notifications");
-                loadNotifications();
-            })
-        );
-        refreshTimeline.setCycleCount(Timeline.INDEFINITE);
-        refreshTimeline.play();
-    }
-    
-    /**
-     * Arrête le rafraîchissement automatique quand la vue est fermée
-     */
-    public void stopAutoRefresh() {
-        if (refreshTimeline != null) {
-            refreshTimeline.stop();
-        }
     }
     
     private void setupTableColumns() {
@@ -187,27 +151,6 @@ public class NotificationViewController implements Initializable {
         statusColumn.setCellValueFactory(cell -> {
             boolean isRead = cell.getValue().isRead();
             return new SimpleStringProperty(isRead ? "Lue" : "Non lue");
-        });
-        
-        // Configurer le style des cellules de la colonne statut en fonction de leur valeur
-        statusColumn.setCellFactory(column -> new TableCell<NotificationHistory, String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText(null);
-                    setStyle("");
-                    getStyleClass().removeAll("status-unread", "status-read");
-                } else {
-                    setText(item);
-                    getStyleClass().removeAll("status-unread", "status-read");
-                    if (item.equals("Non lue")) {
-                        getStyleClass().add("status-unread");
-                    } else {
-                        getStyleClass().add("status-read");
-                    }
-                }
-            }
         });
         
         eventColumn.setCellValueFactory(cell -> {
@@ -325,7 +268,19 @@ public class NotificationViewController implements Initializable {
             updateNotificationCount();
             
             // Mettre à jour le badge dans la barre de navigation
-            updateNavbarBadge();
+            try {
+                // Récupérer le contrôleur de la barre de navigation et mettre à jour le badge
+                BorderPane mainPane = (BorderPane) notificationsTable.getScene().getRoot();
+                if (mainPane != null) {
+                    controllers.FrontNavbarController navController = 
+                            (controllers.FrontNavbarController) mainPane.getTop().getUserData();
+                    if (navController != null) {
+                        navController.updateNotificationBadge();
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("Impossible de mettre à jour le badge de notification: " + e.getMessage());
+            }
         }
     }
     
@@ -345,9 +300,6 @@ public class NotificationViewController implements Initializable {
                 notificationsTable.refresh();
                 markAsReadButton.setDisable(true);
                 updateNotificationCount();
-                
-                // Mettre à jour le badge dans la barre de navigation
-                updateNavbarBadge();
             } else {
                 showAlert("Erreur", "Impossible de marquer la notification comme lue.");
             }
@@ -368,11 +320,6 @@ public class NotificationViewController implements Initializable {
                     notificationsList.remove(selectedNotification);
                     hideNotificationDetails();
                     updateNotificationCount();
-                    
-                    // Mettre à jour le badge dans la barre de navigation si la notification n'était pas lue
-                    if (!selectedNotification.isRead()) {
-                        updateNavbarBadge();
-                    }
                     
                     // Afficher un message si la liste est vide
                     if (noNotificationsLabel != null) {
@@ -432,9 +379,6 @@ public class NotificationViewController implements Initializable {
     
     @FXML
     private void handleRetour() {
-        // Arrêter le rafraîchissement automatique
-        stopAutoRefresh();
-        
         // Revenir à la page précédente (événements)
         try {
             BorderPane mainContainer = (BorderPane) notificationsTable.getScene().getRoot();
@@ -462,25 +406,5 @@ public class NotificationViewController implements Initializable {
         alert.setContentText(message);
         
         return alert.showAndWait().orElse(ButtonType.CANCEL) == ButtonType.OK;
-    }
-    
-    /**
-     * Méthode utilitaire pour mettre à jour le badge dans la barre de navigation
-     */
-    private void updateNavbarBadge() {
-        try {
-            // Récupérer le contrôleur de la barre de navigation et mettre à jour le badge
-            BorderPane mainPane = (BorderPane) notificationsTable.getScene().getRoot();
-            if (mainPane != null && mainPane.getTop() != null) {
-                Object userData = mainPane.getTop().getUserData();
-                if (userData instanceof controllers.FrontNavbarController) {
-                    controllers.FrontNavbarController navController = 
-                            (controllers.FrontNavbarController) userData;
-                    navController.updateNotificationBadge();
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Impossible de mettre à jour le badge de notification: " + e.getMessage());
-        }
     }
 } 

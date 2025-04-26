@@ -51,7 +51,7 @@ public class EventController {
         loadEvents();
         setupSearch();
     }
-    
+
     private void setupSearch() {
         // Configurer la recherche pour les événements actifs
         searchTitle.textProperty().addListener((observable, oldValue, newValue) -> filterActiveEvents());
@@ -165,7 +165,7 @@ public class EventController {
         if (!isArchived) {
             Button editButton = createButton("Modifier", "/images/icons/edit.png");
             Button archiveButton = createButton("Archiver", "/images/icons/archive.png");
-            
+
                 editButton.getStyleClass().addAll("action-button", "edit-button");
                 archiveButton.getStyleClass().addAll("action-button", "archive-button");
 
@@ -192,7 +192,7 @@ public class EventController {
         } else {
             Button restoreButton = createButton("Restaurer", "/images/icons/restore.png");
             Button deleteButton = createButton("Supprimer", "/images/icons/delete.png");
-            
+
                 restoreButton.getStyleClass().addAll("action-button", "restore-button");
                 deleteButton.getStyleClass().addAll("action-button", "delete-button");
 

@@ -19,6 +19,8 @@ import services.InscriptionService;
 import services.UserService;
 import utils.SessionManager;
 import services.EventService;
+import services.NotificationService;
+import services.EventArchiverService;
 
 public class EventDetailsController {
     @FXML
@@ -400,80 +402,115 @@ public class EventDetailsController {
     
     @FXML
     private void handleInscription() {
-        if (currentUser == null || event == null) return;
+        // Check all the required dependencies are available
+        if (currentUser == null || event == null) {
+            return;
+        }
         
-        // Vérifier que l'événement n'est pas terminé ou archivé
-        if (event.isArchived() || event.getEndDate().isBefore(LocalDateTime.now())) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Inscription impossible");
-            alert.setHeaderText(null);
-            alert.setContentText("Cet événement est déjà terminé.");
+        // Check if event is not archived or completed
+        if (event.isArchived()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Événement archivé");
+            alert.setHeaderText("Cet événement n'est plus disponible");
+            alert.setContentText("Cet événement a été archivé et n'accepte plus d'inscriptions.");
             alert.showAndWait();
             return;
         }
         
-        // Vérifier qu'il reste des places disponibles
+        // Check if event has available spots
         if (event.getPlacesDisponibles() <= 0) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Inscription impossible");
-            alert.setHeaderText(null);
-            alert.setContentText("Cet événement est complet. Il n'y a plus de places disponibles.");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Événement complet");
+            alert.setHeaderText("Toutes les places sont prises");
+            alert.setContentText("Cet événement n'a plus de places disponibles. Veuillez choisir un autre événement.");
             alert.showAndWait();
             return;
         }
         
-        boolean success = false;
-        
+        // Debug check archiver service
+        System.out.println("Forçage d'une vérification de l'EventArchiverService...");
         try {
-            Inscription inscription = new Inscription();
-            inscription.setUserId(currentUser.getId());
-            inscription.setEventId(event.getId());
-            inscription.setDateInscription(LocalDateTime.now());
-            inscription.setHasUnsubscribed(false);
-            
-            success = inscriptionService.addInscription(inscription);
-            
-            // Si l'inscription a réussi, mettre à jour les places disponibles dans la base de données
-            if (success) {
-                int newPlaces = event.getPlacesDisponibles() - 1;
-                boolean updateSuccess = eventService.updatePlacesDisponibles(event.getId(), newPlaces);
-                
-                if (updateSuccess) {
-                    System.out.println("Places disponibles mises à jour avec succès: " + newPlaces);
-                } else {
-                    System.err.println("Échec de la mise à jour des places disponibles");
-                }
-                
-                // Mettre à jour l'objet event local
-                event.setPlacesDisponibles(newPlaces);
+            EventArchiverService archiverService = org.example.App.getEventArchiverService();
+            if (archiverService != null) {
+                archiverService.forceCheck();
+                System.out.println("Vérification de l'EventArchiverService forcée avec succès");
+            } else {
+                System.out.println("EventArchiverService n'est pas disponible");
             }
         } catch (Exception e) {
-            System.err.println("Erreur lors de l'inscription: " + e.getMessage());
+            System.err.println("Erreur lors du forçage de la vérification: " + e.getMessage());
             e.printStackTrace();
-            // Mode démo - simuler un succès même si la BD n'est pas disponible
-            success = true;
-            event.setPlacesDisponibles(event.getPlacesDisponibles() - 1);
         }
         
-        if (success) {
-            // Mettre à jour l'interface
-            updateInscriptionButtons();
-            placesLabel.setText("Places disponibles: " + event.getPlacesDisponibles());
+        // Create new inscription
+        Inscription inscription = new Inscription();
+        inscription.setUserId(currentUser.getId());
+        inscription.setEventId(event.getId());
+        inscription.setDateInscription(LocalDateTime.now());
+        inscription.setHasUnsubscribed(false);
+        
+        // Try to add it
+        try {
+            // For demo mode or in case of DB issues, simulate success
+            boolean success = inscriptionService.addInscription(inscription);
             
-            // Afficher un message de confirmation
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Inscription réussie");
-            alert.setHeaderText(null);
-            alert.setContentText("Vous êtes inscrit à l'événement: " + event.getTitle());
-            alert.showAndWait();
-        } else {
-            // Gérer l'échec
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur d'inscription");
-            alert.setHeaderText(null);
-            alert.setContentText("Impossible de vous inscrire à cet événement. Veuillez réessayer.");
-            alert.showAndWait();
+            if (success) {
+                // Update places left
+                int placesLeft = event.getPlacesDisponibles() - 1;
+                event.setPlacesDisponibles(placesLeft);
+                eventService.updatePlacesDisponibles(event.getId(), placesLeft);
+                
+                // Update UI
+                placesLabel.setText(placesLeft + " places disponibles");
+                
+                // Hide/show buttons accordingly
+                inscriptionButton.setVisible(false);
+                desinscriptionButton.setVisible(true);
+                
+                // Show success message
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Inscription réussie");
+                alert.setHeaderText("Vous êtes inscrit(e) !");
+                alert.setContentText("Votre inscription à l'événement \"" + event.getTitle() + "\" a été enregistrée avec succès.");
+                alert.showAndWait();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erreur d'inscription");
+                alert.setHeaderText("Impossible de vous inscrire");
+                alert.setContentText("Une erreur est survenue lors de l'inscription. Veuillez réessayer plus tard.");
+                alert.showAndWait();
+            }
+        } catch (Exception e) {
+            // Log error
+            System.err.println("Erreur lors de l'inscription: " + e.getMessage());
+            e.printStackTrace();
+            
+            // Simulate success in demo mode
+            if (inscriptionService.checkConnection() == false) {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Mode démo");
+                alert.setHeaderText("Inscription simulée");
+                alert.setContentText("En mode démo, l'inscription a été simulée avec succès.");
+                alert.showAndWait();
+                
+                // Hide/show buttons accordingly
+                inscriptionButton.setVisible(false);
+                desinscriptionButton.setVisible(true);
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Erreur");
+                alert.setHeaderText("Erreur lors de l'inscription");
+                alert.setContentText("Une erreur est survenue: " + e.getMessage());
+                alert.showAndWait();
+            }
         }
+        
+        // Final UI update
+        updateInscriptionButtons();
+        System.out.println("État final des boutons: Inscription " + 
+                          (inscriptionButton.isVisible() ? "visible" : "non visible") + 
+                          ", Désinscription " + 
+                          (desinscriptionButton.isVisible() ? "visible" : "non visible"));
     }
     
     @FXML
@@ -508,6 +545,21 @@ public class EventDetailsController {
                 
                 // Mettre à jour l'objet event local
                 event.setPlacesDisponibles(newPlaces);
+                
+                // Envoyer une notification d'annulation
+                try {
+                    NotificationService notificationService = new NotificationService();
+                    String details = "Vous vous êtes désinscrit de l'événement \"" + event.getTitle() + 
+                               "\" qui était prévu le " + event.getStartDate().toLocalDate() + 
+                               " à " + event.getStartDate().getHour() + "h" + 
+                               (event.getStartDate().getMinute() > 0 ? event.getStartDate().getMinute() : "") +
+                               ". Lieu: " + event.getLocation();
+                    
+                    notificationService.sendEventCancellationNotification(currentUser.getId(), event.getId(), details);
+                    System.out.println("✅ Notification d'annulation envoyée avec succès");
+                } catch (Exception e) {
+                    System.err.println("Erreur lors de l'envoi de la notification d'annulation: " + e.getMessage());
+                }
             }
         } catch (Exception e) {
             System.err.println("Erreur lors de la désinscription: " + e.getMessage());

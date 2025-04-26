@@ -24,10 +24,10 @@
         <TabPane styleClass="events-tabpane" tabClosingPolicy="UNAVAILABLE" side="LEFT">
             <Tab text="Événements Actifs">
                 <VBox spacing="10">
-                    <padding>
-                        <Insets top="10" right="10" bottom="10" left="10"/>
-                    </padding>
-                    
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
                     <HBox spacing="10">
                         <TextField fx:id="searchTitle" promptText="Titre" onKeyReleased="#handleSearch" />
                         <DatePicker fx:id="searchDate" promptText="jj/mm/aaaa" onAction="#handleSearch" />
@@ -50,7 +50,7 @@
                     </ScrollPane>
                 </VBox>
             </Tab>
-            
+
             <Tab text="Événements Archivés">
                 <VBox spacing="10">
                     <padding>

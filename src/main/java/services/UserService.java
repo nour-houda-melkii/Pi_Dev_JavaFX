@@ -27,24 +27,34 @@ public class UserService {
      * @return L'utilisateur si l'authentification réussit, null sinon
      */
     public User authenticateUser(String email, String password) {
-        if (connection == null) {
-            // Mode démo - retourner des utilisateurs fictifs
-            return authenticateDemoUser(email, password);
-        }
-        
+        // Utiliser hardcoded user pour rayensabri63@gmail.com
         if ("rayensabri63@gmail.com".equals(email)) {
-            System.out.println("Tentative de connexion avec compte Symfony: " + email);
+            System.out.println("Connexion avec le compte utilisateur prédéfini: " + email);
             User user = new User();
             user.setId(1);
-            user.setNom("Sabri");
-            user.setPrenom("Rayen");
             user.setEmail("rayensabri63@gmail.com");
             user.setRole("ROLE_ADMIN");
+            
+            // Si possible, définir le nom et prénom (mais pas obligatoire)
+            try {
+                user.setNom("Sabri");
+                user.setPrenom("Rayen");
+            } catch (Exception e) {
+                System.out.println("Note: Les champs nom/prénom ne sont pas disponibles mais ce n'est pas bloquant");
+            }
+            
+            // Mettre à jour le currentUser
+            this.currentUser = user;
             return user;
         }
         
+        // Pour les autres utilisateurs, essayer la base de données
+        // Si la connexion est null, utiliser le mode démo
+        if (connection == null) {
+            return authenticateDemoUser(email, password);
+        }
+        
         User user = null;
-
         String sql = "SELECT * FROM user WHERE email = ?";
         
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -52,18 +62,41 @@ public class UserService {
             ResultSet rs = statement.executeQuery();
             
             if (rs.next()) {
-
                 user = new User();
                 user.setId(rs.getInt("id"));
-                user.setNom(rs.getString("nom"));
-                user.setPrenom(rs.getString("prenom"));
                 user.setEmail(rs.getString("email"));
-                user.setRole(rs.getString("roles"));
+                
+                // Essayer de lire les colonnes optionnelles de manière sécurisée
+                try {
+                    user.setNom(rs.getString("nom"));
+                } catch (SQLException e) {
+                    System.out.println("Colonne 'nom' non disponible dans la base de données");
+                }
+                
+                try {
+                    user.setPrenom(rs.getString("prenom"));
+                } catch (SQLException e) {
+                    System.out.println("Colonne 'prenom' non disponible dans la base de données");
+                }
+                
+                try {
+                    user.setRole(rs.getString("roles"));
+                } catch (SQLException e) {
+                    try {
+                        user.setRole(rs.getString("role"));
+                    } catch (SQLException e2) {
+                        System.out.println("Colonnes 'roles' et 'role' non disponibles, utilisation de la valeur par défaut");
+                        user.setRole("ROLE_USER");
+                    }
+                }
             }
         } catch (SQLException e) {
             System.err.println("Erreur lors de l'authentification: " + e.getMessage());
+            return null; // Retourner null en cas d'erreur
         }
         
+        // Mettre à jour le currentUser
+        this.currentUser = user;
         return user;
     }
     
@@ -77,29 +110,28 @@ public class UserService {
         if ("admin@example.com".equals(email) && "admin".equals(password)) {
             User admin = new User();
             admin.setId(1);
-            admin.setNom("Admin");
-            admin.setPrenom("Super");
+            try {
+                admin.setNom("Admin");
+                admin.setPrenom("Super");
+            } catch (Exception e) {
+                // Ignorer si les champs ne sont pas disponibles
+            }
             admin.setEmail("admin@example.com");
-            admin.setRole("admin");
+            admin.setRole("ROLE_ADMIN");
             return admin;
         } else if ("user@example.com".equals(email) && "user".equals(password)) {
             User user = new User();
             user.setId(2);
-            user.setNom("Utilisateur");
-            user.setPrenom("Simple");
+            try {
+                user.setNom("Utilisateur");
+                user.setPrenom("Simple");
+            } catch (Exception e) {
+                // Ignorer si les champs ne sont pas disponibles
+            }
             user.setEmail("user@example.com");
-            user.setRole("user");
+            user.setRole("ROLE_USER");
             return user;
-        } else if ("rayensabri63@gmail.com".equals(email)) {
-            // Accepter votre email avec n'importe quel mot de passe en mode démo
-            User admin = new User();
-            admin.setId(3);
-            admin.setNom("Sabri");
-            admin.setPrenom("Rayen");
-            admin.setEmail("rayensabri63@gmail.com");
-            admin.setRole("admin");
-            return admin;
-        }
+        } 
         
         return null;
     }
@@ -148,11 +180,30 @@ public class UserService {
             if (rs.next()) {
                 user = new User();
                 user.setId(rs.getInt("id"));
-                user.setNom(rs.getString("nom"));
-                user.setPrenom(rs.getString("prenom"));
                 user.setEmail(rs.getString("email"));
-                user.setRole(rs.getString("role"));
-                // Ne pas récupérer le mot de passe
+                
+                // Essayer de lire les colonnes optionnelles de manière sécurisée
+                try {
+                    user.setNom(rs.getString("nom"));
+                } catch (SQLException e) {
+                    // Ignorer si la colonne n'existe pas
+                }
+                
+                try {
+                    user.setPrenom(rs.getString("prenom"));
+                } catch (SQLException e) {
+                    // Ignorer si la colonne n'existe pas
+                }
+                
+                try {
+                    user.setRole(rs.getString("roles"));
+                } catch (SQLException e) {
+                    try {
+                        user.setRole(rs.getString("role"));
+                    } catch (SQLException e2) {
+                        user.setRole("ROLE_USER");
+                    }
+                }
             }
         } catch (SQLException e) {
             System.err.println("Erreur lors de la récupération de l'utilisateur: " + e.getMessage());

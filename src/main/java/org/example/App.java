@@ -6,18 +6,37 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import services.NotificationScheduler;
+import services.EventArchiverService;
 
 public class App extends Application {
     private static NotificationScheduler notificationScheduler;
+    private static EventArchiverService eventArchiverService;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Démarrer le service de notifications
         notificationScheduler = new NotificationScheduler();
-        notificationScheduler.start();
         
-        // Vérifier immédiatement les événements à venir (pour le test)
-        notificationScheduler.forceCheck();
+        // S'assurer que le scheduler est initialisé correctement avant de l'utiliser
+        try {
+            notificationScheduler.start();
+            // Logger le démarrage du scheduler
+            System.out.println("✅ Notification scheduler démarré avec succès");
+        } catch (Exception e) {
+            System.err.println("❌ Erreur lors du démarrage du scheduler de notifications: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        // Démarrer le service d'archivage automatique des événements
+        eventArchiverService = new EventArchiverService();
+        
+        try {
+            eventArchiverService.start();
+            System.out.println("✅ Service d'archivage automatique démarré avec succès");
+        } catch (Exception e) {
+            System.err.println("❌ Erreur lors du démarrage du service d'archivage: " + e.getMessage());
+            e.printStackTrace();
+        }
         
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/login.fxml"));
         Parent root = loader.load();
@@ -39,11 +58,21 @@ public class App extends Application {
         if (notificationScheduler != null) {
             notificationScheduler.stop();
         }
+        
+        // Arrêter le service d'archivage
+        if (eventArchiverService != null) {
+            eventArchiverService.stop();
+        }
+        
         super.stop();
     }
 
     public static NotificationScheduler getNotificationScheduler() {
         return notificationScheduler;
+    }
+    
+    public static EventArchiverService getEventArchiverService() {
+        return eventArchiverService;
     }
 
     public static void main(String[] args) {

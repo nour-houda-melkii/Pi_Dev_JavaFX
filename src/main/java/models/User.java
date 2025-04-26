@@ -58,7 +58,7 @@ public class User {
     }
 
     public String getNom() {
-        return nom;
+        return nom != null ? nom : "";
     }
 
     public void setNom(String nom) {
@@ -66,7 +66,7 @@ public class User {
     }
 
     public String getPrenom() {
-        return prenom;
+        return prenom != null ? prenom : "";
     }
 
     public void setPrenom(String prenom) {
@@ -74,7 +74,7 @@ public class User {
     }
 
     public String getEmail() {
-        return email;
+        return email != null ? email : "";
     }
 
     public void setEmail(String email) {
@@ -90,7 +90,7 @@ public class User {
     }
 
     public String getRole() {
-        return role;
+        return role != null ? role : "";
     }
 
     public void setRole(String role) {

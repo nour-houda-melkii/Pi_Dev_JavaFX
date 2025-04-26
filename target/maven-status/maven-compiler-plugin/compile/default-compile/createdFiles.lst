@@ -5,6 +5,7 @@ utils\SessionManager.class
 gui\NotificationViewController.class
 controllers\FrontMainController.class
 services\CategorieEventDAO.class
+services\NotificationService$NotificationType.class
 controllers\FrontNavbarController.class
 models\Rating.class
 entities\NotificationHistory.class
@@ -16,11 +17,11 @@ controllers\EventDetailsController.class
 controllers\WelcomeController.class
 utils\MyConnection.class
 controllers\CategorieEventController.class
-gui\NotificationViewController$1.class
 org\example\Main.class
 services\UserSession.class
 org\example\App.class
 org\example\DataSource.class
+services\EventArchiverService$1.class
 services\NotificationScheduler.class
 org\example\controllers\WelcomeController.class
 utils\DatabaseConnection.class
@@ -29,6 +30,7 @@ services\InscriptionService.class
 models\User.class
 services\EventDAO.class
 models\Event.class
+services\EventArchiverService.class
 models\CategorieEvent.class
 services\LlamaService.class
 services\EventService.class

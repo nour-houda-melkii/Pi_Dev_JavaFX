@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS notification_history (
     event_id INT NOT NULL,
     notification_type VARCHAR(50) NOT NULL,
     details TEXT,
-    sent_date TIMESTAMP NOT NULL,
+    sent_date TIMESTAMP NULL,
     is_read BOOLEAN DEFAULT FALSE,
     read_date TIMESTAMP NULL,
     

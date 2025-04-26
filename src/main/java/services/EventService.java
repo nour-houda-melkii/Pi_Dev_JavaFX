@@ -147,4 +147,116 @@ public class EventService {
         
         return null;
     }
+
+    /**
+     * Vérifie que la connexion à la base de données est active
+     * @return true si la connexion est active, false sinon
+     */
+    public boolean checkConnection() {
+        try {
+            if (connection == null || connection.isClosed()) {
+                connection = MyConnection.getInstance();
+                System.out.println("🔄 Connexion à la base de données réinitialisée dans EventService");
+                return connection != null && !connection.isClosed();
+            }
+            
+            // Tester la connexion avec une requête simple
+            try (PreparedStatement stmt = connection.prepareStatement("SELECT 1")) {
+                stmt.executeQuery();
+            } catch (SQLException e) {
+                System.out.println("🔄 Connexion à la base de données perdue, tentative de reconnexion");
+                connection = MyConnection.getInstance();
+            }
+            
+            return connection != null && !connection.isClosed();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("❌ Échec de connexion à la base de données dans EventService: " + e.getMessage());
+            try {
+                connection = MyConnection.getInstance();
+                return connection != null && !connection.isClosed();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                return false;
+            }
+        }
+    }
+    
+    /**
+     * Récupère tous les événements non archivés
+     * @return Liste des événements non archivés
+     */
+    public List<Event> findAllNonArchived() {
+        List<Event> events = new ArrayList<>();
+        String query = "SELECT e.*, c.id as cat_id, c.nom as cat_nom, c.description as cat_description, c.is_archived as cat_is_archived " +
+                       "FROM event e " +
+                       "LEFT JOIN categorie_event c ON e.categorie_id = c.id " +
+                       "WHERE e.is_archived = 0";
+        
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            
+            while (resultSet.next()) {
+                Event event = new Event();
+                event.setId(resultSet.getInt("id"));
+                event.setTitle(resultSet.getString("title"));
+                event.setDescription(resultSet.getString("description"));
+                event.setLocation(resultSet.getString("location"));
+                event.setStartDate(resultSet.getTimestamp("start_date").toLocalDateTime());
+                event.setEndDate(resultSet.getTimestamp("end_date").toLocalDateTime());
+                event.setLatitude(resultSet.getDouble("latitude"));
+                event.setLongitude(resultSet.getDouble("longitude"));
+                event.setPlacesDisponibles(resultSet.getInt("places_disponibles"));
+                event.setAffiche(resultSet.getString("affiche"));
+                event.setArchived(resultSet.getBoolean("is_archived"));
+                
+                // Ajout de la catégorie
+                int catId = resultSet.getInt("cat_id");
+                if (!resultSet.wasNull()) {  // Vérifie si categorie_id n'est pas NULL
+                    CategorieEvent categorie = new CategorieEvent();
+                    categorie.setId(catId);
+                    categorie.setNom(resultSet.getString("cat_nom"));
+                    categorie.setDescription(resultSet.getString("cat_description"));
+                    categorie.setArchived(resultSet.getBoolean("cat_is_archived"));
+                    event.setCategorie(categorie);
+                }
+                
+                events.add(event);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return events;
+    }
+    
+    /**
+     * Archive un événement
+     * @param eventId L'identifiant de l'événement à archiver
+     * @param reason La raison de l'archivage (pour journalisation)
+     * @return true si l'archivage a réussi, false sinon
+     */
+    public boolean archiveEvent(int eventId, String reason) {
+        checkConnection();
+        String query = "UPDATE event SET is_archived = 1 WHERE id = ?";
+        
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, eventId);
+            
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("✅ Événement #" + eventId + " archivé avec succès. Raison: " + reason);
+                return true;
+            } else {
+                System.out.println("❌ Échec de l'archivage de l'événement #" + eventId + ". Aucune ligne affectée.");
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("❌ Erreur lors de l'archivage de l'événement #" + eventId + ": " + e.getMessage());
+            return false;
+        }
+    }
 } 

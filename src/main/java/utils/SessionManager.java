@@ -1,6 +1,7 @@
 package utils;
 
 import models.User;
+import services.UserSession;
 
 /**
  * Classe utilitaire pour gérer la session utilisateur dans toute l'application
@@ -13,6 +14,14 @@ public class SessionManager {
      */
     public static void setCurrentUser(User user) {
         currentUser = user;
+        
+        // Synchroniser avec UserSession
+        if (user != null) {
+            UserSession.getInstance().setLoggedInUser(user);
+        } else {
+            UserSession.getInstance().logout();
+        }
+        
         System.out.println("SessionManager: Utilisateur défini - " + 
             (user != null ? user.getEmail() + " (rôle: " + user.getRole() + ")" : "null"));
     }
@@ -48,6 +57,7 @@ public class SessionManager {
      */
     public static void logout() {
         currentUser = null;
+        UserSession.getInstance().logout();
         System.out.println("SessionManager: Utilisateur déconnecté");
     }
 } 
