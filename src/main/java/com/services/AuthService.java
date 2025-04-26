@@ -101,7 +101,7 @@ public class AuthService {
         }
     }
 
-
+////////////////////////////////////////////////////////////
     public User getUserFromToken(String token) throws AuthException {
         try {
             // 1. Parser le token avec JwtUtil

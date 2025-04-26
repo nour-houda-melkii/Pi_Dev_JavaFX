@@ -4,6 +4,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ComboBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -36,6 +38,54 @@
                     <ImageView fitWidth="20" fitHeight="20"/>
                 </graphic>
             </Button>
+
+            <!-- Dans la section <left> du BorderPane, après le menu User Management -->
+            <VBox spacing="5">
+                <Button text="Appointments ▼" styleClass="menu-header-btn" onAction="#toggleAppointmentMenu"/>
+                <VBox fx:id="appointmentMenu" styleClass="submenu-container" spacing="5" managed="false" visible="false">
+                    <Button text="Manage Appointments" styleClass="submenu-btn" onAction="#showAppointmentManagement"/>
+                    <Button text="Create Appointment" styleClass="submenu-btn" onAction="#showCreateAppointment"/>
+                    <!-- Nouveau bouton pour rediriger vers Ajout.fxml -->
+                    <Button text="Ajout Rendez-vous" styleClass="submenu-btn" onAction="#showAjoutView"/>
+                </VBox>
+            </VBox>
+
+            <HBox alignment="CENTER_RIGHT" prefHeight="60.0" spacing="10.0"
+                  style="-fx-background-color: white; -fx-padding: 0 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 2);"
+                  AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+                <Button fx:id="frontButton" onAction="#handleFrontView" prefHeight="35.0" prefWidth="120.0"
+                        style="-fx-font-size: 13px; -fx-background-color: #00BCD4; -fx-text-fill: white; -fx-background-radius: 5;">
+                    <text>Front View</text>
+                </Button>
+
+                <Button fx:id="categoriesButton" onAction="#handleViewCategories" prefHeight="35.0" prefWidth="120.0"
+                        style="-fx-font-size: 13px; -fx-background-color: #00BCD4; -fx-text-fill: white; -fx-background-radius: 5;">
+                    <text>View Categories</text>
+                </Button>
+
+                <Button fx:id="addCategoryButton" onAction="#handleAddCategory" prefHeight="35.0" prefWidth="120.0"
+                        style="-fx-font-size: 13px; -fx-background-color: #00BCD4; -fx-text-fill: white; -fx-background-radius: 5;">
+                    <text>Add Category</text>
+                </Button>
+
+                <Button fx:id="tableViewButton" onAction="#handleTableViewButton" prefHeight="35.0" prefWidth="120.0"
+                        style="-fx-font-size: 13px; -fx-background-color: #00BCD4; -fx-text-fill: white; -fx-background-radius: 5;">
+                    <text>Add Product</text>
+                </Button>
+
+                <Button onAction="#handleDataHistory" prefHeight="35.0" prefWidth="120.0"
+                        style="-fx-font-size: 13px; -fx-background-color: #00BCD4; -fx-text-fill: white; -fx-background-radius: 5;">
+                    <text>Data History</text>
+                </Button>
+
+                <Button onAction="#handleFavoritesStatistics" prefHeight="35.0" prefWidth="160.0"
+                        style="-fx-font-size: 13px; -fx-background-color: #00BCD4; -fx-text-fill: white; -fx-background-radius: 5;">
+                    <text>Favorites Stats</text>
+                </Button>
+
+            </HBox>
+
 
             <!-- User Management -->
             <VBox spacing="5">
@@ -79,7 +129,20 @@
                         <Label fx:id="totalPatientsLabel" text="0" styleClass="stat-value"/>
                     </VBox>
                 </HBox>
+                <!-- Page Title -->
+                <Label alignment="TOP_CENTER" prefHeight="40.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #34495e;" text="Product Management" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="80.0" />
+
+                <!-- Sorting Options -->
+                <HBox alignment="TOP_CENTER" prefHeight="30.0" spacing="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="120.0">
+                    <Label alignment="TOP_RIGHT" style="-fx-font-size: 14px; -fx-text-fill: #2c3e50;" text="Sort by:" />
+                    <ComboBox fx:id="sortComboBox" prefHeight="30.0" prefWidth="150.0" style="-fx-background-radius: 5;" />
+                    <HBox />
+                </HBox>
             </VBox>
+            <ScrollPane fitToWidth="true" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #e0e0e0; -fx-border-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="160.0">
+                <FlowPane fx:id="productContainer" hgap="20" style="-fx-padding: 20; -fx-background-color: white;" vgap="20" />
+            </ScrollPane>
         </StackPane>
     </center>
+
 </BorderPane>

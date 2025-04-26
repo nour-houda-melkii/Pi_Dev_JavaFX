@@ -1,12 +1,11 @@
 package com.services;
 
+import com.models.Medecin;
+import com.models.Patient;
 import com.models.User;
 import com.demo.enums.Role;
 import com.demo.enums.Specialite;
-import com.utils.DataSource;
-import com.utils.PasswordGenerator;
-import com.utils.PasswordHasher;
-import com.utils.WelcomeEmailService;
+import com.utils.*;
 import com.demo.enums.Gender;
 
 import java.io.File;
@@ -22,30 +21,72 @@ import java.util.List;
 public class UserService implements IServiceUser<User> {
 
     private final Connection connection;
+    private ServicePatient servicePatient;
+    private ServiceMedecin serviceMedecin;
 
     public UserService() {
         this.connection = DataSource.getInstance().getConnection();
+        servicePatient = new ServicePatient();
+        serviceMedecin = new ServiceMedecin(connection);
     }
 
     // ============ MÉTHODES COMMUNES ============
+
     @Override
     public void ajouterUser(User user) {
-        user.setVerified(true); // ← Ceci est important
-        user.setStatus("verifie");
-        String req = "INSERT INTO user (email, password, first_name, last_name, roles, adress, phone_number, age, gender, numero_licence, specialite, is_verified, status) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Connection conn = null;
+        try {
+            conn = connection; // Utilisez votre connexion existante ou obtenez-en une nouvelle
+            conn.setAutoCommit(false); // Désactive le mode auto-commit
 
-        try (PreparedStatement pst = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
-            setUserParameters(pst, user);
-            pst.executeUpdate();
+            // 1. Insertion dans la table user
+            user.setVerified(true);
+            user.setStatus("verifie");
+            String userReq = "INSERT INTO user (email, password, first_name, last_name, roles, adress, phone_number, age, gender, numero_licence, specialite, is_verified, status) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-            try (ResultSet rs = pst.getGeneratedKeys()) {
-                if (rs.next()) {
-                    user.setId(rs.getInt(1));
+            try (PreparedStatement userStmt = conn.prepareStatement(userReq, Statement.RETURN_GENERATED_KEYS)) {
+                setUserParameters(userStmt, user);
+                userStmt.executeUpdate();
+
+                try (ResultSet rs = userStmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        int userId = rs.getInt(1);
+                        user.setId(userId);
+
+                        // 2. Insertion dans la table appropriée selon le rôle
+                        if (user.getRoles().contains("ROLE_MEDECIN") || user.getRoles().contains("MEDECIN")) {
+                            Medecin medecin = new Medecin( user.getId(), "1");
+                            serviceMedecin.ajouter(medecin); // Ajouter le Médecin
+                        }
+                        else if (user.getRoles().contains("ROLE_USER") || user.getRoles().contains("PATIENT")) {
+                            String patientReq = "INSERT INTO patient (user_id) VALUES (?)";
+                            try (PreparedStatement patientStmt = conn.prepareStatement(patientReq)) {
+                                patientStmt.setInt(1, userId);
+                                patientStmt.executeUpdate();
+                            }
+                        }
+                    }
                 }
+                conn.commit(); // Valide la transaction
             }
         } catch (SQLException e) {
+            try {
+                if (conn != null) {
+                    conn.rollback(); // Annule la transaction en cas d'erreur
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             handleSQLException("Erreur lors de l'ajout", e);
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.setAutoCommit(true); // Réactive le mode auto-commit
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -543,17 +584,47 @@ public class UserService implements IServiceUser<User> {
      * @return true si la vérification a réussi, false sinon
      */
     public boolean verifierMedecin(int medecinId) {
-        String req = "UPDATE user SET status=? WHERE id=? AND roles LIKE ?";
+        String updateReq = "UPDATE user SET status=? WHERE id=? AND roles LIKE ?";
+        String selectReq = "SELECT phone_number FROM user WHERE id=?";
 
-        try (PreparedStatement pst = connection.prepareStatement(req)) {
-            pst.setString(1, "verifie");
-            pst.setInt(2, medecinId);
-            pst.setString(3, "%\"ROLE_MEDECIN\"%");
+        try (PreparedStatement pstUpdate = connection.prepareStatement(updateReq);
+             PreparedStatement pstSelect = connection.prepareStatement(selectReq)) {
 
-            int rowsAffected = pst.executeUpdate();
+            // 1. Récupérer et formater le téléphone
+            pstSelect.setInt(1, medecinId);
+            ResultSet rs = pstSelect.executeQuery();
+
+            String telephone = null;
+            if (rs.next()) {
+                telephone = rs.getString("phone_number");
+
+                // Formater le numéro avec +216 si nécessaire
+                if (telephone != null && !telephone.startsWith("+216") && !telephone.startsWith("216")) {
+                    telephone = telephone.trim().replaceAll("[^0-9]", ""); // Nettoyer le numéro
+                    if (telephone.startsWith("0")) {
+                        telephone = "+216" + telephone.substring(1); // Remplacer 0 par +216
+                    } else if (!telephone.isEmpty()) {
+                        telephone = "+216" + telephone; // Ajouter +216 devant
+                    }
+                }
+            }
+
+            // 2. Mettre à jour le statut
+            pstUpdate.setString(1, "verifie");
+            pstUpdate.setInt(2, medecinId);
+            pstUpdate.setString(3, "%\"ROLE_MEDECIN\"%");
+
+            int rowsAffected = pstUpdate.executeUpdate();
 
             if (rowsAffected > 0) {
                 System.out.println("✅ Médecin ID " + medecinId + " vérifié avec succès");
+
+                // 3. Envoyer WhatsApp si le téléphone est valide
+                if (telephone != null && !telephone.trim().isEmpty()) {
+                    String message = "Votre compte médecin a été vérifié. Vous pouvez vous connecter.";
+                    TwilioWhatsAppService.sendWhatsAppMessage(telephone, message);
+                }
+
                 return true;
             } else {
                 System.out.println("⚠️ Aucun médecin trouvé avec l'ID " + medecinId + " ou déjà vérifié");

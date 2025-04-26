@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="650.0" prefWidth="850.0" style="-fx-background-color: #f5f5f7;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.nour.ViewCategoryController">
+    <top>
+        <!-- Enhanced Header Section -->
+        <VBox spacing="15">
+            <padding>
+                <Insets bottom="10.0" left="25.0" right="25.0" top="20.0" />
+            </padding>
+
+            <!-- App Bar -->
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Button onAction="#navigateToDashboard" prefHeight="35.0" prefWidth="76.0" style="-fx-background-color: #33ccff; -fx-text-fill: white; -fx-background-radius: 5; -fx-font-weight: bold; -fx-padding: 8 15;" text="← Back">
+                    <font>
+                        <Font size="13" />
+                    </font>
+                </Button>
+
+                <HBox alignment="CENTER" HBox.hgrow="ALWAYS">
+                    <Label prefHeight="38.0" prefWidth="237.0" style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #333333;" text="Categories">
+                        <font>
+                            <Font name="System Bold" size="26.0" />
+                        </font>
+                    </Label>
+                </HBox>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <!-- Main Content Area -->
+        <VBox spacing="15" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="25.0" left="25.0" right="25.0" top="10.0" />
+            </padding>
+
+            <!-- Category Count Label -->
+            <HBox>
+                <Label fx:id="categoryCountLabel" alignment="TOP_CENTER" prefHeight="20.0" prefWidth="870.0" style="-fx-font-size: 14px; -fx-text-fill: #666666;" text="Showing all categories" />
+            </HBox>
+
+            <!-- Enhanced Category List -->
+            <VBox style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);" VBox.vgrow="ALWAYS">
+                <ListView fx:id="categoryListView" style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-padding: 5;" VBox.vgrow="ALWAYS">
+                    <placeholder>
+                        <Label style="-fx-text-fill: #7f8c8d;" text="No categories found" />
+                    </placeholder>
+                </ListView>
+            </VBox>
+
+            <!-- Status Bar -->
+            <HBox alignment="CENTER_RIGHT" spacing="10" style="-fx-padding: 10 0 0 0;" />
+        </VBox>
+    </center>
+</BorderPane>

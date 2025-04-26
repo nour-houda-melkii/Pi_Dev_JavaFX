@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.controllers.nour.FavoritesStatisticsController"
+            style="-fx-background-color: #f0f0f0;">
+
+    <top>
+        <VBox alignment="CENTER" spacing="10" style="-fx-padding: 20 20 10 20;">
+            <Label text="Favorites Statistics" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <Label fx:id="discountInfoLabel" style="-fx-font-size: 14px; -fx-text-fill: #16a085; -fx-font-style: italic;"/>
+        </VBox>
+    </top>
+
+    <center>
+        <VBox spacing="20" style="-fx-padding: 0 20 20 20;">
+            <!-- Products Favorites Chart -->
+            <VBox spacing="5">
+                <Label text="Most Favorited Products" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                <BarChart fx:id="favoritesChart" legendVisible="false" animated="true">
+                    <xAxis>
+                        <CategoryAxis label="Product Name" style="-fx-font-size: 12px;"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Number of Favorites" style="-fx-font-size: 12px;"/>
+                    </yAxis>
+                </BarChart>
+            </VBox>
+
+            <!-- Categories Pie Chart -->
+            <VBox spacing="5">
+                <Label text="Favorites by Category" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                <PieChart fx:id="categoriesChart" animated="true" labelLineLength="20" labelsVisible="true"/>
+            </VBox>
+        </VBox>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" spacing="10" style="-fx-padding: 0 0 20 0;">
+            <Button text="Back to Dashboard" onAction="#handleBackToDashboard"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 20; -fx-background-radius: 5;"/>
+        </HBox>
+    </bottom>
+</BorderPane>
