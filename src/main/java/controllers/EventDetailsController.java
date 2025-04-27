@@ -11,16 +11,23 @@ import java.time.format.DateTimeFormatter;
 import javafx.scene.control.Button;
 import javafx.scene.control.Alert;
 import java.time.LocalDateTime;
+import javafx.scene.layout.HBox;
+import javafx.scene.shape.SVGPath;
+import javafx.scene.shape.Shape;
+import javafx.scene.paint.Color;
 
 import models.Event;
 import models.Inscription;
 import models.User;
+import models.Rating;
 import services.InscriptionService;
 import services.UserService;
 import utils.SessionManager;
 import services.EventService;
 import services.NotificationService;
 import services.EventArchiverService;
+import services.RatingService;
+import services.EmailService;
 
 public class EventDetailsController {
     @FXML
@@ -56,6 +63,9 @@ public class EventDetailsController {
     @FXML
     private Button backButton;
     
+    @FXML
+    private HBox ratingContainer;
+    
     private WebEngine webEngine;
     private Event event;
     private Stage previousStage;
@@ -64,6 +74,8 @@ public class EventDetailsController {
     private UserService userService;
     private User currentUser;
     private EventService eventService;
+    private RatingService ratingService;
+    private int currentRating = 0;
     
     @FXML
     public void initialize() {
@@ -71,6 +83,7 @@ public class EventDetailsController {
         userService = new UserService();
         eventService = new EventService();
         inscriptionService = new InscriptionService();
+        ratingService = new RatingService();
         
         // Initialisation des styles pour les boutons
         backButton.getStyleClass().clear();
@@ -97,6 +110,12 @@ public class EventDetailsController {
         inscriptionButton.setVisible(true);
         inscriptionButton.setDisable(currentUser == null); // Activé seulement si utilisateur connecté
         desinscriptionButton.setVisible(false);
+        
+        // Initialiser le conteneur de notation comme invisible par défaut
+        if (ratingContainer != null) {
+            ratingContainer.setVisible(false);
+            ratingContainer.setManaged(false);
+        }
     }
     
     public void setUser(User user) {
@@ -136,6 +155,11 @@ public class EventDetailsController {
         // Mettre à jour les boutons d'inscription selon l'état de l'événement
         if (currentUser != null) {
             updateInscriptionButtons();
+            
+            // Si l'événement est expiré, afficher le système de notation
+            if (isExpired) {
+                setupRatingSystem();
+            }
         } else {
             // Même sans utilisateur, mettre à jour l'état des boutons pour les événements expirés
             if (isExpired) {
@@ -338,17 +362,22 @@ public class EventDetailsController {
 
         // 1. Si l'événement est expiré
         if (isEventExpired) {
-            // Afficher "Terminé" et désactiver le bouton
-            inscriptionButton.setText("Terminé");
-            inscriptionButton.setDisable(true);
-            inscriptionButton.setVisible(true);
-            
-            // Réinitialiser les classes et ajouter celles nécessaires
-            inscriptionButton.getStyleClass().clear();
-            inscriptionButton.getStyleClass().addAll("details-button", "button-expired");
-            
-            // Cacher le bouton de désinscription
+            // Cacher les boutons d'inscription/désinscription dans tous les cas
+            inscriptionButton.setVisible(false);
+            inscriptionButton.setManaged(false);
             desinscriptionButton.setVisible(false);
+            desinscriptionButton.setManaged(false);
+            
+            // Si l'utilisateur est connecté, on affiche le système de notation
+            if (currentUser != null) {
+                setupRatingSystem();
+                
+                // Afficher le système de notation
+                if (ratingContainer != null) {
+                    ratingContainer.setVisible(true);
+                    ratingContainer.setManaged(true);
+                }
+            }
         }
         // 2. Si l'utilisateur est déjà inscrit
         else if (isInscrit) {
@@ -427,6 +456,32 @@ public class EventDetailsController {
             return;
         }
         
+        // Vérifier les chevauchements d'événements
+        InscriptionService.EventOverlapResult overlapResult = inscriptionService.checkEventTimeOverlap(currentUser.getId(), event.getId());
+        if (overlapResult.hasOverlap()) {
+            Event conflictingEvent = overlapResult.getConflictingEvent();
+            
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Conflit d'horaire");
+            alert.setHeaderText("Vous êtes déjà inscrit(e) à un événement durant cette période");
+            
+            String message = String.format(
+                "Vous êtes déjà inscrit(e) à l'événement \"%s\" qui se déroule du %s au %s.\n\n" +
+                "Cet événement chevauche l'horaire de l'événement \"%s\" prévu du %s au %s.\n\n" +
+                "Pour vous inscrire à cet événement, veuillez d'abord vous désinscrire de l'autre événement.",
+                conflictingEvent.getTitle(),
+                conflictingEvent.getStartDate().format(dateFormatter),
+                conflictingEvent.getEndDate().format(dateFormatter),
+                event.getTitle(),
+                event.getStartDate().format(dateFormatter),
+                event.getEndDate().format(dateFormatter)
+            );
+            
+            alert.setContentText(message);
+            alert.showAndWait();
+            return;
+        }
+        
         // Debug check archiver service
         System.out.println("Forçage d'une vérification de l'EventArchiverService...");
         try {
@@ -467,11 +522,30 @@ public class EventDetailsController {
                 inscriptionButton.setVisible(false);
                 desinscriptionButton.setVisible(true);
                 
+                // Envoyer un email de confirmation
+                try {
+                    EmailService emailService = new EmailService();
+                    boolean emailSent = emailService.sendEventRegistrationConfirmation(currentUser, event);
+                    if (emailSent) {
+                        System.out.println("Email de confirmation envoyé avec succès à " + currentUser.getEmail());
+                    } else {
+                        System.out.println("L'email de confirmation n'a pas pu être envoyé.");
+                    }
+                } catch (Exception e) {
+                    System.err.println("Erreur lors de l'envoi de l'email de confirmation: " + e.getMessage());
+                }
+                
                 // Show success message
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Inscription réussie");
                 alert.setHeaderText("Vous êtes inscrit(e) !");
-                alert.setContentText("Votre inscription à l'événement \"" + event.getTitle() + "\" a été enregistrée avec succès.");
+                
+                String message = "Votre inscription à l'événement \"" + event.getTitle() + "\" a été enregistrée avec succès.";
+                if (currentUser.getEmail() != null && !currentUser.getEmail().isEmpty()) {
+                    message += "\n\nUn email de confirmation a été envoyé à " + currentUser.getEmail();
+                }
+                
+                alert.setContentText(message);
                 alert.showAndWait();
             } else {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -487,10 +561,24 @@ public class EventDetailsController {
             
             // Simulate success in demo mode
             if (inscriptionService.checkConnection() == false) {
+                // Envoyer un email de confirmation en mode simulation
+                try {
+                    EmailService emailService = new EmailService();
+                    emailService.sendEventRegistrationConfirmation(currentUser, event);
+                } catch (Exception emailEx) {
+                    System.err.println("Erreur lors de l'envoi de l'email de confirmation: " + emailEx.getMessage());
+                }
+                
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Mode démo");
                 alert.setHeaderText("Inscription simulée");
-                alert.setContentText("En mode démo, l'inscription a été simulée avec succès.");
+                
+                String message = "En mode démo, l'inscription a été simulée avec succès.";
+                if (currentUser.getEmail() != null && !currentUser.getEmail().isEmpty()) {
+                    message += "\n\nUn email de confirmation a été simulé vers " + currentUser.getEmail();
+                }
+                
+                alert.setContentText(message);
                 alert.showAndWait();
                 
                 // Hide/show buttons accordingly
@@ -508,9 +596,9 @@ public class EventDetailsController {
         // Final UI update
         updateInscriptionButtons();
         System.out.println("État final des boutons: Inscription " + 
-                          (inscriptionButton.isVisible() ? "visible" : "non visible") + 
-                          ", Désinscription " + 
-                          (desinscriptionButton.isVisible() ? "visible" : "non visible"));
+                           (inscriptionButton.isVisible() ? "visible" : "non visible") + 
+                           ", Désinscription " + 
+                           (desinscriptionButton.isVisible() ? "visible" : "non visible"));
     }
     
     @FXML
@@ -602,6 +690,135 @@ public class EventDetailsController {
             stage.close();
         } else {
             System.err.println("Aucune scène précédente définie");
+        }
+    }
+    
+    /**
+     * Configure le système de notation par étoiles pour les événements expirés
+     */
+    private void setupRatingSystem() {
+        // S'assurer que le conteneur de notation existe
+        if (ratingContainer == null) {
+            return;
+        }
+        
+        // Nettoyer le conteneur avant d'ajouter les étoiles
+        ratingContainer.getChildren().clear();
+        
+        // Vérifier si l'utilisateur a déjà noté cet événement
+        Rating existingRating = null;
+        try {
+            existingRating = ratingService.getUserRatingForEvent(currentUser.getId(), event.getId());
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la récupération de la notation: " + e.getMessage());
+        }
+        
+        // Si une note existe déjà, l'utiliser comme valeur initiale
+        currentRating = (existingRating != null) ? (int)existingRating.getRating() : 0;
+        
+        // Créer les 5 étoiles
+        for (int i = 1; i <= 5; i++) {
+            final int starValue = i;
+            Button starButton = createStarButton();
+            
+            // Appliquer le style approprié (vide ou rempli)
+            SVGPath starPath = (SVGPath) starButton.getGraphic();
+            if (i <= currentRating) {
+                starPath.getStyleClass().add("star-filled");
+            } else {
+                starPath.getStyleClass().add("star-empty");
+            }
+            
+            // Ajouter l'action de clic
+            starButton.setOnAction(e -> rateEvent(starValue));
+            
+            // Ajouter l'étoile au conteneur
+            ratingContainer.getChildren().add(starButton);
+        }
+        
+        // Afficher le conteneur
+        ratingContainer.setVisible(true);
+        ratingContainer.setManaged(true);
+    }
+    
+    /**
+     * Crée un bouton avec une étoile SVG
+     */
+    private Button createStarButton() {
+        // Créer un chemin SVG pour l'étoile
+        SVGPath starPath = new SVGPath();
+        starPath.setContent("M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z");
+        
+        // Créer le bouton avec l'étoile
+        Button starButton = new Button();
+        starButton.setGraphic(starPath);
+        starButton.getStyleClass().add("star-button");
+        
+        return starButton;
+    }
+    
+    /**
+     * Gère la notation d'un événement
+     */
+    private void rateEvent(int value) {
+        if (currentUser == null || event == null) {
+            return;
+        }
+        
+        // Mettre à jour l'affichage des étoiles
+        currentRating = value;
+        updateStarsDisplay();
+        
+        // Créer ou mettre à jour la notation
+        try {
+            // Vérifier si l'utilisateur a déjà noté cet événement
+            boolean hasRated = ratingService.hasUserRatedEvent(currentUser.getId(), event.getId());
+            
+            Rating rating = new Rating();
+            rating.setUserId(currentUser.getId());
+            rating.setEventId(event.getId());
+            rating.setRating(value);
+            
+            boolean success;
+            if (hasRated) {
+                // Mettre à jour la notation existante
+                success = ratingService.updateRating(rating);
+            } else {
+                // Créer une nouvelle notation
+                success = ratingService.addRating(rating);
+            }
+            
+            if (success) {
+                // Afficher un message de succès
+                System.out.println("Notation enregistrée avec succès: " + value + " étoiles");
+                
+                // On pourrait ajouter une animation ou un message de confirmation ici
+            } else {
+                System.err.println("Erreur lors de l'enregistrement de la notation");
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la notation: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Met à jour l'affichage des étoiles en fonction de la notation actuelle
+     */
+    private void updateStarsDisplay() {
+        // Parcourir les étoiles et mettre à jour leur classe CSS
+        for (int i = 0; i < ratingContainer.getChildren().size(); i++) {
+            Button starButton = (Button) ratingContainer.getChildren().get(i);
+            SVGPath starPath = (SVGPath) starButton.getGraphic();
+            
+            // Supprimer les classes existantes
+            starPath.getStyleClass().removeAll("star-empty", "star-filled");
+            
+            // Ajouter la classe appropriée
+            if (i < currentRating) {
+                starPath.getStyleClass().add("star-filled");
+            } else {
+                starPath.getStyleClass().add("star-empty");
+            }
         }
     }
 } 

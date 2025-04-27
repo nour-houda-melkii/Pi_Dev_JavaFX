@@ -1,0 +1,145 @@
+/* Notification menu styling */
+.menu-button .context-menu {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);
+    -fx-padding: 10px;
+    -fx-pref-width: 400px;
+    -fx-translate-y: 40px; /* Push menu down below navbar */
+}
+
+.notification-item, .notification-item-unread {
+    -fx-padding: 10px 5px;
+    -fx-border-color: transparent transparent #f0f0f0 transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.notification-item-unread {
+    -fx-background-color: #f5f9ff;
+}
+
+.notification-header {
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-padding: 5px 10px 10px 10px;
+    -fx-border-color: transparent transparent #e0e0e0 transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.notification-footer {
+    -fx-font-size: 13px;
+    -fx-padding: 10px 10px 5px 10px;
+    -fx-border-color: #e0e0e0 transparent transparent transparent;
+    -fx-border-width: 1px 0 0 0;
+    -fx-text-fill: #1976D2;
+}
+
+.notification-footer:hover {
+    -fx-text-fill: #0D47A1;
+}
+
+.notification-empty {
+    -fx-font-style: italic;
+    -fx-text-fill: #757575;
+    -fx-padding: 15px 5px;
+}
+
+.notification-type {
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-text-fill: #404040;
+    -fx-padding: 3px 8px;
+    -fx-background-radius: 4px;
+    -fx-background-color: #f0f0f0;
+}
+
+.notification-date {
+    -fx-font-size: 11px;
+    -fx-text-fill: #757575;
+}
+
+.notification-content {
+    -fx-font-size: 13px;
+    -fx-text-fill: #505050;
+}
+
+.notification-reminder .notification-type {
+    -fx-background-color: #FFF3E0;
+    -fx-text-fill: #E65100;
+}
+
+.notification-registration .notification-type {
+    -fx-background-color: #E8F5E9;
+    -fx-text-fill: #2E7D32;
+}
+
+/* Ensure menu stays in front without disturbing navbar */
+#notificationMenuButton > .menu-button {
+    -fx-cursor: hand;
+}
+
+#notificationMenuButton .context-menu {
+    -fx-consume-auto-hiding-events: false;
+    -fx-animation: none;
+}
+
+/* Notification Menu */
+.context-menu.notification-context-menu {
+    -fx-background-color: white;
+    -fx-background-radius: 5px;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5px;
+    -fx-border-width: 1px;
+    -fx-padding: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 10, 0, 0, 5);
+    -fx-max-width: 350px;
+    -fx-min-width: 300px;
+    -fx-translate-y: 10px; /* Ensure menu appears below navbar */
+}
+
+.menu-item.notification-item {
+    -fx-padding: 10px;
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-border-color: transparent transparent #f0f0f0 transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.menu-item.notification-item:hover {
+    -fx-background-color: #f5f5f5;
+}
+
+.menu-item.notification-item .label {
+    -fx-font-size: 13px;
+    -fx-wrap-text: true;
+    -fx-text-fill: #333333;
+    -fx-padding: 5px 0;
+}
+
+/* Different notification types */
+.menu-item.notification-item.reminder {
+    -fx-border-left-color: #ff9800;
+    -fx-border-width: 0 0 1px 3px;
+}
+
+.menu-item.notification-item.registration {
+    -fx-border-left-color: #4CAF50;
+    -fx-border-width: 0 0 1px 3px;
+}
+
+.menu-item.notification-item .notification-time {
+    -fx-font-size: 11px;
+    -fx-text-fill: #757575;
+    -fx-font-style: italic;
+}
+
+.menu-item.notification-item .notification-title {
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-text-fill: #212121;
+}
+
+.menu-item.notification-item .notification-content {
+    -fx-text-fill: #424242;
+    -fx-wrap-text: true;
+} 

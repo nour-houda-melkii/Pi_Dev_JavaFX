@@ -8,53 +8,98 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.shape.Circle?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
 
-<HBox xmlns="http://javafx.com/javafx"
+<StackPane xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="controllers.FrontNavbarController"
-      styleClass="front-navbar"
-      alignment="CENTER_LEFT"
-      spacing="20"
-      prefHeight="70.0">
+      styleClass="front-navbar-container">
+      
+    <effect>
+        <DropShadow offsetY="2" radius="5" spread="0.05">
+            <color>
+                <Color opacity="0.2" />
+            </color>
+        </DropShadow>
+    </effect>
     
-    <padding>
-        <Insets top="10" right="20" bottom="10" left="20" />
-    </padding>
+    <!-- Background pattern -->
+    <StackPane styleClass="navbar-background-pattern" />
     
-    <!-- Logo -->
-    <ImageView fitHeight="50" fitWidth="50" preserveRatio="true">
-        <Image url="@../images/logo.png" />
-    </ImageView>
-    
-    <!-- Titre -->
-    <Label text="SAHATECH" styleClass="front-nav-title">
-        <font>
-            <Font name="System Bold" size="24" />
-        </font>
-    </Label>
-    
-    <Pane HBox.hgrow="ALWAYS" /> <!-- Spacer -->
-    
-    <!-- Boutons de navigation -->
-    <Button text="Accueil" styleClass="front-nav-button" onAction="#handleHome" />
-    <Button text="Événements" styleClass="front-nav-button, active-nav-button" onAction="#handleEvents" />
-    <Button text="À propos" styleClass="front-nav-button" onAction="#handleAbout" />
-    <Button text="Contact" styleClass="front-nav-button" onAction="#handleContact" />
-    
-    <!-- Bouton Notifications avec icône de badge -->
-    <StackPane fx:id="notificationContainer">
-        <MenuButton fx:id="notificationMenuButton" text="🔔" styleClass="front-nav-button" 
-                   popupSide="BOTTOM" onMouseClicked="#handleNotificationClick"
-                   style="-fx-cursor: hand; -fx-background-color: transparent; -fx-padding: 5;">
-            <!-- items populated dynamically -->
-        </MenuButton>
-        <StackPane fx:id="notificationBadge" visible="false" StackPane.alignment="TOP_RIGHT" mouseTransparent="true">
-            <Circle radius="8" fill="red" />
-            <Label fx:id="notificationCount" text="0" textFill="white" style="-fx-font-size: 10px;" />
+    <HBox styleClass="front-navbar"
+          alignment="CENTER_LEFT"
+          spacing="24"
+          prefHeight="80.0">
+        
+        <padding>
+            <Insets top="10" right="30" bottom="10" left="30" />
+        </padding>
+        
+        <!-- Logo and Title Container -->
+        <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-background-color: transparent;">
+            <!-- Logo with glow effect -->
+            <StackPane styleClass="logo-container" minWidth="50" minHeight="50">
+                <ImageView fitHeight="40" fitWidth="40" preserveRatio="true">
+                    <Image url="@../images/logo.png" />
+                    <effect>
+                        <DropShadow color="#4d8cfb" radius="10" spread="0.1" />
+                    </effect>
+                </ImageView>
+            </StackPane>
+            
+            <!-- Titre -->
+            <Label text="SAHATECH" styleClass="front-nav-title" />
+        </HBox>
+        
+        <Pane HBox.hgrow="ALWAYS" style="-fx-background-color: transparent;" /> <!-- Spacer -->
+        
+        <!-- Navigation Links Container -->
+        <HBox spacing="8" alignment="CENTER" style="-fx-background-color: transparent;">
+            <!-- Boutons de navigation avec effet hover -->
+            <Button text="Accueil" styleClass="nav-link" onAction="#handleHome" />
+            <Button text="Événements" styleClass="nav-link, active-nav-link" onAction="#handleEvents" />
+            <Button text="À propos" styleClass="nav-link" onAction="#handleAbout" />
+            <Button text="Contact" styleClass="nav-link" onAction="#handleContact" />
+        </HBox>
+        
+        <!-- Spacer -->
+        <Pane HBox.hgrow="ALWAYS" style="-fx-background-color: transparent;" minWidth="10" />
+        
+        <!-- Bouton Donate -->
+        <Button text="Donate" styleClass="donate-button" onAction="#handleDonate" />
+        
+        <!-- Notification Button -->
+        <StackPane fx:id="notificationContainer" styleClass="notification-container" style="-fx-background-color: transparent;">
+            <MenuButton fx:id="notificationMenuButton" styleClass="notification-button" 
+                       popupSide="BOTTOM" onMouseClicked="#handleNotificationClick">
+                <graphic>
+                    <Text text="🔔" styleClass="notification-icon" />
+                </graphic>
+                <style>
+                    -fx-background-color: transparent;
+                    -fx-padding: 8;
+                    -fx-cursor: hand;
+                </style>
+            </MenuButton>
+            
+            <StackPane fx:id="notificationBadge" visible="false" StackPane.alignment="TOP_RIGHT" 
+                      translateX="6" translateY="-6" mouseTransparent="true">
+                <Circle radius="8" styleClass="notification-badge-circle" />
+                <Label fx:id="notificationCount" text="0" styleClass="notification-badge-text" />
+            </StackPane>
         </StackPane>
-    </StackPane>
-    
-</HBox> 
+        
+        <!-- User Profile Button -->
+        <Button styleClass="profile-button">
+            <graphic>
+                <StackPane>
+                    <Circle radius="18" styleClass="profile-circle" />
+                    <Text text="SH" styleClass="profile-initials" />
+                </StackPane>
+            </graphic>
+        </Button>
+    </HBox>
+</StackPane> 

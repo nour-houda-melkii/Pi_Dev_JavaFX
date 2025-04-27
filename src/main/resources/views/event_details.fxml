@@ -99,6 +99,12 @@
                                     </StackPane>
                                 </graphic>
                             </Button>
+                            
+                            <!-- Conteneur pour le système de notation (ajouté) -->
+                            <HBox fx:id="ratingContainer" styleClass="rating-container" visible="false" managed="false">
+                                <Label text="Noter cet événement:" styleClass="rating-label"/>
+                                <!-- Les étoiles seront ajoutées dynamiquement par le contrôleur -->
+                            </HBox>
                         </HBox>
                     </VBox>
                 </HBox>

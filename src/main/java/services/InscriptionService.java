@@ -286,4 +286,92 @@ public class InscriptionService {
         }
         return inscriptions;
     }
+    
+    /**
+     * Vérifie si un utilisateur a déjà une inscription à un événement qui chevauche
+     * dans le temps avec l'événement spécifié.
+     * 
+     * @param userId ID de l'utilisateur
+     * @param eventId ID de l'événement auquel l'utilisateur souhaite s'inscrire
+     * @return Un objet contenant le résultat de la vérification et l'événement en conflit si trouvé
+     */
+    public EventOverlapResult checkEventTimeOverlap(int userId, int eventId) {
+        if (connection == null) {
+            // Mode démo - toujours retourner pas de chevauchement si pas de connexion
+            System.out.println("Mode démo : vérification de chevauchement sans base de données");
+            return new EventOverlapResult(false, null);
+        }
+        
+        try {
+            // Récupérer l'événement auquel l'utilisateur souhaite s'inscrire
+            Event newEvent = eventService.findById(eventId);
+            if (newEvent == null) {
+                return new EventOverlapResult(false, null);
+            }
+            
+            LocalDateTime newEventStart = newEvent.getStartDate();
+            LocalDateTime newEventEnd = newEvent.getEndDate();
+            
+            // Récupérer tous les événements auxquels l'utilisateur est inscrit
+            List<Inscription> userInscriptions = getInscriptionsByUserId(userId);
+            
+            // Filtrer pour garder seulement les inscriptions actives (not unsubscribed)
+            userInscriptions = userInscriptions.stream()
+                .filter(inscription -> !inscription.isHasUnsubscribed())
+                .toList();
+            
+            for (Inscription inscription : userInscriptions) {
+                // Éviter de vérifier le même événement
+                if (inscription.getEventId() == eventId) {
+                    continue;
+                }
+                
+                // Obtenir les détails de l'événement inscrit
+                Event existingEvent = eventService.findById(inscription.getEventId());
+                if (existingEvent == null) {
+                    continue;
+                }
+                
+                LocalDateTime existingEventStart = existingEvent.getStartDate();
+                LocalDateTime existingEventEnd = existingEvent.getEndDate();
+                
+                // Vérifier si les événements se chevauchent dans le temps
+                boolean overlap = (newEventStart.isBefore(existingEventEnd) || newEventStart.isEqual(existingEventEnd)) 
+                               && (newEventEnd.isAfter(existingEventStart) || newEventEnd.isEqual(existingEventStart));
+                
+                if (overlap) {
+                    return new EventOverlapResult(true, existingEvent);
+                }
+            }
+            
+            // Aucun chevauchement trouvé
+            return new EventOverlapResult(false, null);
+            
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la vérification de chevauchement d'événements: " + e.getMessage());
+            e.printStackTrace();
+            return new EventOverlapResult(false, null);
+        }
+    }
+    
+    /**
+     * Classe pour retourner le résultat de la vérification de chevauchement
+     */
+    public static class EventOverlapResult {
+        private final boolean hasOverlap;
+        private final Event conflictingEvent;
+        
+        public EventOverlapResult(boolean hasOverlap, Event conflictingEvent) {
+            this.hasOverlap = hasOverlap;
+            this.conflictingEvent = conflictingEvent;
+        }
+        
+        public boolean hasOverlap() {
+            return hasOverlap;
+        }
+        
+        public Event getConflictingEvent() {
+            return conflictingEvent;
+        }
+    }
 } 
