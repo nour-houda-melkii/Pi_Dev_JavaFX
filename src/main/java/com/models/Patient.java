@@ -15,6 +15,9 @@ public class Patient extends User {
         this.rendezVousList = new ArrayList<>();
     }
 
+    public Patient() {
+    }
+
     // Getters et Setters
     public int getId() {
         return id;

@@ -5,6 +5,7 @@ import com.demo.enums.Gender;
 import com.demo.enums.Specialite;
 import com.exceptions.AuthException;
 import com.exceptions.SmsException;
+import com.models.Medecin;
 import com.models.User;
 import com.demo.enums.Role;
 import com.utils.*;
@@ -30,11 +31,13 @@ public class AuthService {
     private final EmailService emailService;
     private static final int MAX_LOGIN_ATTEMPTS = 3;
     private static final int LOCK_TIME_MINUTES = 30;
+    private ServiceMedecin serviceMedecin;
 
     public AuthService() {
         this.connection = DataSource.getInstance().getConnection();
         this.smsService = new SmsService();
         this.emailService = new EmailService();
+        serviceMedecin = new ServiceMedecin(connection);
     }
 
     /**
@@ -364,6 +367,7 @@ public class AuthService {
         if (user.getRoles() == null || user.getRoles().isEmpty()) {
             user.setRoles(List.of(user.ROLE_USER)); // Valeur par défaut
         }
+
         // Vérifier si l'email existe déjà
         if (emailExists(user.getEmail())) {
             throw new SQLException("This email is already in use.");
@@ -386,46 +390,85 @@ public class AuthService {
             user.setStatus("verifie");
         }
 
-        String query = "INSERT INTO user (email, password, first_name, last_name, roles, " +
-                "adress, phone_number, age, gender, numero_licence, specialite, is_verified, status) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Connection conn = null;
+        try {
+            conn = connection; // Utilisez votre connexion existante ou créez-en une nouvelle
+            conn.setAutoCommit(false); // Désactivez l'auto-commit pour gérer la transaction manuellement
 
-        try (PreparedStatement pst = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            int paramIndex = 1;
-            pst.setString(paramIndex++, user.getEmail());
-            pst.setString(paramIndex++, user.getPassword());
-            pst.setString(paramIndex++, user.getFirstName());
-            pst.setString(paramIndex++, user.getLastName());
-            pst.setString(paramIndex++, user.getRolesAsJson());
-            pst.setString(paramIndex++, user.getAddress());
-            pst.setString(paramIndex++, user.getPhoneNumber());
-            pst.setInt(paramIndex++, user.getAge());
-            pst.setString(paramIndex++, user.getGender().toString());
+            // 1. Insertion dans la table user
+            String userQuery = "INSERT INTO user (email, password, first_name, last_name, roles, " +
+                    "adress, phone_number, age, gender, numero_licence, specialite, is_verified, status) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-            if (user.isMedecin()) {
-                pst.setString(paramIndex++, user.getNumeroLicence());
-                pst.setString(paramIndex++, user.getSpecialite().toString());
-            } else {
-                pst.setNull(paramIndex++, Types.VARCHAR); // numero_licence
-                pst.setNull(paramIndex++, Types.VARCHAR); // specialite
-            }
-            pst.setBoolean(paramIndex++, true); // is_verified
-            pst.setString(paramIndex++, user.getStatus());
+            try (PreparedStatement userStmt = conn.prepareStatement(userQuery, Statement.RETURN_GENERATED_KEYS)) {
+                int paramIndex = 1;
+                userStmt.setString(paramIndex++, user.getEmail());
+                userStmt.setString(paramIndex++, user.getPassword());
+                userStmt.setString(paramIndex++, user.getFirstName());
+                userStmt.setString(paramIndex++, user.getLastName());
+                userStmt.setString(paramIndex++, user.getRolesAsJson());
+                userStmt.setString(paramIndex++, user.getAddress());
+                userStmt.setString(paramIndex++, user.getPhoneNumber());
+                userStmt.setInt(paramIndex++, user.getAge());
+                userStmt.setString(paramIndex++, user.getGender().toString());
 
-            int affectedRows = pst.executeUpdate();
-            if (affectedRows == 0) {
-                throw new SQLException("Échec de l'enregistrement, aucune ligne affectée");
-            }
-
-            try (ResultSet generatedKeys = pst.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    user.setId(generatedKeys.getInt(1));
+                if (user.isMedecin()) {
+                    userStmt.setString(paramIndex++, user.getNumeroLicence());
+                    userStmt.setString(paramIndex++, user.getSpecialite().toString());
                 } else {
-                    throw new SQLException("Échec de l'enregistrement, aucun ID obtenu");
+                    userStmt.setNull(paramIndex++, Types.VARCHAR); // numero_licence
+                    userStmt.setNull(paramIndex++, Types.VARCHAR); // specialite
+                }
+                userStmt.setBoolean(paramIndex++, true); // is_verified
+                userStmt.setString(paramIndex++, user.getStatus());
+
+                int affectedRows = userStmt.executeUpdate();
+                if (affectedRows == 0) {
+                    throw new SQLException("Échec de l'enregistrement, aucune ligne affectée");
+                }
+
+                try (ResultSet generatedKeys = userStmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        int userId = generatedKeys.getInt(1);
+                        user.setId(userId);
+
+                        // 2. Insertion dans la table appropriée selon le rôle
+                        if (user.getRoles().contains("ROLE_MEDECIN") || user.getRoles().contains("MEDECIN")) {
+                            Medecin medecin = new Medecin( user.getId(), "1");
+                            serviceMedecin.ajouter(medecin);
+                        }
+                        else if (user.getRoles().contains("ROLE_USER") || user.getRoles().contains("PATIENT")) {
+                            String patientQuery = "INSERT INTO patient (user_id) VALUES (?)";
+                            try (PreparedStatement patientStmt = conn.prepareStatement(patientQuery)) {
+                                patientStmt.setInt(1, userId);
+                                patientStmt.executeUpdate();
+                            }
+                        }
+
+                        conn.commit(); // Validez la transaction
+                        return user;
+                    } else {
+                        throw new SQLException("Échec de l'enregistrement, aucun ID obtenu");
+                    }
                 }
             }
-
-            return user;
+        } catch (SQLException e) {
+            if (conn != null) {
+                try {
+                    conn.rollback(); // Annulez la transaction en cas d'erreur
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            throw e; // Relancez l'exception
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true); // Réactivez l'auto-commit
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

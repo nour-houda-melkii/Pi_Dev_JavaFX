@@ -493,5 +493,29 @@ public class ProfileController {
         }
     }
 
+
+    @FXML
+    private void openAjoutView() {
+        try {
+            // Chargement de la vue Ajout
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/Ajout.fxml"));
+            Parent root = loader.load();
+
+            // Récupération du contrôleur et passage du token
+            Ajout ajoutController = loader.getController();
+            ajoutController.setToken(this.token);
+
+            // Création et affichage de la nouvelle scène
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Prise de Rendez-vous");
+            stage.show();
+
+        } catch (IOException e) {
+            showAlert("Erreur", "Échec d'ouverture",
+                    "Impossible d'ouvrir la vue des rendez-vous: " + e.getMessage());
+        }
+    }
+
 }
 

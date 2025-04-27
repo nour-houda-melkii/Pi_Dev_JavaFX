@@ -278,20 +278,19 @@ public class AdminDashboardController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/ajout.fxml"));
             Parent ajoutView = loader.load();
 
+            // Get the controller and set the token
+            Ajout ajoutController = loader.getController();
+            ajoutController.setToken(this.token);  // Passer le token au contrôleur
+
             // Clear the current content and add the new view
             contentPane.getChildren().clear();
             contentPane.getChildren().add(ajoutView);
-
-            // Optional: Get the controller to initialize data if needed
-            // Ajout ajoutController = loader.getController();
-            // ajoutController.initialize() or any other method
 
         } catch (IOException e) {
             e.printStackTrace();
             // Handle exception (show error dialog, etc.)
         }
     }
-
 
 
     private void handleSort() {
@@ -644,6 +643,26 @@ public class AdminDashboardController {
     }
 
     public void showProducts(ActionEvent actionEvent) {
+    }
+
+
+    @FXML
+    private void medecin() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/Medecin.fxml"));
+            Parent root = loader.load();
+
+            // Récupérer le contrôleur
+            MedecinController medecinController = loader.getController();
+
+            // Lui passer le token
+            medecinController.setToken(this.token); // "this.token" est ton token actuel
+
+            // Charger la nouvelle vue
+            contentPane.getChildren().setAll(root); // ou comme tu fais dans loadContent()
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

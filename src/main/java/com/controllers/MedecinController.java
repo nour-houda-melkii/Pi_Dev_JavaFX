@@ -57,8 +57,7 @@ public class MedecinController implements Initializable {
     private PasswordField passwordFieldMedecin;
     @FXML
     private Label loginMessageMedecin;
-    @FXML
-    private Pane loginPaneMedecin;
+
 
     // Pane du dashboard (gestion des rendez-vous)
     @FXML
@@ -90,7 +89,6 @@ public class MedecinController implements Initializable {
     @FXML
     private VBox etatsSection;
 
-    private User loggedInMedecin;
     private Medecin medecin;
 
     //// notif
@@ -111,8 +109,12 @@ private VBox onlineAppointmentsContainer;
     private VBox rendezVousEnLigneSection;
     @FXML
     private Button rdvEnLigneButton;
-///
-
+    @FXML
+    private Label loginMessage;
+    @FXML
+    private VBox loginPane;
+    @FXML
+    private VBox doctorPane;
 
     // Services
     private UserService serviceUser = new UserService();
@@ -121,12 +123,86 @@ private VBox onlineAppointmentsContainer;
     private ServicePatient servicePatient = new ServicePatient();
     private ServiceEtatRendezVous serviceEtatRendezVous = new ServiceEtatRendezVous();
     private ServiceNotification serviceNotification;
+    private AuthService authService;
+
+    private String token;
+    private User currentUser;
+
+    public boolean isUserConnected() {
+        try {
+            if (token == null || token.isEmpty()) return false;
+            currentUser = authService.getUserFromToken(token);
+            return currentUser != null;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
+    public void setToken(String token) {
+        this.token = token;
+        System.out.println("Nouveau token reçu: " + token);
+
+        // Si AuthService n'est pas encore initialisé
+        if (authService == null) {
+            authService = new AuthService();
+        }
+
+        if (!isUserConnected()) {
+            loginMessage.setText("Connexion requise");
+            loginPane.setVisible(true);
+            doctorPane.setVisible(false);
+        } else {
+            initialiserUserFromToken();
+        }
+    }
+
+    @FXML
+    private void initialiserUserFromToken() {
+        try {
+            System.out.println("Initialisation avec token: " + token);
+
+            if (token == null || token.isEmpty()) {
+                System.out.println("Token non fourni");
+                return;
+            }
+
+            currentUser = authService.getUserFromToken(token);
+            System.out.println("Utilisateur récupéré: " + (currentUser != null ? currentUser.getEmail() : "null"));
+
+            if (currentUser == null) {
+                System.out.println("Session invalide");
+                return;
+            }
+
+            medecin = new Medecin(currentUser.getId(), "1");
+            boolean test = medecin instanceof Medecin;
+            System.out.println(test);
+
+            // Récupérer l'id du med
+            int medid = serviceMedecin.idmed(medecin);
+
+            // Masquer la pane de connexion et afficher le dashboard
+//            loginPaneMedecin.setVisible(false);
+            dashboardPaneMedecin.setVisible(true);
+
+            // Charger la liste des rdv pour le médecin connecté
+            loadData(medid);
+            chargerEtatsMedecin(medid);
+            CalendarController calendarController = new CalendarController();
+            calendarController.setMedecinConnecte(medecin);
+            updateNotificationCount();
+            loadRendezVousEnLigne();
+
+        } catch (Exception e) {
+            System.out.println("Erreur d'initialisation: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Afficher d'abord la pane de login et masquer le dashboard.
-        loginPaneMedecin.setVisible(true);
-        dashboardPaneMedecin.setVisible(false);
         serviceNotification = new ServiceNotification();
         rendezVousEnLigneSection.setVisible(false);
         // Initialiser les heures disponibles par défaut pour le filtre (de 09:00 à 20:30 par tranches de 30 minutes).
@@ -202,41 +278,6 @@ private VBox onlineAppointmentsContainer;
 
     }
 
-
-//    @FXML
-//    private void handleLoginMedecin() {
-//        String medecinEmail = emailFieldMedecin.getText().trim();
-//        String medecinPassword = passwordFieldMedecin.getText().trim();
-//CalendarController calendarController = new CalendarController();
-//        if (medecinEmail.isEmpty() || medecinPassword.isEmpty()) {
-//            loginMessageMedecin.setText("Veuillez renseigner l'email et le mot de passe.");
-//            return;
-//        }
-//
-//        loggedInMedecin = serviceUser.authentifier(medecinEmail, medecinPassword);
-//        if (loggedInMedecin != null) {
-//            loginMessageMedecin.setText("Connexion réussie en tant que " + loggedInMedecin.getFirstName());
-//
-//            medecin = new Medecin(loggedInMedecin.getId(), "");
-//
-//            // Récupérer l'id du med
-//            int medid = serviceMedecin.idmed(medecin);
-//
-//            // Masquer la pane de connexion et afficher le dashboard
-//            loginPaneMedecin.setVisible(false);
-//            dashboardPaneMedecin.setVisible(true);
-//
-//            // Charger la liste des rdv pour le médecin connecté
-//            loadData(medid);
-//            chargerEtatsMedecin(medid);
-//            calendarController.setMedecinConnecte(medecin);
-//            updateNotificationCount();
-//            loadRendezVousEnLigne();
-//
-//        } else {
-//            loginMessageMedecin.setText("Échec de la connexion. Vérifiez vos identifiants.");
-//        }
-//    }
 
 
 //// les pat + le crud des rdvs
@@ -820,18 +861,18 @@ private void loadData(int medecinId) {
     public void afficherCalendrier(ActionEvent event) {
         try {
             // Utiliser le bon nom de fichier et chemin d'accès
-            URL fxmlUrl = getClass().getResource("/calender.fxml");
+            URL fxmlUrl = getClass().getResource("/com/views/calender.fxml");
             if (fxmlUrl == null) {
                 System.err.println("Fichier calendar.fxml introuvable");
                 // Essayer l'autre orthographe si la première tentative échoue
-                fxmlUrl = getClass().getResource("/fxml/calender.fxml");
+                fxmlUrl = getClass().getResource("/com/views/calender.fxml");
                 if (fxmlUrl == null) {
                     System.err.println("Fichier calender.fxml introuvable également");
                     // Rechercher dans d'autres répertoires potentiels
                     System.err.println("Chemins possibles à vérifier:");
-                    System.err.println("- /calendar.fxml");
-                    System.err.println("- /calender.fxml");
-                    System.err.println("- /org/example/fxml/calendar.fxml");
+                    System.err.println("- /com/views/calendar.fxml");
+                    System.err.println("- /com/views/calender.fxml");
+                    System.err.println("- /com/views/calendar.fxml");
 
                     // Afficher une alerte à l'utilisateur
                     Alert alert = new Alert(Alert.AlertType.ERROR);

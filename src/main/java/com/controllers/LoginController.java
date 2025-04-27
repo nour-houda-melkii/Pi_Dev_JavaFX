@@ -57,7 +57,7 @@ public class LoginController {
             User user = authService.getUserFromToken(token);
 
             // Redirection selon le rôle (sans changer vos méthodes existantes)
-            if (user.getRoles().contains("ROLE_MEDECIN") || user.getRoles().contains("ROLE_ADMIN")) {
+            if (user.getRoles().contains("ROLE_MEDECIN") || user.getRoles().contains("ROLE_ADMIN")  || user.getRoles().contains("ROLE_USER")) {
                 redirectToAdminDashboard(); // Méthode existante
             } else {
                 redirectToFrontOffice();    // Nouvelle méthode (voir ci-dessous)

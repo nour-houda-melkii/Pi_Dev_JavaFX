@@ -1,5 +1,7 @@
 package com.controllers;
 
+import com.exceptions.AuthException;
+import com.utils.AuthManager;
 import com.utils.DataSource;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -74,6 +76,7 @@ public class Ajout {
 
     // Instances de services
     private UserService serviceUser = new UserService();
+    private AuthService authService;
     private ServicePatient servicePatient = new ServicePatient();
     private ServiceMedecin serviceMedecin = new ServiceMedecin(DataSource.getInstance().getConnection());
     private ServiceRendezVous serviceRendezVous = new ServiceRendezVous();
@@ -86,9 +89,43 @@ public class Ajout {
     // Liste complète des médecins et rendez-vous pour filtrage et tri
     private List<Medecin> allDoctors;
     private List<RendezVous> patientAppointments;
+    private String token;
+    private User currentUser;
 
+
+
+
+    public boolean isUserConnected() {
+        try {
+            if (token == null || token.isEmpty()) return false;
+            currentUser = authService.getUserFromToken(token);
+            return currentUser != null;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
+    public void setToken(String token) {
+        this.token = token;
+        System.out.println("Nouveau token reçu: " + token);
+
+        // Si AuthService n'est pas encore initialisé
+        if (authService == null) {
+            authService = new AuthService();
+        }
+
+        if (!isUserConnected()) {
+            loginMessage.setText("Connexion requise");
+            loginPane.setVisible(true);
+            doctorPane.setVisible(false);
+        } else {
+            initialiserUserFromToken();
+        }
+    }
     @FXML
     private void initialize() {
+        authService = new AuthService();
         serviceNotification = new ServiceNotification();
         // Configuration du DatePicker pour bloquer les dates passées et le week-end
         datePicker.setDayCellFactory(picker -> new DateCell() {
@@ -110,6 +147,64 @@ public class Ajout {
                 timeComboBox.setDisable(horaires.isEmpty());
             }
         });
+    }
+
+
+    @FXML
+    private void initialiserUserFromToken() {
+        try {
+            System.out.println("Initialisation avec token: " + token);
+
+            if (token == null || token.isEmpty()) {
+                System.out.println("Token non fourni");
+                return;
+            }
+
+            currentUser = authService.getUserFromToken(token);
+            System.out.println("Utilisateur récupéré: " + (currentUser != null ? currentUser.getEmail() : "null"));
+
+            if (currentUser == null) {
+                System.out.println("Session invalide");
+                return;
+            }
+
+            // Récupération du patient associé à l'utilisateur connecté
+            patient = servicePatient.afficher().stream()
+                    .filter(p -> p.getUserId() == currentUser.getId())
+                    .findFirst()
+                    .orElse(null);
+
+            if (patient == null) {
+                System.out.println("Aucun patient associé à cet utilisateur");
+                // Gérer le cas où l'utilisateur n'est pas associé à un patient
+            } else {
+                System.out.println("Patient récupéré: ID=" + patient.getId());
+            }
+
+            // Ajout de vérifications de nullité pour tous les éléments d'interface
+            if (loginMessage != null) {
+                loginMessage.setText("Bienvenue " + currentUser.getFirstName());
+            }
+
+            if (loginPane != null) {
+                loginPane.setVisible(false);
+            }
+
+            if (doctorPane != null) {
+                doctorPane.setVisible(true);
+            }
+
+            if (navbar != null) {
+                navbar.setVisible(true);
+            }
+
+            populateDoctorGrid();
+            checkNewNotifications();
+
+        } catch (Exception e) {
+            System.out.println("Erreur d'initialisation: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     // Gestion de la recherche par spécialité
@@ -316,53 +411,73 @@ public class Ajout {
 
     @FXML
     private void handleAppointmentCreation(ActionEvent event) {
-        EtatRendezVous selectedEtat = stateChoiceBox.getValue();
-        String selectedTime = timeComboBox.getValue();
-        LocalDate selectedDate = datePicker.getValue();
-
-        if (selectedEtat == null || selectedDate == null || selectedTime == null) {
-            appointmentMessage.setText("Veuillez remplir tous les champs.");
+        // Vérification renforcée de la connexion
+        if (token == null || token.isEmpty()) {
+            appointmentMessage.setText("Erreur: Token d'authentification manquant");
             return;
         }
 
-        try {
-            Date date = Date.valueOf(selectedDate);
-            Time time = Time.valueOf(selectedTime + ":00");
+        // S'assurer que le service est initialisé
+        if (authService == null) {
+            authService = new AuthService();
+        }
 
+        try {
+            // Recharge l'utilisateur à partir du token à chaque fois
+            currentUser = authService.getUserFromToken(token);
+
+            if (currentUser == null) {
+                appointmentMessage.setText("Erreur: Session expirée. Veuillez vous reconnecter.");
+                return;
+            }
+
+            // Vérification des champs obligatoires
+            if (stateChoiceBox.getValue() == null || datePicker.getValue() == null || timeComboBox.getValue() == null) {
+                appointmentMessage.setText("Veuillez remplir tous les champs.");
+                return;
+            }
+
+            // Création du rendez-vous
             RendezVous rdv = new RendezVous(
                     "",
-                    date,
-                    time,
+                    Date.valueOf(datePicker.getValue()),
+                    Time.valueOf(timeComboBox.getValue() + ":00"),
                     false,
                     false,
                     null,
-                    selectedEtat.getId()
+                    stateChoiceBox.getValue().getId()
             );
+
             rdv.setMedecinId(selectedMedecin.getId());
-            rdv.setPatientId(patient.getId());
-            System.out.println(patient.getId());
+            rdv.setPatientId(patient.getId()); // Utilisation directe de l'ID utilisateur
 
-            // Ajouter le rendez-vous à la base de données
+            // Debug
+            System.out.println("Création RDV - User: " + patient.getId()
+                    + ", Médecin: " + selectedMedecin.getId()
+                    + ", Date: " + datePicker.getValue());
+
+            // Enregistrement
             serviceRendezVous.ajouter(rdv);
-
-            // Créer et envoyer une notification au médecin
-            ServiceNotification serviceNotification = new ServiceNotification();
-            serviceNotification.notifierNouveauRendezVous(rdv);
+            new ServiceNotification().notifierNouveauRendezVous(rdv);
 
             appointmentMessage.setText("Rendez-vous créé avec succès !");
+            resetAppointmentForm();
 
-            // Réinitialisation
-            stateChoiceBox.setValue(null);
-            datePicker.setValue(null);
-            timeComboBox.getItems().clear();
-
-            appointmentPane.setVisible(false);
-            doctorPane.setVisible(true);
         } catch (Exception e) {
-            appointmentMessage.setText("Erreur lors de la création du rendez-vous.");
+            appointmentMessage.setText("Erreur technique: " + e.getMessage());
             e.printStackTrace();
         }
     }
+
+    private void resetAppointmentForm() {
+        stateChoiceBox.setValue(null);
+        datePicker.setValue(null);
+        timeComboBox.getItems().clear();
+        appointmentPane.setVisible(false);
+        doctorPane.setVisible(true);
+    }
+
+    // Chargement des rdv du patient
     // Chargement des rdv du patient
     @FXML
     private void loadPatientAppointments() {
@@ -388,6 +503,7 @@ public class Ajout {
         // Rendre visible le tableau
         appointmentsListPane.setVisible(true);
         notificationsPane.setVisible(false);
+//        onlineAppointmentsPane.setVisible(false);
 
     }
 
@@ -462,10 +578,6 @@ public class Ajout {
         notificationsGrid.add(createHeaderLabel("Message "), 0, 0);
         notificationsGrid.add(createHeaderLabel("  Statut     "), 1, 0);
         notificationsGrid.add(createHeaderLabel("Action     "), 2, 0);
-        patient = servicePatient.afficher().stream()
-                .filter(p -> p.getUserId() == loggedInPatient.getId())
-                .findFirst()
-                  .orElse(null);
         // Get notifications for the current patient
         List<Notification> notifications = serviceNotification.getNotificationsForPatient(patient.getId());
 
@@ -555,5 +667,4 @@ public class Ajout {
         // Load notifications
         loadPatientNotifications();
     }
-
 }

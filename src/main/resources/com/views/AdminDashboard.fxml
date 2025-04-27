@@ -128,7 +128,7 @@
             <!-- Appointment Submenu -->
             <VBox fx:id="appointmentMenu" style="-fx-background-color: #f8fafc; -fx-padding: 0 0 0 20; -fx-spacing: 5;" managed="false" visible="false">
                 <Button text="Manage Appointments" onAction="#showAppointmentManagement" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
-                <Button text="Create Appointment" onAction="#showCreateAppointment" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
+                <Button text="Medecin" onAction="#medecin" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
                 <Button text="Ajout Rendez-vous" onAction="#showAjoutView" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
             </VBox>
 

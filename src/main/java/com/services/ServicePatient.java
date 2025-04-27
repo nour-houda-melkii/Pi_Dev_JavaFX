@@ -10,6 +10,7 @@ import java.util.List;
 public class ServicePatient implements CrudService<Patient> {
 
     private Connection connection;
+    private Patient currentPatient;
 
     public ServicePatient() {
         connection = DataSource.getInstance().getConnection();
@@ -69,7 +70,7 @@ public class ServicePatient implements CrudService<Patient> {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery(req);
             while (rs.next()) {
-                Patient patient = new Patient(rs.getInt("userId"));
+                Patient patient = new Patient(rs.getInt("user_id"));
                 patient.setId(rs.getInt("id"));
                 patients.add(patient);
             }
@@ -200,4 +201,29 @@ public class ServicePatient implements CrudService<Patient> {
         }
         return rendezVousList;
     }
+
+
+    public Integer getPatientIdByUserId(int userId) {
+        String req = "SELECT id FROM patient WHERE user_id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(req);
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération de l'ID patient : " + e.getMessage());
+        }
+        return null; // Retourne null si aucun patient trouvé avec ce user_id
+    }
+
+    public Patient getPatientByUserId(int userId) {
+        Integer patientId = getPatientIdByUserId(userId);
+        if (patientId != null) {
+            return getPatientById(patientId);
+        }
+        return null; // Retourne null si aucun patient trouvé avec ce user_id
+    }
+
 }

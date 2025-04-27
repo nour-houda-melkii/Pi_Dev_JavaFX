@@ -11,38 +11,9 @@
             prefWidth="1000" prefHeight="650"
             style="-fx-background-color: #f5f7fb;">
 
-    <!-- Panneau de connexion -->
-    <Pane fx:id="loginPaneMedecin" visible="true" prefWidth="1000" prefHeight="650">
-        <VBox alignment="CENTER" spacing="25" layoutX="350" layoutY="150">
-            <!-- Logo et nom de l'application -->
-            <Label text="SAHATECH"
-                   style="-fx-text-fill: #3498db; -fx-font-size: 36px; -fx-font-weight: bold;"/>
-
-            <VBox style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 40; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 5);">
-                <Label text="Connexion Médecin"
-                       style="-fx-text-fill: #2c3e50; -fx-font-size: 24px; -fx-font-weight: bold;"/>
-
-                <VBox spacing="15" style="-fx-padding: 20 0 0 0;">
-                    <TextField fx:id="emailFieldMedecin"
-                               promptText="Adresse email"
-                               style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-pref-width: 300;"/>
-
-                    <PasswordField fx:id="passwordFieldMedecin"
-                                   promptText="Mot de passe"
-                                   style="-fx-background-radius: 8; -fx-border-radius: 8; -fx-pref-width: 300;"/>
-
-                    <Button text="Se connecter"
-                            style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8; -fx-pref-width: 120;"/>
-                </VBox>
-
-                <Label fx:id="loginMessageMedecin"
-                       style="-fx-text-fill: #e74c3c; -fx-padding: 10 0 0 0;"/>
-            </VBox>
-        </VBox>
-    </Pane>
 
     <!-- Tableau de bord avec navbar à gauche -->
-    <Pane fx:id="dashboardPaneMedecin" visible="false" prefWidth="1000" prefHeight="650">
+    <Pane fx:id="dashboardPaneMedecin" visible="true" prefWidth="1000" prefHeight="650">
         <HBox>
             <!-- Navbar gauche -->
             <VBox style="-fx-background-color: #3498db; -fx-pref-width: 220; -fx-padding: 20 10;">
