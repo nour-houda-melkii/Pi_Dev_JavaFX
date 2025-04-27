@@ -1,0 +1,95 @@
+/* Police Pacifico */
+@font-face {
+    /*    src: url('fonts/Pacifico-Regular.ttf');*/
+       font-family: 'Pacifico';
+   }
+
+   .root {
+       -fx-font-family: 'Poppins', sans-serif;
+   }
+
+   /* Boutons */
+.primary-button {
+    -fx-background-color: #1E90FF;
+    -fx-text-fill: white;
+    -fx-background-radius: 8px;
+    -fx-padding: 8 16 8 16;
+    -fx-cursor: hand;
+}
+
+.primary-button:hover {
+    -fx-background-color: #1a7fd9;
+}
+
+.outline-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #1E90FF;
+    -fx-border-color: #1E90FF;
+    -fx-border-radius: 8px;
+    -fx-border-width: 1px;
+    -fx-padding: 8 16 8 16;
+    -fx-cursor: hand;
+}
+
+.outline-button:hover {
+    -fx-background-color: #1E90FF;
+    -fx-text-fill: white;
+}
+
+.icon-button {
+    -fx-background-color: transparent;
+    -fx-padding: 4;
+    -fx-cursor: hand;
+}
+
+.icon-button:hover {
+    -fx-opacity: 0.8;
+}
+
+.social-button {
+    -fx-background-color: #f3f4f6;
+    -fx-background-radius: 20px;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-max-width: 40px;
+    -fx-max-height: 40px;
+    -fx-cursor: hand;
+}
+
+.social-button:hover {
+    -fx-background-color: #1E90FF;
+}
+
+.social-button:hover .image-view {
+    -fx-effect: dropshadow(one-pass-box, white, 0, 0, 0, 0);
+}
+
+.hyperlink {
+    -fx-text-fill: #6b7280;
+    -fx-border-color: transparent;
+    -fx-underline: false;
+    -fx-cursor: hand;
+}
+
+.hyperlink:hover {
+    -fx-text-fill: #1E90FF;
+    -fx-underline: false;
+}
+
+/* Effets de survol */
+.button:hover, .hyperlink:hover {
+    -fx-cursor: hand;
+}
+
+/* Champ de recherche */
+.text-field {
+    -fx-background-radius: 20px;
+    -fx-background-color: #f9fafb;
+    -fx-border-color: transparent;
+    -fx-padding: 8 12 8 12;
+}
+
+.text-field:focused {
+    -fx-border-color: transparent;
+    -fx-background-color: #f9fafb;
+}

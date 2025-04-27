@@ -12,26 +12,24 @@ public class MainFX extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Load the FXML file
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/Login.fxml"));
+        // Charger le fichier FXML
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/frontoffice.fxml"));
         Parent root = loader.load();
 
-        // Configure the controller
-        LoginController controller = loader.getController();
-        // Si votre LoginController a besoin d'un AuthService
-        controller.setAuthService(new AuthService());
-
-        // Configure the scene
+        // Créer la scène avec la taille 1000x700
         Scene scene = new Scene(root, 1000, 700);
 
-        // Load CSS
-        scene.getStylesheets().add(getClass().getResource("/styles/styleLogin/login.css").toExternalForm());
+        // Appliquer la feuille de style CSS
+        scene.getStylesheets().add(getClass().getResource("/styles/styleFrontOffice/styles.css").toExternalForm());
 
-        // Configure the window
-        primaryStage.setTitle("SAHATECK - Login");
+        // Configurer la fenêtre principale
+        primaryStage.setTitle("SAHATECH - Solutions Technologiques");
         primaryStage.setScene(scene);
-        primaryStage.setMinWidth(800);
-        primaryStage.setMinHeight(600);
+
+        // Empêcher le redimensionnement si nécessaire
+        // primaryStage.setResizable(false);
+
+        // Afficher la fenêtre
         primaryStage.show();
     }
 

@@ -4,145 +4,194 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.geometry.*?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.text.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1"
-            stylesheets="@/styles/admin.css"
-            fx:controller="com.controllers.AdminDashboardController">
+<?import javafx.scene.shape.Circle?>
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.controllers.AdminDashboardController" stylesheets="@/styles/admin.css">
 
     <!-- Top - Header -->
     <top>
-        <HBox style="-fx-background-color: #012970; -fx-padding: 15;">
-            <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
-                <Image url="@/assets/img/logo.png"/>
-            </ImageView>
-            <Label text="SAHATECK" styleClass="header-title"/>
+        <HBox style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 0, 1, 3, 0); -fx-padding: 15;">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <!-- Menu Toggle Button (visible only on mobile) -->
+                <Button id="sidebarToggle" style="-fx-background-color: transparent; -fx-padding: 5;" onAction="#toggleSidebar">
+                    <graphic>
+                        <ImageView fitWidth="20" fitHeight="20">
+                        </ImageView>
+                    </graphic>
+                </Button>
 
-            <!-- Menu Button -->
-            <Button styleClass="menu-toggle-btn" onAction="#toggleSidebar">
-                <graphic>
-                    <ImageView fitWidth="20" fitHeight="20"/>
-                </graphic>
-            </Button>
+                <Label text="Tableau de Bord" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+
+                <HBox spacing="5" style="-fx-padding: 0 10;">
+                    <Label text="Accueil" style="-fx-text-fill: #64748b; -fx-font-size: 14px;"/>
+                    <Label text="/" style="-fx-text-fill: #64748b; -fx-font-size: 14px;"/>
+                    <Label text="Tableau de Bord" style="-fx-text-fill: #64748b; -fx-font-size: 14px;"/>
+                </HBox>
+            </HBox>
+
+            <HBox alignment="CENTER_RIGHT" spacing="10" HBox.hgrow="ALWAYS">
+                <!-- Notification Button -->
+                <Button style="-fx-background-color: transparent; -fx-padding: 5;">
+                    <graphic>
+                        <StackPane>
+                            <ImageView fitWidth="20" fitHeight="20">
+                            </ImageView>
+                            <Circle radius="5" fill="#10b981" style="-fx-translate-x: 5; -fx-translate-y: -5;"/>
+                        </StackPane>
+                    </graphic>
+                </Button>
+
+                <!-- Settings Button -->
+                <Button style="-fx-background-color: transparent; -fx-padding: 5;">
+                    <graphic>
+                        <ImageView fitWidth="20" fitHeight="20">
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </HBox>
         </HBox>
     </top>
 
     <!-- Left - Sidebar -->
     <left>
-        <VBox fx:id="sidebar" styleClass="sidebar" spacing="10">
-            <!-- Dashboard -->
-            <Button text="Dashboard" styleClass="sidebar-btn" onAction="#showDashboard">
+        <VBox fx:id="sidebar" style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-width: 0 1 0 0; -fx-pref-width: 250; -fx-spacing: 0;">
+            <!-- Logo Section -->
+            <HBox style="-fx-padding: 15; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1 0; -fx-alignment: CENTER_LEFT;">
+                <Label text="SAHATECK" style="-fx-text-fill: #0ea5e9; -fx-font-size: 24px; -fx-font-family: 'Pacifico';"/>
+            </HBox>
+
+            <!-- Pages Section -->
+            <Label text="PAGES" style="-fx-text-fill: #94a3b8; -fx-font-size: 12px; -fx-padding: 10 15 5 15; -fx-font-weight: bold;"/>
+
+            <!-- Dashboard Button -->
+            <Button text="Tableau de Bord" onAction="#showDashboard" style="-fx-background-color: #f0f9ff; -fx-border-color: #0ea5e9; -fx-border-width: 0 0 0 4; -fx-text-fill: #0ea5e9; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-font-size: 14px;">
                 <graphic>
-                    <ImageView fitWidth="20" fitHeight="20"/>
+                    <ImageView fitWidth="20" fitHeight="20">
+                    </ImageView>
                 </graphic>
             </Button>
 
-            <!-- Dans la section <left> du BorderPane, après le menu User Management -->
-            <VBox spacing="5">
-                <Button text="Appointments ▼" styleClass="menu-header-btn" onAction="#toggleAppointmentMenu"/>
-                <VBox fx:id="appointmentMenu" styleClass="submenu-container" spacing="5" managed="false" visible="false">
-                    <Button text="Manage Appointments" styleClass="submenu-btn" onAction="#showAppointmentManagement"/>
-                    <Button text="Create Appointment" styleClass="submenu-btn" onAction="#showCreateAppointment"/>
-                    <!-- Nouveau bouton pour rediriger vers Ajout.fxml -->
-                    <Button text="Ajout Rendez-vous" styleClass="submenu-btn" onAction="#showAjoutView"/>
-                </VBox>
+            <!-- Product Management -->
+            <Button text="Gestion des Produits" onAction="#toggleProductMenu" style="-fx-background-color: transparent; -fx-text-fill: #1e293b; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-font-size: 14px;">
+                <graphic>
+                    <ImageView fitWidth="20" fitHeight="20">
+                    </ImageView>
+                </graphic>
+                <HBox style="-fx-alignment: CENTER_RIGHT; -fx-hgrow: ALWAYS;">
+                    <ImageView fitWidth="16" fitHeight="16">
+                    </ImageView>
+                </HBox>
+            </Button>
+
+            <!-- Product Submenu -->
+            <VBox fx:id="productMenu" style="-fx-background-color: #f8fafc; -fx-padding: 0 0 0 20; -fx-spacing: 5;" managed="false" visible="false">
+                <Button text="Front View" onAction="#handleFrontView" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
+                <Button text="View Categories" onAction="#handleViewCategories" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
+                <Button text="Add Category" onAction="#handleAddCategory" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
+                <Button text="Add Product" onAction="#handleTableViewButton" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
+                <Button text="Data History" onAction="#handleDataHistory" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
+                <Button text="Favorites Stats" onAction="#handleFavoritesStatistics" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
             </VBox>
 
-            <HBox alignment="CENTER_RIGHT" prefHeight="60.0" spacing="10.0"
-                  style="-fx-background-color: white; -fx-padding: 0 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 2);"
-                  AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-
-                <Button fx:id="frontButton" onAction="#handleFrontView" prefHeight="35.0" prefWidth="120.0"
-                        style="-fx-font-size: 13px; -fx-background-color: #00BCD4; -fx-text-fill: white; -fx-background-radius: 5;">
-                    <text>Front View</text>
-                </Button>
-
-                <Button fx:id="categoriesButton" onAction="#handleViewCategories" prefHeight="35.0" prefWidth="120.0"
-                        style="-fx-font-size: 13px; -fx-background-color: #00BCD4; -fx-text-fill: white; -fx-background-radius: 5;">
-                    <text>View Categories</text>
-                </Button>
-
-                <Button fx:id="addCategoryButton" onAction="#handleAddCategory" prefHeight="35.0" prefWidth="120.0"
-                        style="-fx-font-size: 13px; -fx-background-color: #00BCD4; -fx-text-fill: white; -fx-background-radius: 5;">
-                    <text>Add Category</text>
-                </Button>
-
-                <Button fx:id="tableViewButton" onAction="#handleTableViewButton" prefHeight="35.0" prefWidth="120.0"
-                        style="-fx-font-size: 13px; -fx-background-color: #00BCD4; -fx-text-fill: white; -fx-background-radius: 5;">
-                    <text>Add Product</text>
-                </Button>
-
-                <Button onAction="#handleDataHistory" prefHeight="35.0" prefWidth="120.0"
-                        style="-fx-font-size: 13px; -fx-background-color: #00BCD4; -fx-text-fill: white; -fx-background-radius: 5;">
-                    <text>Data History</text>
-                </Button>
-
-                <Button onAction="#handleFavoritesStatistics" prefHeight="35.0" prefWidth="160.0"
-                        style="-fx-font-size: 13px; -fx-background-color: #00BCD4; -fx-text-fill: white; -fx-background-radius: 5;">
-                    <text>Favorites Stats</text>
-                </Button>
-
-            </HBox>
-
-
             <!-- User Management -->
-            <VBox spacing="5">
-                <Button text="User Management ▼" styleClass="menu-header-btn" onAction="#toggleUserMenu"/>
-                <VBox fx:id="userMenu" styleClass="submenu-container" spacing="5" managed="false" visible="false">
-                    <Button text="Doctors" styleClass="submenu-btn" onAction="#showDoctors"/>
-                    <Button text="Patients" styleClass="submenu-btn" onAction="#showPatients"/>
-                </VBox>
+            <Button text="Gestion des Utilisateurs" onAction="#toggleUserMenu" style="-fx-background-color: transparent; -fx-text-fill: #1e293b; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-font-size: 14px;">
+                <graphic>
+                    <ImageView fitWidth="20" fitHeight="20">
+                    </ImageView>
+                </graphic>
+                <HBox style="-fx-alignment: CENTER_RIGHT; -fx-hgrow: ALWAYS;">
+                    <ImageView fitWidth="16" fitHeight="16">
+                    </ImageView>
+                </HBox>
+            </Button>
+
+            <!-- User Submenu -->
+            <VBox fx:id="userMenu" style="-fx-background-color: #f8fafc; -fx-padding: 0 0 0 20; -fx-spacing: 5;" managed="false" visible="false">
+                <Button text="Doctors" onAction="#showDoctors" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
+                <Button text="Patients" onAction="#showPatients" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
+            </VBox>
+
+            <!-- Appointment Management -->
+            <Button text="Gestion des Rendez-vous" onAction="#toggleAppointmentMenu" style="-fx-background-color: transparent; -fx-text-fill: #1e293b; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-font-size: 14px;">
+                <graphic>
+                    <ImageView fitWidth="20" fitHeight="20">
+                    </ImageView>
+                </graphic>
+                <HBox style="-fx-alignment: CENTER_RIGHT; -fx-hgrow: ALWAYS;">
+                    <ImageView fitWidth="16" fitHeight="16">
+                    </ImageView>
+                </HBox>
+            </Button>
+
+            <!-- Appointment Submenu -->
+            <VBox fx:id="appointmentMenu" style="-fx-background-color: #f8fafc; -fx-padding: 0 0 0 20; -fx-spacing: 5;" managed="false" visible="false">
+                <Button text="Manage Appointments" onAction="#showAppointmentManagement" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
+                <Button text="Create Appointment" onAction="#showCreateAppointment" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
+                <Button text="Ajout Rendez-vous" onAction="#showAjoutView" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
             </VBox>
 
             <!-- Profile & Logout -->
-            <Button text="Profile" styleClass="sidebar-btn" onAction="#showProfile"/>
-            <Button text="Sign Out" styleClass="sidebar-btn" onAction="#logout"/>
+            <VBox style="-fx-spacing: 5; -fx-padding: 20 0 0 0; -fx-border-color: #e2e8f0; -fx-border-width: 1 0 0 0;">
+                <Button text="Profile" onAction="#showProfile" style="-fx-background-color: transparent; -fx-text-fill: #1e293b; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-font-size: 14px;">
+                    <graphic>
+                        <ImageView fitWidth="20" fitHeight="20">
+                        </ImageView>
+                    </graphic>
+                </Button>
+
+                <Button text="Déconnexion" onAction="#logout" style="-fx-background-color: transparent; -fx-text-fill: #1e293b; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-font-size: 14px;">
+                    <graphic>
+                        <ImageView fitWidth="20" fitHeight="20">
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </VBox>
         </VBox>
     </left>
 
     <!-- Center - Content Area -->
     <center>
-        <StackPane fx:id="contentPane">
+        <StackPane fx:id="contentPane" style="-fx-background-color: #f8fafc;">
             <!-- Default content - Dashboard Stats -->
-            <VBox spacing="20" alignment="TOP_CENTER" style="-fx-padding: 20;">
-                <Label text="Welcome to Admin Dashboard" styleClass="welcome-text"/>
-
-                <!-- Statistics Cards -->
-                <HBox spacing="20" alignment="CENTER">
+            <VBox style="-fx-padding: 20; -fx-spacing: 20;">
+                <HBox style="-fx-spacing: 20; -fx-alignment: CENTER;">
                     <!-- Total Users Card -->
-                    <VBox styleClass="stat-card">
-                        <Label text="Total Users" styleClass="stat-title"/>
-                        <Label fx:id="totalUsersLabel" text="0" styleClass="stat-value"/>
+                    <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-spacing: 10; -fx-alignment: CENTER; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2); -fx-border-radius: 8; -fx-background-radius: 8;">
+                        <Label text="Total Users" style="-fx-text-fill: #64748b; -fx-font-size: 14px;"/>
+                        <Label fx:id="totalUsersLabel" text="0" style="-fx-text-fill: #1e293b; -fx-font-size: 24px; -fx-font-weight: bold;"/>
                     </VBox>
 
                     <!-- Doctors Card -->
-                    <VBox styleClass="stat-card">
-                        <Label text="Doctors" styleClass="stat-title"/>
-                        <Label fx:id="totalDoctorsLabel" text="0" styleClass="stat-value"/>
+                    <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-spacing: 10; -fx-alignment: CENTER; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2); -fx-border-radius: 8; -fx-background-radius: 8;">
+                        <Label text="Doctors" style="-fx-text-fill: #64748b; -fx-font-size: 14px;"/>
+                        <Label fx:id="totalDoctorsLabel" text="0" style="-fx-text-fill: #1e293b; -fx-font-size: 24px; -fx-font-weight: bold;"/>
                     </VBox>
 
                     <!-- Patients Card -->
-                    <VBox styleClass="stat-card">
-                        <Label text="Patients" styleClass="stat-title"/>
-                        <Label fx:id="totalPatientsLabel" text="0" styleClass="stat-value"/>
+                    <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-spacing: 10; -fx-alignment: CENTER; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2); -fx-border-radius: 8; -fx-background-radius: 8;">
+                        <Label text="Patients" style="-fx-text-fill: #64748b; -fx-font-size: 14px;"/>
+                        <Label fx:id="totalPatientsLabel" text="0" style="-fx-text-fill: #1e293b; -fx-font-size: 24px; -fx-font-weight: bold;"/>
                     </VBox>
                 </HBox>
-                <!-- Page Title -->
-                <Label alignment="TOP_CENTER" prefHeight="40.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #34495e;" text="Product Management" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="80.0" />
 
-                <!-- Sorting Options -->
-                <HBox alignment="TOP_CENTER" prefHeight="30.0" spacing="10.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="120.0">
-                    <Label alignment="TOP_RIGHT" style="-fx-font-size: 14px; -fx-text-fill: #2c3e50;" text="Sort by:" />
-                    <ComboBox fx:id="sortComboBox" prefHeight="30.0" prefWidth="150.0" style="-fx-background-radius: 5;" />
-                    <HBox />
-                </HBox>
+                <!-- Product Management Section -->
+                <VBox style="-fx-spacing: 15; -fx-padding: 20; -fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2); -fx-border-radius: 8; -fx-background-radius: 8;">
+                    <Label text="Product Management" style="-fx-text-fill: #1e293b; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+                    <!-- Sorting Options -->
+                    <HBox style="-fx-spacing: 10; -fx-alignment: CENTER_LEFT;">
+                        <Label text="Sort by:" style="-fx-text-fill: #64748b; -fx-font-size: 14px;"/>
+                        <ComboBox fx:id="sortComboBox" style="-fx-background-radius: 4; -fx-pref-width: 150;"/>
+                    </HBox>
+
+                    <!-- Product Cards Container -->
+                    <ScrollPane style="-fx-background-color: transparent; -fx-fit-to-width: true;">
+                        <FlowPane fx:id="productContainer" style="-fx-padding: 10; -fx-hgap: 20; -fx-vgap: 20;"/>
+                    </ScrollPane>
+                </VBox>
             </VBox>
-            <ScrollPane fitToWidth="true" style="-fx-background-color: white; -fx-background-radius: 8; -fx-border-color: #e0e0e0; -fx-border-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="160.0">
-                <FlowPane fx:id="productContainer" hgap="20" style="-fx-padding: 20; -fx-background-color: white;" vgap="20" />
-            </ScrollPane>
         </StackPane>
     </center>
-
 </BorderPane>

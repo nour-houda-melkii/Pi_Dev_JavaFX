@@ -1,8 +1,10 @@
 package com.controllers;
 
+import com.models.User;
 import com.services.AuthService;
 import com.utils.AlertUtils;
 import com.utils.AuthManager;
+import com.utils.JwtUtil;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,6 +23,15 @@ public class LoginController {
 
     private AuthService authService;
 
+    @FXML
+    public void initialize() {
+        this.authService = new AuthService(); // Initialisation tardive
+    }
+
+    public LoginController() {
+        this.authService = new AuthService(); // Initialisation directe
+    }
+
     // Ajoutez cette méthode
     public void setAuthService(AuthService authService) {
         this.authService = authService;
@@ -38,17 +49,52 @@ public class LoginController {
         }
 
         try {
+            // Authentification (existant)
             String token = authService.login(email, password);
+            AuthManager.storeToken(token);
 
-            // Stocker le token dans votre système de gestion d'authentification
-            AuthManager.storeToken(token);  // <-- Nouvelle ligne pour stocker le token
+            // Récupération de l'utilisateur avec votre méthode existante
+            User user = authService.getUserFromToken(token);
 
-            // Si l'authentification réussit
-            redirectToAdminDashboard();
-
+            // Redirection selon le rôle (sans changer vos méthodes existantes)
+            if (user.getRoles().contains("ROLE_MEDECIN") || user.getRoles().contains("ROLE_ADMIN")) {
+                redirectToAdminDashboard(); // Méthode existante
+            } else {
+                redirectToFrontOffice();    // Nouvelle méthode (voir ci-dessous)
+            }
 
         } catch (Exception e) {
             showError(e.getMessage());
+        }
+    }
+
+    private void redirectToAdminDashboard() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/AdminDashboard.fxml"));
+            Parent root = loader.load();
+
+            // Passer le token si nécessaire
+            AdminDashboardController controller = loader.getController();
+            controller.setToken(AuthManager.getStoredToken());  // <-- Passage du token
+
+            Stage stage = (Stage) emailField.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            showError("Erreur lors du chargement du dashboard");
+            e.printStackTrace();
+        }
+    }
+
+    // Ajoutez cette nouvelle méthode dans le même contrôleur
+    private void redirectToFrontOffice() {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/com/views/frontoffice.fxml"));
+            Stage stage = (Stage) emailField.getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.sizeToScene();
+        } catch (IOException e) {
+            showError("Erreur lors du chargement de l'interface utilisateur");
         }
     }
 
@@ -92,23 +138,6 @@ public class LoginController {
         errorLabel.setVisible(true);
     }
 
-    private void redirectToAdminDashboard() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/AdminDashboard.fxml"));
-            Parent root = loader.load();
-
-            // Passer le token si nécessaire
-            AdminDashboardController controller = loader.getController();
-            controller.setToken(AuthManager.getStoredToken());  // <-- Passage du token
-
-            Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            showError("Erreur lors du chargement du dashboard");
-            e.printStackTrace();
-        }
-    }
 
     @FXML
     private void handleSignUp() {
