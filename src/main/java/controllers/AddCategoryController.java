@@ -1,5 +1,6 @@
 package controllers;
 
+import Services.DataPersistenceService;
 import entities.Category;
 import Services.CategoryServices;
 import Services.AIDescriptionService;
@@ -20,6 +21,8 @@ public class AddCategoryController {
 
     private final CategoryServices categoryService = new CategoryServices();
     private final AIDescriptionService aiService = new AIDescriptionService();
+    private DataPersistenceService dataPersistence = new DataPersistenceService();
+
 
     @FXML
     public void initialize() {
@@ -57,7 +60,6 @@ public class AddCategoryController {
             return;
         }
 
-        // Check category name length - minimum 5 characters
         if (name.length() < 5) {
             showAlert("Input Error", "Category name must be at least 5 characters long");
             return;
@@ -71,6 +73,10 @@ public class AddCategoryController {
         try {
             Category category = new Category(name, description);
             categoryService.insert(category);
+
+            // Record the addition in history
+            dataPersistence.recordCategoryAdded(category);
+
             clearFields();
             showSuccessAlert("Category Added", "Category has been successfully added!");
         } catch (SQLException e) {

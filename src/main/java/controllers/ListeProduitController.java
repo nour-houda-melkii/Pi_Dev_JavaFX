@@ -2,6 +2,7 @@ package controllers;
 
 import Services.CategoryServices;
 import Services.AIDescriptionService;
+import Services.DataPersistenceService;
 import entities.Category;
 import entities.Produit;
 import Services.ProduitServices;
@@ -49,6 +50,8 @@ public class ListeProduitController {
     private final AIDescriptionService aiService = new AIDescriptionService();
 
     private Produit productToEdit = null;
+    private DataPersistenceService dataPersistence = new DataPersistenceService();
+
 
     public void initialize() throws SQLException {
         loadCategories();
@@ -123,8 +126,11 @@ public class ListeProduitController {
         try {
             int newId = produitService.insert(produit);
             produit.setId(newId);
-            clearFields();
 
+            // Record the addition in history
+            dataPersistence.recordProductAdded(produit);
+
+            clearFields();
             showSuccessAlert("Success", "Product added successfully!");
         } catch (SQLException e) {
             if (e.getMessage().contains("already exists")) {

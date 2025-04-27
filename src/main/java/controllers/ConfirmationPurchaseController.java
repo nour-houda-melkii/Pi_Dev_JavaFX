@@ -1,11 +1,14 @@
 package controllers;
 
+import entities.Commande;
+import entities.CommandeLigne;
 import entities.Produit;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -16,10 +19,13 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class ConfirmationPurchaseController {
 
@@ -33,22 +39,34 @@ public class ConfirmationPurchaseController {
     @FXML private Label orderReferenceLabel;
     @FXML private Label totalAmountLabel;
     @FXML private Label itemCountLabel;
+    @FXML private Button confirmButton;
+    @FXML private Button paymentButton; // New button for proceeding to payment
 
     private List<Produit> cartProducts;
     private Map<Integer, Integer> productQuantities = new HashMap<>();
     private String orderReference;
     private String totalAmount;
     private final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+    private boolean orderProcessed = false; // Flag to track if order has been processed
 
     // Email configuration
     private static final String EMAIL_HOST = "smtp.gmail.com";
     private static final String EMAIL_PORT = "587";
     private static final String SENDER_EMAIL = "nourmelki05@gmail.com"; // Change to your store email
     private static final String SENDER_PASSWORD = "inom yuqm ciop jorf"; // Use app password for Gmail
+    private int currentUserId;
+
+    public void setCurrentUserId(int userId) {
+        this.currentUserId = userId;
+    }
 
     @FXML
     public void initialize() {
-        // Initialize any specific components if needed
+        // Initially hide the payment button until order is processed
+        if (paymentButton != null) {
+            paymentButton.setVisible(false);
+            paymentButton.setManaged(false);
+        }
     }
 
     public void setCartProducts(List<Produit> cartProducts) {
@@ -90,8 +108,87 @@ public class ConfirmationPurchaseController {
             return;
         }
 
-        // Ask user to choose payment method - for demonstration, we'll go straight to Stripe
-        proceedToStripePayment();
+        // Process order - send email confirmation and generate QR code
+        processOrder();
+    }
+
+    private void processOrder() {
+        try {
+            // Create the order in database
+            createOrderInDatabase();
+
+            // Send confirmation email
+            boolean emailSent = sendConfirmationEmail(
+                    emailField.getText(),
+                    passwordField.getText(),
+                    fullNameField.getText(),
+                    addressField.getText(),
+                    phoneField.getText(),
+                    orderReference,
+                    totalAmount,
+                    cartProducts,
+                    productQuantities
+            );
+
+            if (emailSent) {
+                LOGGER.info("Confirmation email sent successfully to: " + emailField.getText());
+            } else {
+                LOGGER.warning("Failed to send confirmation email to: " + emailField.getText());
+                showAlert("Email Notification", "We couldn't send a confirmation email. Please check your email address.");
+            }
+
+            // Generate and show QR code
+            showQRCode();
+
+            // Show confirmation message
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Order Confirmed");
+            alert.setHeaderText("Thank you for your purchase!");
+            alert.setContentText("Your order has been confirmed.\n\n" +
+                    "Order Reference: " + orderReference + "\n" +
+                    "Total amount: " + totalAmount + "\n\n" +
+                    (emailSent ? "A confirmation email has been sent to your email address." :
+                            "We couldn't send a confirmation email. Please contact support.") + "\n\n" +
+                    "You will now be redirected to the payment page.");
+            alert.showAndWait();
+
+            // Update order processed status
+            orderProcessed = true;
+
+            // Proceed to payment
+            proceedToStripePayment();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to create order", e);
+            showAlert("Order Error", "Failed to create order: " + e.getMessage());
+        }
+    }
+
+    private void createOrderInDatabase() throws SQLException {
+        // Calculate total amount
+        double total = 0;
+        for (Produit product : cartProducts) {
+            int quantity = productQuantities.getOrDefault(product.getId(), 1);
+            total += product.getPrice() * quantity;
+        }
+
+        // Create commande
+        Commande commande = new Commande();
+        commande.setUserId(currentUserId);
+        commande.setDateCommande(LocalDate.now());
+        commande.setStatut("Pending Payment");
+        commande.setTotal(total);
+
+        // Create commande lignes
+        List<CommandeLigne> lignes = cartProducts.stream()
+                .map(product -> {
+                    CommandeLigne ligne = new CommandeLigne();
+                    ligne.setProduitId(product.getId());
+                    ligne.setQuantity(productQuantities.getOrDefault(product.getId(), 1));
+                    return ligne;
+                })
+                .collect(Collectors.toList());
+
+        // Save to database
     }
 
     @FXML
@@ -158,7 +255,7 @@ public class ConfirmationPurchaseController {
     }
 
     /**
-     * Public method to send confirmation email that can be called from the StripePaymentController
+     * Public method to send confirmation email
      *
      * @param toEmail Recipient email address
      * @param password Customer password
@@ -231,10 +328,10 @@ public class ConfirmationPurchaseController {
             emailContent.append("<p>Dear ").append(name).append(",</p>");
             emailContent.append("<p>Your order has been confirmed and is being processed. Below are your order details:</p>");
 
-            // Payment information
+            // Payment information - Modified to show payment is pending
             emailContent.append("<div class='payment-info'>");
-            emailContent.append("<p><strong>Payment Status:</strong> Completed</p>");
-            emailContent.append("<p><strong>Payment Method:</strong> Credit Card (Stripe)</p>");
+            emailContent.append("<p><strong>Payment Status:</strong> Pending</p>");
+            emailContent.append("<p><strong>Payment Method:</strong> Not yet selected</p>");
             emailContent.append("</div>");
 
             // Order information box
@@ -272,6 +369,9 @@ public class ConfirmationPurchaseController {
             emailContent.append("<td align='right'><strong>").append(amount).append("</strong></td>");
             emailContent.append("</tr>");
             emailContent.append("</table>");
+
+            // Payment reminder
+            emailContent.append("<p><strong>Please note:</strong> You still need to complete your payment to finalize your order. You can pay online or contact our customer service team.</p>");
 
             // Call to action button
             emailContent.append("<div style='text-align: center;'>");
@@ -392,6 +492,17 @@ public class ConfirmationPurchaseController {
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Failed to navigate to products view", e);
             showAlert("Error", "Failed to navigate to products view: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleContinueShopping() {
+        // If order has been processed, continue shopping
+        if (orderProcessed) {
+            navigateToProductView(false); // Don't clear the cart
+        } else {
+            // Otherwise, process the order first
+            handleConfirmPurchase();
         }
     }
 

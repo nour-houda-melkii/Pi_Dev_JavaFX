@@ -1,5 +1,6 @@
 package controllers;
 
+import Services.DataPersistenceService;
 import entities.Produit;
 import Services.ProduitServices;
 import javafx.fxml.FXML;
@@ -158,6 +159,11 @@ public class AdminDashboardController {
     private void deleteProduct(Produit product) {
         try {
             ProduitServices produitService = new ProduitServices();
+            // Create and use DataPersistenceService to record deletion
+            DataPersistenceService persistenceService = new DataPersistenceService();
+            persistenceService.recordProductDeleted(product);
+
+            // Then delete the product
             produitService.delete(product);
             loadProductsInCardView(); // Refresh the view
             showAlert("Success", "Product deleted successfully");

@@ -1,5 +1,6 @@
 package controllers;
 
+import Services.DataPersistenceService;
 import entities.Category;
 import Services.CategoryServices;
 import Services.AIDescriptionService;
@@ -21,6 +22,8 @@ public class EditCategoryController {
     private final CategoryServices categoryService = new CategoryServices();
     private final AIDescriptionService aiService = new AIDescriptionService();
     private Category categoryToEdit;
+    private DataPersistenceService dataPersistence = new DataPersistenceService();
+
 
     @FXML
     public void initialize() {
@@ -82,9 +85,18 @@ public class EditCategoryController {
         }
 
         try {
+            // Get the current state before updating
+            Category oldCategory = new Category(categoryToEdit.getName(), categoryToEdit.getDescription());
+            oldCategory.setId(categoryToEdit.getId());
+
+            // Update the category
             categoryToEdit.setName(newName);
             categoryToEdit.setDescription(newDescription);
             categoryService.update(categoryToEdit);
+
+            // Record the update in history
+            dataPersistence.recordCategoryUpdated(oldCategory, categoryToEdit);
+
             showSuccessAlert("Category Updated", "Category has been successfully updated!");
             navigateBack();
         } catch (SQLException e) {
@@ -126,5 +138,34 @@ public class EditCategoryController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    @FXML
+    private void deleteCategory() {
+        if (categoryToEdit == null) {
+            showAlert("Error", "No category selected for deletion");
+            return;
+        }
+
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Confirm Deletion");
+        confirmAlert.setHeaderText("Delete Category");
+        confirmAlert.setContentText("Are you sure you want to delete this category?");
+
+        confirmAlert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                try {
+                    // Record the deletion before actually deleting
+                    dataPersistence.recordCategoryDeleted(categoryToEdit);
+
+                    // Delete from database
+                    categoryService.delete(categoryToEdit);
+
+                    showSuccessAlert("Category Deleted", "Category has been successfully deleted!");
+                    navigateBack();
+                } catch (SQLException e) {
+                    showAlert("Database Error", "Failed to delete category: " + e.getMessage());
+                }
+            }
+        });
     }
 }

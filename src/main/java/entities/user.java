@@ -204,4 +204,12 @@ public class user {
     public void setVerificationToken(String verificationToken) {
         this.verificationToken.set(verificationToken);
     }
+
+    public String getPhone() {
+        return null;
+    }
+
+    public String getFullName() {
+        return null;
+    }
 }

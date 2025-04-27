@@ -63,8 +63,10 @@
     <!-- Bottom Section - Action Buttons -->
     <bottom>
         <HBox alignment="CENTER_RIGHT" spacing="15" style="-fx-background-color: white; -fx-padding: 15; -fx-border-color: #f0f0f0; -fx-border-width: 1 0 0 0;">
-            <Button fx:id="exportPdfButton" alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="34.0" prefWidth="123.0" style="-fx-background-color: #00BCD4; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20;" text="Export to PDF" />
             <Button fx:id="closeButton" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20;" text="Close" />
+            <Button fx:id="exportExcelButton" text="Export to Excel" />
+            <Button fx:id="exportPdfButton" text="Export to PDF" />
+
         </HBox>
     </bottom>
 </BorderPane>

@@ -1,10 +1,6 @@
 package controllers;
 
 import Services.DataPersistenceService;
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,6 +10,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,7 +40,7 @@ public class DataHistoryController {
     private Button closeButton;
 
     @FXML
-    private Button exportPdfButton;
+    private Button exportExcelButton;
 
     @FXML
     private ComboBox<String> filterComboBox;
@@ -71,8 +71,8 @@ public class DataHistoryController {
                 }
         );
 
-        // Set up export PDF button
-        exportPdfButton.setOnAction(event -> exportToPdf());
+        // Set up export Excel button
+        exportExcelButton.setOnAction(event -> exportToExcel());
 
         // Set up close button
         closeButton.setOnAction(event -> {
@@ -197,29 +197,29 @@ public class DataHistoryController {
         updateListView(filteredEntries);
     }
 
-    private void exportToPdf() {
+    private void exportToExcel() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save PDF File");
+        fileChooser.setTitle("Save Excel File");
         fileChooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+                new FileChooser.ExtensionFilter("Excel Files", "*.xlsx"));
 
         // Set default filename with current date and time
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
-        String defaultFileName = "data_history_" + LocalDateTime.now().format(formatter) + ".pdf";
+        String defaultFileName = "data_history_" + LocalDateTime.now().format(formatter) + ".xlsx";
         fileChooser.setInitialFileName(defaultFileName);
 
         // Show save dialog
-        File file = fileChooser.showSaveDialog(exportPdfButton.getScene().getWindow());
+        File file = fileChooser.showSaveDialog(exportExcelButton.getScene().getWindow());
 
         if (file != null) {
             try {
-                createPdf(file.getAbsolutePath());
+                createExcel(file.getAbsolutePath());
 
                 // Show success alert
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Export Successful");
                 alert.setHeaderText(null);
-                alert.setContentText("Data history has been exported to PDF successfully!");
+                alert.setContentText("Data history has been exported to Excel successfully!");
                 alert.showAndWait();
             } catch (Exception e) {
                 // Show error alert
@@ -228,47 +228,85 @@ public class DataHistoryController {
                 alert.setHeaderText(null);
                 alert.setContentText("Failed to export data history: " + e.getMessage());
                 alert.showAndWait();
+                e.printStackTrace();
             }
         }
     }
 
-    private void createPdf(String filePath) throws Exception {
-        Document document = new Document();
-        PdfWriter.getInstance(document, new FileOutputStream(filePath));
+    private void createExcel(String filePath) throws Exception {
+        try (Workbook workbook = new XSSFWorkbook()) {
+            // Create summary sheet
+            Sheet summarySheet = workbook.createSheet("Summary");
+            createSummarySheet(workbook, summarySheet);
 
-        document.open();
+            // Create detailed entries sheet
+            Sheet detailsSheet = workbook.createSheet("Detailed Entries");
+            createDetailsSheet(workbook, detailsSheet);
 
-        // Add title
-        Font titleFont = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);
-        Paragraph title = new Paragraph("Data History Report", titleFont);
-        title.setAlignment(Element.ALIGN_CENTER);
-        document.add(title);
+            // Auto-size columns
+            for (int i = 0; i < summarySheet.getRow(0).getPhysicalNumberOfCells(); i++) {
+                summarySheet.autoSizeColumn(i);
+            }
+            for (int i = 0; i < detailsSheet.getRow(0).getPhysicalNumberOfCells(); i++) {
+                detailsSheet.autoSizeColumn(i);
+            }
 
-        // Add generation timestamp
-        Font timestampFont = new Font(Font.FontFamily.HELVETICA, 10, Font.ITALIC);
-        Paragraph timestamp = new Paragraph("Generated on: " +
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                timestampFont);
-        timestamp.setAlignment(Element.ALIGN_CENTER);
-        document.add(timestamp);
-
-        document.add(Chunk.NEWLINE);
-
-        // Add summary table
-        addSummaryTable(document);
-
-        document.add(Chunk.NEWLINE);
-
-        // Add detailed entries
-        addDetailedEntries(document);
-
-        document.close();
+            // Write the output to a file
+            try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+                workbook.write(fileOut);
+            }
+        }
     }
 
-    private void addSummaryTable(Document document) throws DocumentException {
+    private void createSummarySheet(Workbook workbook, Sheet sheet) {
+        // Create header style
+        CellStyle headerStyle = workbook.createCellStyle();
+        Font headerFont = workbook.createFont();
+        headerFont.setBold(true);
+        headerFont.setFontHeightInPoints((short) 12);
+        headerStyle.setFont(headerFont);
+        headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        headerStyle.setBorderBottom(BorderStyle.THIN);
+        headerStyle.setBorderTop(BorderStyle.THIN);
+        headerStyle.setBorderLeft(BorderStyle.THIN);
+        headerStyle.setBorderRight(BorderStyle.THIN);
+
+        // Create title row
+        Row titleRow = sheet.createRow(0);
+        Cell titleCell = titleRow.createCell(0);
+        titleCell.setCellValue("Data History Report");
+
+        CellStyle titleStyle = workbook.createCellStyle();
+        Font titleFont = workbook.createFont();
+        titleFont.setBold(true);
+        titleFont.setFontHeightInPoints((short) 14);
+        titleStyle.setFont(titleFont);
+        titleCell.setCellStyle(titleStyle);
+
+        // Merge cells for title
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 1));
+
+        // Add generation timestamp
+        Row timestampRow = sheet.createRow(1);
+        timestampRow.createCell(0).setCellValue("Generated on:");
+        timestampRow.createCell(1).setCellValue(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
+        // Add empty row
+        sheet.createRow(2);
+
+        // Create summary table header
+        Row headerRow = sheet.createRow(3);
+        Cell headerCell1 = headerRow.createCell(0);
+        headerCell1.setCellValue("Operation Type");
+        headerCell1.setCellStyle(headerStyle);
+
+        Cell headerCell2 = headerRow.createCell(1);
+        headerCell2.setCellValue("Count");
+        headerCell2.setCellStyle(headerStyle);
+
         // Create summary of operations
         Map<String, Integer> operationCounts = new HashMap<>();
-
         for (String entry : allHistoryEntries) {
             String operationType = "Unknown";
 
@@ -282,99 +320,79 @@ public class DataHistoryController {
             operationCounts.put(operationType, operationCounts.getOrDefault(operationType, 0) + 1);
         }
 
-        // Create the summary table
-        PdfPTable table = new PdfPTable(2);
-        table.setWidthPercentage(60);
-        table.setHorizontalAlignment(Element.ALIGN_CENTER);
-
-        // Add header
-        Font headerFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
-        PdfPCell cell = new PdfPCell(new Phrase("Operation Type", headerFont));
-        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell.setPadding(5);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase("Count", headerFont));
-        cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell.setPadding(5);
-        table.addCell(cell);
-
         // Add data rows
-        Font cellFont = new Font(Font.FontFamily.HELVETICA, 10);
+        int rowNum = 4;
         for (Map.Entry<String, Integer> entry : operationCounts.entrySet()) {
-            cell = new PdfPCell(new Phrase(entry.getKey(), cellFont));
-            cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-            cell.setPadding(5);
-            table.addCell(cell);
-
-            cell = new PdfPCell(new Phrase(entry.getValue().toString(), cellFont));
-            cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            cell.setPadding(5);
-            table.addCell(cell);
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(entry.getKey());
+            row.createCell(1).setCellValue(entry.getValue());
         }
 
         // Add total row
-        int total = operationCounts.values().stream().mapToInt(Integer::intValue).sum();
-
-        cell = new PdfPCell(new Phrase("Total", headerFont));
-        cell.setHorizontalAlignment(Element.ALIGN_LEFT);
-        cell.setPadding(5);
-        table.addCell(cell);
-
-        cell = new PdfPCell(new Phrase(String.valueOf(total), headerFont));
-        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        cell.setPadding(5);
-        table.addCell(cell);
-
-        // Add the table to the document
-        Paragraph summaryTitle = new Paragraph("Summary of Operations", headerFont);
-        summaryTitle.setAlignment(Element.ALIGN_CENTER);
-        document.add(summaryTitle);
-        document.add(Chunk.NEWLINE);
-        document.add(table);
+        Row totalRow = sheet.createRow(rowNum);
+        totalRow.createCell(0).setCellValue("Total");
+        totalRow.getCell(0).setCellStyle(headerStyle);
+        totalRow.createCell(1).setCellValue(operationCounts.values().stream().mapToInt(Integer::intValue).sum());
+        totalRow.getCell(1).setCellStyle(headerStyle);
     }
 
-    private void addDetailedEntries(Document document) throws DocumentException {
-        Font sectionFont = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD);
-        Font entryFont = new Font(Font.FontFamily.HELVETICA, 10);
-        Font timestampFont = new Font(Font.FontFamily.HELVETICA, 8, Font.ITALIC);
+    private void createDetailsSheet(Workbook workbook, Sheet sheet) {
+        // Create header style
+        CellStyle headerStyle = workbook.createCellStyle();
+        Font headerFont = workbook.createFont();
+        headerFont.setBold(true);
+        headerFont.setFontHeightInPoints((short) 12);
+        headerStyle.setFont(headerFont);
+        headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
+        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        headerStyle.setBorderBottom(BorderStyle.THIN);
+        headerStyle.setBorderTop(BorderStyle.THIN);
+        headerStyle.setBorderLeft(BorderStyle.THIN);
+        headerStyle.setBorderRight(BorderStyle.THIN);
 
-        Paragraph detailsTitle = new Paragraph("Detailed History Entries", sectionFont);
-        detailsTitle.setAlignment(Element.ALIGN_CENTER);
-        document.add(detailsTitle);
-        document.add(Chunk.NEWLINE);
+        // Create title row
+        Row titleRow = sheet.createRow(0);
+        titleRow.createCell(0).setCellValue("Detailed History Entries");
 
+        CellStyle titleStyle = workbook.createCellStyle();
+        Font titleFont = workbook.createFont();
+        titleFont.setBold(true);
+        titleFont.setFontHeightInPoints((short) 14);
+        titleStyle.setFont(titleFont);
+        titleRow.getCell(0).setCellStyle(titleStyle);
+
+        // Merge cells for title
+        sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, 3));
+
+        // Create column headers
+        Row headerRow = sheet.createRow(1);
+        String[] headers = {"Timestamp", "Action", "Summary", "Details"};
+        for (int i = 0; i < headers.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(headers[i]);
+            cell.setCellStyle(headerStyle);
+        }
+
+        // Add data rows
+        int rowNum = 2;
         for (String entry : allHistoryEntries) {
             HistoryEntryItem item = parseHistoryEntry(entry);
             if (item == null) continue;
 
-            // Create a section for each entry
-            PdfPTable entryTable = new PdfPTable(1);
-            entryTable.setWidthPercentage(100);
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(item.getTimestamp());
+            row.createCell(1).setCellValue(item.getAction());
+            row.createCell(2).setCellValue(item.getSummary());
 
-            // Add timestamp and type
-            Paragraph headerPara = new Paragraph();
-            headerPara.add(new Chunk(item.getAction() + " - ", sectionFont));
-            headerPara.add(new Chunk(item.getTimestamp(), timestampFont));
+            // Create a cell style with word wrap
+            CellStyle wrapStyle = workbook.createCellStyle();
+            wrapStyle.setWrapText(true);
 
-            PdfPCell cell = new PdfPCell(headerPara);
-            cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
-            cell.setPadding(5);
-            entryTable.addCell(cell);
-
-            // Add details
-            String formattedDetails = formatEntryDetails(item.getFullEntry());
-            cell = new PdfPCell(new Paragraph(formattedDetails, entryFont));
-            cell.setPadding(5);
-            entryTable.addCell(cell);
-
-            document.add(entryTable);
-            document.add(Chunk.NEWLINE);
+            Cell detailsCell = row.createCell(3);
+            detailsCell.setCellValue(formatEntryDetails(item.getFullEntry()));
+            detailsCell.setCellStyle(wrapStyle);
         }
     }
-
 
     public static class HistoryEntryItem {
         private final String timestamp;

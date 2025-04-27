@@ -2,6 +2,7 @@ package controllers;
 
 import Services.AIDescriptionService;
 import Services.CategoryServices;
+import Services.DataPersistenceService;
 import Services.ProduitServices;
 import entities.Category;
 import entities.Produit;
@@ -55,6 +56,8 @@ public class EditProductController {
     private final AIDescriptionService aiService = new AIDescriptionService();
 
     private Produit productToEdit = null;
+    private DataPersistenceService dataPersistence = new DataPersistenceService();
+
 
     public void initialize() {
         try {
@@ -213,6 +216,7 @@ public class EditProductController {
         }
     }
 
+
     @FXML
     void updateProduct(ActionEvent event) {
         if (!validateFields()) return;
@@ -223,6 +227,10 @@ public class EditProductController {
                 return;
             }
 
+            // Get the current state before updating
+            Produit oldProduct = produitService.getOne(productToEdit.getId());
+
+            // Update the product fields
             productToEdit.setName(nameField.getText());
             productToEdit.setDescription(descriptionField.getText());
             productToEdit.setPrice(Double.parseDouble(priceField.getText()));
@@ -233,10 +241,11 @@ public class EditProductController {
             // Update the product in the database
             produitService.update(productToEdit);
 
+            // Record the update in history
+            dataPersistence.recordProductUpdated(oldProduct, productToEdit);
+
             showSuccessAlert("Success", "Product updated successfully!");
-
             navigateToAdminDashboard();
-
         } catch (SQLException e) {
             showAlert(Alert.AlertType.ERROR, "Database Error", "Failed to update product: " + e.getMessage());
         }
