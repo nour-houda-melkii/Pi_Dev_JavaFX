@@ -1,23 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="controller.EditTypeController" spacing="15" style="-fx-padding: 20;"
-      prefWidth="400" prefHeight="200">
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.EditTypeController">
+    <top>
+        <HBox style="-fx-background-color: #4361ee; -fx-padding: 15;" alignment="CENTER_LEFT">
+            <Label text="SAHATECK" style="-fx-text-fill: white; -fx-font-size: 24px; -fx-font-weight: bold;" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button text="Sign Out" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px;" />
+        </HBox>
+    </top>
 
-    <Label text="Modifier Type de Réclamation" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    <left>
+        <VBox style="-fx-background-color: #2c3e50; -fx-padding: 10;" spacing="10" prefWidth="200">
+            <Label text="Dashboard" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-padding: 10;"/>
+            <Separator style="-fx-background-color: #3d4f65;"/>
+            <Button text="Type Reclamation" style="-fx-background-color: #4361ee; -fx-text-fill: white; -fx-alignment: CENTER_LEFT;"/>
+            <Button text="Reclamation" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT;"/>
+            <Button text="Réponses" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT;"/>
+        </VBox>
+    </left>
 
-    <HBox spacing="10" alignment="CENTER_LEFT">
-        <Label text="Nom:" style="-fx-font-weight: bold;"/>
-        <TextField fx:id="nomField" prefWidth="250"/>
-    </HBox>
+    <center>
+        <VBox spacing="20" style="-fx-padding: 20;" alignment="TOP_CENTER" prefWidth="400">
+            <Label text="Type de Réclamation" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
 
-    <HBox spacing="15" alignment="CENTER">
-        <Button text="Enregistrer" onAction="#handleSave"
-                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20;"/>
-        <Button text="Annuler" onAction="#handleCancel"
-                style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20;"/>
-    </HBox>
-</VBox>
+            <GridPane hgap="15" vgap="15" style="-fx-padding: 20; -fx-background-color: white; -fx-border-radius: 5;">
+                <Label text="Type reclamation:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                <TextField fx:id="nomField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <HBox spacing="10" alignment="CENTER_RIGHT" GridPane.rowIndex="1" GridPane.columnSpan="2">
+                    <Button text="Annuler" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                    <Button text="Enregistrer" style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+                </HBox>
+            </GridPane>
+
+            <Button text="Back to list" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-alignment: CENTER;"/>
+        </VBox>
+    </center>
+</BorderPane>

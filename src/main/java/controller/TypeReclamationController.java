@@ -4,21 +4,15 @@ import entity.TypeReclamation;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
+import javafx.scene.layout.*;
 import services.TypeReclamationService;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
 public class TypeReclamationController {
-    @FXML private TableView<TypeReclamation> typeTable;
-    @FXML private TableColumn<TypeReclamation, Integer> idColumn;
-    @FXML private TableColumn<TypeReclamation, String> nomColumn;
+    @FXML private FlowPane cardsContainer;
     @FXML private TextField nomField;
     @FXML private Button addButton;
     @FXML private Button updateButton;
@@ -26,44 +20,97 @@ public class TypeReclamationController {
 
     private final TypeReclamationService service = new TypeReclamationService();
     private final ObservableList<TypeReclamation> data = FXCollections.observableArrayList();
+    private TypeReclamation selectedType;
 
     @FXML
     public void initialize() {
-        // Configuration des colonnes
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        nomColumn.setCellValueFactory(new PropertyValueFactory<>("nom"));
-
-        // Chargement des données
         loadData();
-
-        // Désactiver les boutons update et delete initialement
         updateButton.setDisable(true);
         deleteButton.setDisable(true);
-
-        // Gestion de la sélection dans le tableau
-        typeTable.getSelectionModel().selectedItemProperty().addListener(
-                (obs, oldSelection, newSelection) -> {
-                    boolean itemSelected = newSelection != null;
-                    updateButton.setDisable(!itemSelected);
-                    deleteButton.setDisable(!itemSelected);
-
-                    if (itemSelected) {
-                        fillForm(newSelection);
-                    }
-                });
     }
 
     private void loadData() {
         try {
             data.setAll(service.getAllTypes());
-            typeTable.setItems(data);
+            displayCards();
         } catch (SQLException e) {
             showAlert("Erreur", "Erreur de chargement: " + e.getMessage());
         }
     }
 
-    private void fillForm(TypeReclamation type) {
-        nomField.setText(type.getNom());
+    private void displayCards() {
+        cardsContainer.getChildren().clear();
+
+        if (data.isEmpty()) {
+            Label emptyLabel = new Label("Aucun type de réclamation trouvé");
+            cardsContainer.getChildren().add(emptyLabel);
+        } else {
+            for (TypeReclamation type : data) {
+                VBox card = createTypeCard(type);
+                cardsContainer.getChildren().add(card);
+            }
+        }
+    }
+
+    private VBox createTypeCard(TypeReclamation type) {
+        VBox card = new VBox(10);
+        // Style de base de la carte
+        card.setStyle("-fx-background-color: white; -fx-background-radius: 10; " +
+                "-fx-border-radius: 10; -fx-border-color: #e0e0e0; " +
+                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1); " +
+                "-fx-padding: 15; -fx-spacing: 12; -fx-min-width: 250;");
+
+        // Nom du type
+        Label nomLabel = new Label(type.getNom());
+        nomLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16; -fx-text-fill: #00B4D8;");
+        card.getChildren().add(nomLabel);
+
+        // Effets de survol
+        card.setOnMouseEntered(e -> {
+            if (!card.getStyle().contains("-fx-background-color: #d4e6f1")) {
+                card.setStyle("-fx-background-color: #e0e0e0; " +
+                        "-fx-background-radius: 10; -fx-border-radius: 10; " +
+                        "-fx-border-color: #bbb; " +
+                        "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1); " +
+                        "-fx-padding: 15; -fx-spacing: 12; -fx-min-width: 250;");
+            }
+        });
+
+        card.setOnMouseExited(e -> {
+            if (!card.getStyle().contains("-fx-background-color: #d4e6f1")) {
+                card.setStyle("-fx-background-color: white; " +
+                        "-fx-background-radius: 10; -fx-border-radius: 10; " +
+                        "-fx-border-color: #e0e0e0; " +
+                        "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1); " +
+                        "-fx-padding: 15; -fx-spacing: 12; -fx-min-width: 250;");
+            }
+        });
+
+        // Gestion du clic
+        card.setOnMouseClicked(e -> {
+            // Désélectionner toutes les cartes
+            cardsContainer.getChildren().forEach(c -> {
+                c.setStyle("-fx-background-color: white; " +
+                        "-fx-background-radius: 10; -fx-border-radius: 10; " +
+                        "-fx-border-color: #e0e0e0; " +
+                        "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1); " +
+                        "-fx-padding: 15; -fx-spacing: 12; -fx-min-width: 250;");
+            });
+
+            // Sélectionner la carte cliquée
+            card.setStyle("-fx-background-color: #d4e6f1; " +
+                    "-fx-background-radius: 10; -fx-border-radius: 10; " +
+                    "-fx-border-color: #3498db; " +
+                    "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1); " +
+                    "-fx-padding: 15; -fx-spacing: 12; -fx-min-width: 250;");
+
+            selectedType = type;
+            updateButton.setDisable(false);
+            deleteButton.setDisable(false);
+            nomField.setText(type.getNom());
+        });
+
+        return card;
     }
 
     @FXML
@@ -82,39 +129,27 @@ public class TypeReclamationController {
         }
     }
 
-    // Ajoutez cette méthode à votre TypeReclamationController
     @FXML
     private void handleUpdate() {
-        TypeReclamation selected = typeTable.getSelectionModel().getSelectedItem();
-        if (selected != null) {
+        if (selectedType != null && validateForm()) {
+            selectedType.setNom(nomField.getText());
+
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/edit-type.fxml"));
-                Parent root = loader.load();
-
-                EditTypeController controller = loader.getController();
-                controller.setTypeToEdit(selected);
-                controller.setParentController(this);
-
-                Stage stage = new Stage();
-                stage.setScene(new Scene(root));
-                stage.setTitle("Modifier Type");
-                stage.show();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                showAlert("Erreur", "Impossible d'ouvrir la fenêtre de modification: " + e.getMessage());
+                service.updateType(selectedType);
+                loadData();
+                clearForm();
+                showAlert("Succès", "Type modifié avec succès!");
+            } catch (SQLException e) {
+                showAlert("Erreur", "Échec de modification: " + e.getMessage());
             }
-        } else {
-            showAlert("Avertissement", "Veuillez sélectionner un type à modifier");
         }
     }
 
     @FXML
     private void handleDelete() {
-        TypeReclamation selected = typeTable.getSelectionModel().getSelectedItem();
-        if (selected != null) {
+        if (selectedType != null) {
             try {
-                service.deleteType(selected.getId());
+                service.deleteType(selectedType.getId());
                 loadData();
                 clearForm();
                 showAlert("Succès", "Type supprimé!");
@@ -123,13 +158,9 @@ public class TypeReclamationController {
             }
         }
     }
-    public void refreshTable() {
-        try {
-            data.setAll(service.getAllTypes());
-            typeTable.setItems(data);
-        } catch (SQLException e) {
-            showAlert("Erreur", "Erreur de chargement: " + e.getMessage());
-        }
+
+    public void refreshData() {
+        loadData();
     }
 
     private boolean validateForm() {
@@ -142,6 +173,9 @@ public class TypeReclamationController {
 
     private void clearForm() {
         nomField.clear();
+        selectedType = null;
+        updateButton.setDisable(true);
+        deleteButton.setDisable(true);
     }
 
     private void showAlert(String title, String message) {

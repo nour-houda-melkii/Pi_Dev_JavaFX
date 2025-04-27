@@ -44,7 +44,7 @@ public class TypeReclamationService {
         }
     }
 
-    public void updateType(TypeReclamation type) throws SQLException {
+    public boolean updateType(TypeReclamation type) throws SQLException {
         String sql = "UPDATE type_reclamation SET nom = ? WHERE id = ?";
 
         try (Connection conn = connBD.getConnection();
@@ -54,6 +54,7 @@ public class TypeReclamationService {
             stmt.setInt(2, type.getId());
             stmt.executeUpdate();
         }
+        return false;
     }
 
     public void deleteType(int id) throws SQLException {

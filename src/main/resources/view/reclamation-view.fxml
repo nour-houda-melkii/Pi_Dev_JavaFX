@@ -1,39 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
 
-<?import javafx.scene.control.cell.PropertyValueFactory?>
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="controller.ReclamationViewController" spacing="15" style="-fx-padding: 20;">
 
-    <Label text="des Réclamations" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    <Label text="Liste des Réclamations" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
 
-    <TableView fx:id="reclamationTable" VBox.vgrow="ALWAYS">
-        <columns>
-            <!-- Colonne ID -->
-            <TableColumn fx:id="idColumn" text="ID" prefWidth="50"/>
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Label text="Filtrer par type:"/>
+        <ComboBox fx:id="typeFilter" promptText="Tous les types"/>
 
-            <!-- Colonne Type -->
-            <TableColumn fx:id="typeColumn" text="Type" prefWidth="120"/>
+        <Label text="Filtrer par statut:"/>
+        <ComboBox fx:id="statusFilter" promptText="Tous les statuts"/>
 
-            <!-- Colonne Description -->
-            <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="250"/>
+        <Button text="Actualiser" onAction="#refreshReclamations"/>
+    </HBox>
 
-            <!-- Colonne Date -->
-            <TableColumn fx:id="dateColumn" text="Date" prefWidth="100"/>
-
-            <!-- Colonne Médecin -->
-            <TableColumn fx:id="medecinColumn" text="Médecin" prefWidth="150"/>
-
-            <!-- Colonne Photo -->
-            <TableColumn fx:id="photoColumn" text="Photo" prefWidth="150"/>
-
-            <!-- Colonne Statut -->
-            <TableColumn fx:id="statusColumn" text="Statut" prefWidth="100"/>
-
-            <!-- Colonne Action (celle-ci sera ajoutée dynamiquement) -->
-        </columns>
-    </TableView>
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
+        <FlowPane fx:id="cardsContainer" hgap="15" vgap="15" style="-fx-padding: 10;"/>
+    </ScrollPane>
 </VBox>

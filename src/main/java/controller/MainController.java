@@ -1,177 +1,346 @@
 package controller;
 
 import entity.Reclamation;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import services.ReclamationServices;
+import javafx.event.ActionEvent;
 
-import java.awt.event.ActionEvent;
-import java.io.IOException;
+
+import java.io.*;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class MainController {
-    @FXML private TableView<Reclamation> reclamationTable;
-    @FXML private TableColumn<Reclamation, String> idColumn;
-    @FXML private TableColumn<Reclamation, String> typeColumn;
-    @FXML private TableColumn<Reclamation, String> descriptionColumn;
-    @FXML private TableColumn<Reclamation, LocalDate> dateColumn;
-    @FXML private TableColumn<Reclamation, String> medecinColumn;
-    @FXML private TableColumn<Reclamation, String> photoColumn;
+    @FXML private ScrollPane scrollPane;
+    @FXML private FlowPane cardsContainer;
     @FXML private Button editBtn;
     @FXML private Button deleteBtn;
+    @FXML private Button addBtn;
 
     private final ReclamationServices service = new ReclamationServices();
-    private final ObservableList<Reclamation> data = FXCollections.observableArrayList();
+    private Reclamation selectedReclamation;
+
+    public static void show(Stage stage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(MainController.class.getResource("/view/main-view.fxml"));
+        Parent root = loader.load();
+
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setTitle("Gestion des Réclamations");
+        stage.show();
+    }
 
     @FXML
     public void initialize() {
-        setupTableColumns();
-        loadData();
-        setupSelectionListener();
-    }
-
-    private void setupTableColumns() {
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        typeColumn.setCellValueFactory(new PropertyValueFactory<>("typeReclamation"));
-        descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
-        dateColumn.setCellValueFactory(new PropertyValueFactory<>("dateReclamation"));
-        medecinColumn.setCellValueFactory(new PropertyValueFactory<>("medecin"));
-        photoColumn.setCellValueFactory(new PropertyValueFactory<>("photoPath"));
-    }
-
-    public void loadData() {
+        System.out.println("Initialisation du contrôleur démarrée");
         try {
-            data.setAll(service.getAllReclamations());
-            reclamationTable.setItems(data);
-        } catch (SQLException e) {
-            showAlert("Erreur", "Erreur de chargement: " + e.getMessage());
-        }
-    }
-
-    private void setupSelectionListener() {
-        reclamationTable.getSelectionModel().selectedItemProperty().addListener(
-                (obs, oldSelection, newSelection) -> {
-                    boolean itemSelected = newSelection != null;
-                    editBtn.setDisable(!itemSelected);
-                    deleteBtn.setDisable(!itemSelected);
-                });
-    }
-
-    @FXML
-    private void handleBackend(ActionEvent event) {
-        try {
-            // Charge le fichier FXML
-            URL fxmlUrl = getClass().getResource("/view/backend-view.fxml");
-            if (fxmlUrl == null) {
-                throw new IOException("Fichier backend-view.fxml introuvable");
-            }
-
-            FXMLLoader loader = new FXMLLoader(fxmlUrl);
-            Parent root = loader.load();
-
-            // Crée la nouvelle scène
-            Stage backendStage = new Stage();
-            backendStage.setTitle("Administration SAHATECK");
-            backendStage.setScene(new Scene(root, 1000, 700));
-
-            // Configure comme fenêtre modale
-            backendStage.initModality(Modality.WINDOW_MODAL);
-            backendStage.initOwner(((Node)event.getSource()).getScene().getWindow());
-
-            backendStage.show();
-
-        } catch (IOException e) {
+            loadReclamations();
+            setupSelectionButtons();
+            System.out.println("Initialisation du contrôleur terminée");
+        } catch (Exception e) {
+            System.err.println("Erreur dans initialize():");
             e.printStackTrace();
-            showAlert("Erreur", "Impossible d'ouvrir l'interface d'administration: " + e.getMessage());
         }
+
+        if(addBtn != null) {
+            addBtn.setOnAction(e -> {
+                System.out.println("Bouton cliqué"); // Test
+                handleAdd();
+            });
+        } else {
+            System.err.println("Erreur: generateDescriptionButton est null!");
+        }
+
+    }
+
+
+    private void loadReclamations() {
+        try {
+            System.out.println("Tentative de chargement des données...");
+            List<Reclamation> reclamations = service.getAllReclamationsWithNames();
+            System.out.println("Nombre de réclamations chargées: " + reclamations.size());
+
+            cardsContainer.getChildren().clear();
+
+            if (reclamations.isEmpty()) {
+                Label emptyLabel = new Label("Aucune réclamation trouvée");
+                cardsContainer.getChildren().add(emptyLabel);
+            } else {
+                for (Reclamation reclamation : reclamations) {
+                    VBox card = createCard(reclamation);
+                    cardsContainer.getChildren().add(card);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur de base de données:");
+            e.printStackTrace();
+
+            Label errorLabel = new Label("Erreur de connexion à la base de données");
+            cardsContainer.getChildren().add(errorLabel);
+        }
+    }
+
+    private VBox createCard(Reclamation reclamation) {
+        VBox card = new VBox(10);
+        card.setStyle("-fx-background-color: white; -fx-background-radius: 10; " +
+                "-fx-border-radius: 10; -fx-border-color: #e0e0e0; " +
+                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1); " +
+                "-fx-padding: 15; -fx-spacing: 12; -fx-min-width: 300;");
+
+        // Type et date
+        HBox header = new HBox();
+        Label typeLabel = new Label("Type: " + reclamation.getTypeReclamationName());
+        typeLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 16; -fx-text-fill: #00B4D8;");
+
+        Label dateLabel = new Label("Date: " + reclamation.getDateReclamation().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        dateLabel.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 13;");
+
+        header.getChildren().addAll(typeLabel, new Region(), dateLabel);
+        HBox.setHgrow(header.getChildren().get(1), Priority.ALWAYS);
+
+        // Description
+        TextArea descriptionText = new TextArea(reclamation.getDescription());
+        descriptionText.setEditable(false);
+        descriptionText.setWrapText(true);
+        descriptionText.setStyle("-fx-text-fill: black; -fx-background-color: transparent; -fx-border-color: transparent;");
+        descriptionText.setPrefHeight(60);
+
+        // Photo
+        HBox imageContainer = new HBox();
+        if (reclamation.getPhotoPath() != null && !reclamation.getPhotoPath().isEmpty()) {
+            try {
+                ImageView photoView = new ImageView(new Image(new File(reclamation.getPhotoPath()).toURI().toString()));
+                photoView.setFitHeight(80);
+                photoView.setFitWidth(80);
+                photoView.setPreserveRatio(true);
+                imageContainer.getChildren().add(photoView);
+            } catch (Exception e) {
+                System.err.println("Erreur de chargement de l'image: " + e.getMessage());
+            }
+        }
+
+        // Médecin
+        Label medecinLabel = new Label("Médecin: " + reclamation.getMedecinName());
+        medecinLabel.setStyle("-fx-font-size: 12; -fx-text-fill: black;");
+
+        // Boutons
+        HBox buttons = new HBox(10);
+        Button editBtn = new Button("Edit");
+        editBtn.setOnAction(e -> handleEdit(reclamation));
+        editBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; " +
+                "-fx-background-radius: 5; -fx-padding: 5 10;");
+
+        Button deleteBtn = new Button("Delete");
+        deleteBtn.setOnAction(e -> handleDelete(reclamation));
+        deleteBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; " +
+                "-fx-background-radius: 5; -fx-padding: 5 10;");
+
+        buttons.getChildren().addAll(new Region(), editBtn, deleteBtn);
+        HBox.setHgrow(buttons.getChildren().get(0), Priority.ALWAYS);
+
+        // Effet de survol
+        card.setOnMouseEntered(e -> {
+            card.setStyle("-fx-background-color: #e0e0e0; " +
+                    "-fx-background-radius: 10; -fx-border-radius: 10; " +
+                    "-fx-border-color: #bbb; " +
+                    "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1); " +
+                    "-fx-padding: 15; -fx-spacing: 12; -fx-min-width: 300;");
+        });
+
+        card.setOnMouseExited(e -> {
+            card.setStyle("-fx-background-color: white; " +
+                    "-fx-background-radius: 10; -fx-border-radius: 10; " +
+                    "-fx-border-color: #e0e0e0; " +
+                    "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1); " +
+                    "-fx-padding: 15; -fx-spacing: 12; -fx-min-width: 300;");
+        });
+
+        // Sélection
+        card.setOnMouseClicked(e -> {
+            selectedReclamation = reclamation;
+            cardsContainer.getChildren().forEach(c ->
+                    c.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0;")
+            );
+            card.setStyle("-fx-background-color: #d4e6f1; -fx-border-color: #3498db;");
+            this.editBtn.setDisable(false);
+            this.deleteBtn.setDisable(false);
+        });
+
+        card.getChildren().addAll(header, descriptionText, imageContainer, medecinLabel, buttons);
+        return card;
+    }
+
+    private void setupSelectionButtons() {
+        editBtn.setDisable(true);
+        deleteBtn.setDisable(true);
+    }
+
+    private void handleEdit(Reclamation reclamation) {
+        selectedReclamation = reclamation;
+        handleEdit();
+    }
+
+    private void handleDelete(Reclamation reclamation) {
+        selectedReclamation = reclamation;
+        handleDelete();
     }
 
     @FXML
     private void handleAdd() {
         try {
-            // Charger la vue d'ajout
+            // Charger le fichier FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/add-reclamation.fxml"));
             Parent root = loader.load();
 
-            // Créer une nouvelle scène
+            // Configurer le contrôleur
+            AddReclamationController controller = loader.getController();
+            controller.setMainController(this);
+            if(controller == null) {
+                System.err.println("ERREUR: Controller non initialisé!");
+            }
+
+            // Initialiser les ComboBox avec les données
+
+
+            // Créer et afficher la fenêtre
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Ajouter une réclamation");
+            stage.initModality(Modality.APPLICATION_MODAL); // Rend la fenêtre modale
+            stage.showAndWait(); // Attend la fermeture de la fenêtre
 
-            // Obtenir le contrôleur et définir une référence à ce contrôleur principal
-            AddReclamationController addController = loader.getController();
-            addController.setMainController(this);
-
-            stage.showAndWait(); // Attend que la fenêtre soit fermée
+            // Rafraîchir après fermeture
+            loadReclamations();
 
         } catch (IOException e) {
-            showAlert("Erreur", "Impossible d'ouvrir la fenêtre d'ajout: " + e.getMessage());
+            showAlert("Erreur", "Impossible d'ouvrir la fenêtre d'ajout : " + e.getMessage(), Alert.AlertType.ERROR);
             e.printStackTrace();
         }
     }
 
+
+
     @FXML
     private void handleEdit() {
-        Reclamation selected = reclamationTable.getSelectionModel().getSelectedItem();
-        if (selected != null) {
+        if (selectedReclamation != null) {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/edit-reclamation.fxml"));
                 Parent root = loader.load();
 
                 EditReclamationController controller = loader.getController();
-                if (controller == null) {
-                    showAlert("Erreur", "Impossible de charger le contrôleur d'édition");
-                    return;
-                }
-
-                controller.setReclamationToEdit(selected);
+                controller.setReclamationToEdit(selectedReclamation);
                 controller.setMainController(this);
+
+                // Initialiser les ComboBox
+                controller.initialize();
 
                 Stage stage = new Stage();
                 stage.setScene(new Scene(root));
                 stage.setTitle("Modifier Réclamation");
-                stage.show();
+                stage.initModality(Modality.APPLICATION_MODAL);
+                stage.showAndWait();
 
+                loadReclamations();
             } catch (IOException e) {
-                showAlert("Erreur", "Impossible d'ouvrir la fenêtre d'édition: " + e.getMessage());
+                showAlert("Erreur", "Impossible d'ouvrir la fenêtre d'édition: " + e.getMessage(), Alert.AlertType.ERROR);
                 e.printStackTrace();
             }
         } else {
-            showAlert("Aucune sélection", "Veuillez sélectionner une réclamation à modifier");
+            showAlert("Aucune sélection", "Veuillez sélectionner une réclamation à modifier", Alert.AlertType.ERROR);
         }
     }
 
     @FXML
     private void handleDelete() {
-        Reclamation selected = reclamationTable.getSelectionModel().getSelectedItem();
-        if (selected != null) {
+        if (selectedReclamation != null) {
             try {
-                service.deleteReclamation(Integer.parseInt(selected.getId()));
-                loadData();
-                showAlert("Succès", "Réclamation supprimée!");
+                // Supprimer la conversion inutile puisque getId() retourne déjà un int
+                service.deleteReclamation(selectedReclamation.getId());
+                showAlert("Succès", "Réclamation supprimée !", Alert.AlertType.ERROR);
+                loadReclamations();
+                selectedReclamation = null;
+                editBtn.setDisable(true);
+                deleteBtn.setDisable(true);
             } catch (SQLException e) {
-                showAlert("Erreur", "Échec de suppression: " + e.getMessage());
+                showAlert("Erreur", "Échec de suppression: " + e.getMessage(), Alert.AlertType.ERROR);
             }
         }
     }
 
-    public void refreshTable() {
-        loadData();
+    @FXML
+    private void handleBackend(ActionEvent event) {
+        try {
+            InputStream fxmlStream = getClass().getResourceAsStream("/view/backend-view.fxml");
+            if (fxmlStream == null) {
+                throw new IOException("Fichier backend-view.fxml introuvable dans les ressources");
+            }
+
+            FXMLLoader loader = new FXMLLoader();
+            Parent root = loader.load(fxmlStream);
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Administration SAHATECK");
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(((Node)event.getSource()).getScene().getWindow());
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setContentText("Erreur lors du chargement de l'interface admin: " + e.getMessage());
+            alert.showAndWait();
+        }
     }
 
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    private void listAllFilesInResources() {
+        try {
+            System.out.println("Contenu de resources:");
+            Files.walk(Paths.get("src/main/resources"))
+                    .forEach(System.out::println);
+        } catch (IOException e) {
+            System.out.println("Erreur lecture resources: " + e.getMessage());
+        }
+    }
+
+    private void showDetailedError(String title, Exception e) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText("Échec du chargement");
+
+        TextArea textArea = new TextArea(
+                "Message: " + e.getMessage() + "\n\n" +
+                        "Stack Trace:\n" + getStackTraceAsString(e));
+        textArea.setEditable(false);
+
+        alert.getDialogPane().setContent(textArea);
+        alert.showAndWait();
+    }
+
+    private String getStackTraceAsString(Exception e) {
+        StringWriter sw = new StringWriter();
+        e.printStackTrace(new PrintWriter(sw));
+        return sw.toString();
+    }
+
+    private void showAlert(String title, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
@@ -179,33 +348,8 @@ public class MainController {
     }
 
 
-    @FXML
-    private void handleBackend(javafx.event.ActionEvent event) {
-        try {
-            // Charge le fichier FXML
-            URL fxmlUrl = getClass().getResource("/view/backend-view.fxml");
-            if (fxmlUrl == null) {
-                throw new IOException("Fichier backend-view.fxml introuvable");
-            }
-
-            FXMLLoader loader = new FXMLLoader(fxmlUrl);
-            Parent root = loader.load();
-
-            // Crée la nouvelle scène
-            Stage backendStage = new Stage();
-            backendStage.setTitle("Administration SAHATECK");
-            backendStage.setScene(new Scene(root, 1000, 700));
-
-            // Configure comme fenêtre modale
-            backendStage.initModality(Modality.WINDOW_MODAL);
-            backendStage.initOwner(((Node)event.getSource()).getScene().getWindow());
-
-            backendStage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Erreur", "Impossible d'ouvrir l'interface d'administration: " + e.getMessage());
-        }
+    public void refreshReclamations() {
+        loadReclamations();
     }
 
 }

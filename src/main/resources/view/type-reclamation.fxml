@@ -2,28 +2,37 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="controller.TypeReclamationController" spacing="15" style="-fx-padding: 20;">
+      fx:controller="controller.TypeReclamationController"
+      spacing="15" style="-fx-padding: 20; -fx-background-color: #f5f7fa;">
 
-    <TableView fx:id="typeTable" style="-fx-background-color: transparent;">
-        <columns>
-            <TableColumn fx:id="idColumn" text="ID" minWidth="50"/>
-            <TableColumn fx:id="nomColumn" text="Nom" minWidth="200"/>
-        </columns>
-    </TableView>
+    <Label text="Types de Réclamation"
+           style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
 
-    <HBox spacing="10" alignment="CENTER_LEFT">
-        <Label text="Nom:" style="-fx-font-weight: bold;"/>
-        <TextField fx:id="nomField" prefWidth="200"/>
-    </HBox>
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER"
+                style="-fx-background: transparent; -fx-background-color: transparent;">
+        <FlowPane fx:id="cardsContainer" hgap="15" vgap="15" style="-fx-padding: 10;"/>
+    </ScrollPane>
 
-    <HBox spacing="15" alignment="CENTER">
-        <Button fx:id="addButton" text="Ajouter" onAction="#handleAdd"
-                style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20;"/>
-        <Button fx:id="updateButton" text="Modifier" onAction="#handleUpdate"
-                style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20;"/>
-        <Button fx:id="deleteButton" text="Supprimer" onAction="#handleDelete"
-                style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 20;"/>
-    </HBox>
+    <!-- Formulaire d'ajout -->
+    <VBox spacing="10" style="-fx-padding: 20 0 0 0;">
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Nom:" style="-fx-font-weight: bold;"/>
+            <TextField fx:id="nomField" prefWidth="200"/>
+        </HBox>
+
+        <HBox spacing="15" alignment="CENTER">
+            <Button fx:id="addButton" text="Ajouter" onAction="#handleAdd"
+                    style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-font-weight: bold;
+                           -fx-background-radius: 5; -fx-padding: 8 20;"/>
+            <Button fx:id="updateButton" text="Modifier" onAction="#handleUpdate"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;
+                           -fx-background-radius: 5; -fx-padding: 8 20;"/>
+            <Button fx:id="deleteButton" text="Supprimer" onAction="#handleDelete"
+                    style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-font-weight: bold;
+                           -fx-background-radius: 5; -fx-padding: 8 20;"/>
+        </HBox>
+    </VBox>
 </VBox>

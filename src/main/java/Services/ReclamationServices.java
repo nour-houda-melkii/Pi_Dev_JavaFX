@@ -8,183 +8,168 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static utils.connBD.getConnection;
-
 public class ReclamationServices {
     private Connection connection;
 
     public ReclamationServices() {
         try {
-            connection = getConnection();
+            connection = connBD.getConnection();
         } catch (SQLException e) {
             System.err.println("Error connecting to database: " + e.getMessage());
+            throw new RuntimeException("Failed to initialize database connection", e);
         }
     }
 
-    /**
-     * Vérifie si une réclamation similaire existe déjà
-     */
     public boolean reclamationExists(Reclamation reclamation) throws SQLException {
         String query = "SELECT COUNT(*) FROM reclamation WHERE " +
                 "type_reclamation_id = ? AND medecin_id = ? AND date_reclamation = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, Integer.parseInt(reclamation.getTypeReclamation()));
-            ps.setInt(2, Integer.parseInt(reclamation.getMedecin()));
+            ps.setInt(1, reclamation.getTypeReclamationId());
+            ps.setInt(2, reclamation.getMedecinId());
             ps.setDate(3, Date.valueOf(reclamation.getDateReclamation()));
 
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1) > 0;
-                }
+                return rs.next() && rs.getInt(1) > 0;
             }
         }
-        return false;
     }
 
-    /**
-     * Vérifie si une réclamation similaire existe déjà (pour la mise à jour)
-     */
     public boolean reclamationExistsExcludingCurrent(Reclamation reclamation) throws SQLException {
         String query = "SELECT COUNT(*) FROM reclamation WHERE " +
                 "type_reclamation_id = ? AND medecin_id = ? AND date_reclamation = ? " +
                 "AND id != ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, Integer.parseInt(reclamation.getTypeReclamation()));
-            ps.setInt(2, Integer.parseInt(reclamation.getMedecin()));
+            ps.setInt(1, reclamation.getTypeReclamationId());
+            ps.setInt(2, reclamation.getMedecinId());
             ps.setDate(3, Date.valueOf(reclamation.getDateReclamation()));
-            ps.setInt(4, Integer.parseInt(reclamation.getId()));
+            ps.setInt(4, reclamation.getId());
 
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1) > 0;
+                return rs.next() && rs.getInt(1) > 0;
+            }
+        }
+    }
+
+    public boolean addReclamation(Reclamation reclamation) throws SQLException {
+        String query = "INSERT INTO reclamation (type_reclamation_id, description, date_reclamation, photo, medecin_id) " +
+                "VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setInt(1, reclamation.getTypeReclamationId());
+            statement.setString(2, reclamation.getDescription());
+            statement.setDate(3, Date.valueOf(reclamation.getDateReclamation()));
+            statement.setString(4, reclamation.getPhotoPath());
+            statement.setInt(5, reclamation.getMedecinId());
+
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows > 0) {
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        reclamation.setId(generatedKeys.getInt(1));
+                    }
                 }
+                return true;
             }
-        }
-        return false;
-    }
-
-    /**
-     * Ajoute une nouvelle réclamation
-     */
-    public void addReclamation(Reclamation reclamation) throws SQLException {
-        System.out.println("Tentative d'ajout pour le type: " + reclamation.getTypeReclamation());
-
-        String query = "INSERT INTO reclamation (type_reclamation_id, description, date_reclamation, medecin_id, photo) VALUES (?, ?, ?, ?, ?)";
-
-        try (PreparedStatement ps = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setInt(1, Integer.parseInt(reclamation.getTypeReclamation()));
-            ps.setString(2, reclamation.getDescription());
-            ps.setDate(3, Date.valueOf(reclamation.getDateReclamation()));
-            ps.setInt(4, Integer.parseInt(reclamation.getMedecin()));
-            ps.setString(5, reclamation.getPhotoPath() != null ? reclamation.getPhotoPath() : "");
-
-            int affectedRows = ps.executeUpdate();
-
-            if (affectedRows == 0) {
-                throw new SQLException("L'ajout a échoué, aucune ligne affectée");
-            }
-
-            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    reclamation.setId(String.valueOf(generatedKeys.getInt(1)));
-                } else {
-                    throw new SQLException("Échec de récupération de l'ID généré");
-                }
-            }
-
-            System.out.println("Réclamation ajoutée avec ID: " + reclamation.getId());
+            return false;
         }
     }
 
-    /**
-     * Met à jour une réclamation existante
-     *
-     * @return
-     */
-    public boolean updateReclamation(Reclamation reclamation) throws SQLException {
-        String query = "UPDATE reclamation SET type_reclamation_id = ?, description = ?, "
-                + "date_reclamation = ?, medecin_id = ?, photo = ? WHERE id = ?";
-
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, Integer.parseInt(reclamation.getTypeReclamation()));
-            ps.setString(2, reclamation.getDescription());
-            ps.setDate(3, Date.valueOf(reclamation.getDateReclamation()));
-            ps.setInt(4, Integer.parseInt(reclamation.getMedecin()));
-            ps.setString(5, reclamation.getPhotoPath());
-            ps.setInt(6, Integer.parseInt(reclamation.getId()));
-
-            int rowsUpdated = ps.executeUpdate();
-            return rowsUpdated > 0;
-        }
-    }
-
-    /**
-     * Supprime une réclamation
-     */
-    public void deleteReclamation(int id) throws SQLException {
-        String query = "DELETE FROM reclamation WHERE id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, id);
-            ps.executeUpdate();
-        }
-    }
-
-    /**
-     * Récupère toutes les réclamations
-     */
-    public List<Reclamation> getAllReclamations() throws SQLException {
+    public List<Reclamation> getAllReclamationsWithNames() throws SQLException {
         List<Reclamation> reclamations = new ArrayList<>();
-        String query = "SELECT * FROM reclamation";
+        String query = "SELECT r.*, t.nom as type_name, m.nom as medecin_name " +
+                "FROM reclamation r " +
+                "JOIN type_reclamation t ON r.type_reclamation_id = t.id " +
+                "JOIN medecin m ON r.medecin_id = m.id";
 
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(query)) {
 
             while (rs.next()) {
-                Reclamation rec = new Reclamation(
-                        String.valueOf(rs.getInt("id")),
-                        rs.getString("type_reclamation_id"),
-                        rs.getString("description"),
-                        rs.getDate("date_reclamation").toLocalDate(),
-                        rs.getString("medecin_id"),
-                        rs.getString("photo")
-                );
-                reclamations.add(rec);
+                Reclamation r = new Reclamation();
+                r.setId(rs.getInt("id"));
+                r.setTypeReclamationId(rs.getInt("type_reclamation_id"));
+                r.setTypeReclamationName(rs.getString("type_name"));
+                r.setDescription(rs.getString("description"));
+                r.setDateReclamation(rs.getDate("date_reclamation").toLocalDate());
+                r.setMedecinId(rs.getInt("medecin_id"));
+                r.setMedecinName(rs.getString("medecin_name"));
+                r.setPhotoPath(rs.getString("photo"));
+                reclamations.add(r);
             }
         }
         return reclamations;
     }
 
-    /**
-     * Récupère une réclamation par son ID
-     */
-    public Reclamation getReclamationById(int id) throws SQLException {
-        String query = "SELECT * FROM reclamation WHERE id = ?";
+    public void updateReclamationStatus(int id, String newStatus) throws SQLException {
+        String query = "UPDATE reclamation SET status = ? WHERE id = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, newStatus);
+            pstmt.setInt(2, id);
+            pstmt.executeUpdate();
+        }
+    }
+
+    public boolean updateReclamation(Reclamation reclamation) throws SQLException {
+        String query = "UPDATE reclamation SET " +
+                "type_reclamation_id = ?, description = ?, " +
+                "date_reclamation = ?, medecin_id = ?, photo = ? " +
+                "WHERE id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, reclamation.getTypeReclamationId());
+            ps.setString(2, reclamation.getDescription());
+            ps.setDate(3, Date.valueOf(reclamation.getDateReclamation()));
+            ps.setInt(4, reclamation.getMedecinId());
+            ps.setString(5, reclamation.getPhotoPath());
+            ps.setInt(6, reclamation.getId());
+
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    public boolean deleteReclamation(int id) throws SQLException {
+        String query = "DELETE FROM reclamation WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, id);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    public Reclamation getReclamationByIdWithNames(int id) throws SQLException {
+        String query = "SELECT r.*, t.nom AS type_nom, m.nom AS medecin_nom " +
+                "FROM reclamation r " +
+                "JOIN type_reclamation t ON r.type_reclamation_id = t.id " +
+                "JOIN medecin m ON r.medecin_id = m.id " +
+                "WHERE r.id = ?";
+
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, id);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return new Reclamation(
-                            String.valueOf(rs.getInt("id")),
-                            rs.getString("type_reclamation_id"),
-                            rs.getString("description"),
-                            rs.getDate("date_reclamation").toLocalDate(),
-                            rs.getString("medecin_id"),
-                            rs.getString("photo")
-                    );
+                    Reclamation reclamation = new Reclamation();
+                    reclamation.setId(rs.getInt("id"));
+                    reclamation.setTypeReclamationId(rs.getInt("type_reclamation_id"));
+                    reclamation.setTypeReclamationName(rs.getString("type_nom"));
+                    reclamation.setDescription(rs.getString("description"));
+                    reclamation.setDateReclamation(rs.getDate("date_reclamation").toLocalDate());
+                    reclamation.setMedecinId(rs.getInt("medecin_id"));
+                    reclamation.setMedecinName(rs.getString("medecin_nom"));
+                    reclamation.setPhotoPath(rs.getString("photo"));
+                    return reclamation;
                 }
             }
         }
         return null;
     }
 
-    // Méthodes pour les types de réclamation
     public List<TypeReclamation> getAllTypes() throws SQLException {
         List<TypeReclamation> types = new ArrayList<>();
         String sql = "SELECT id, nom FROM type_reclamation ORDER BY id";
 
-        try (Connection conn = getConnection();
-             Statement stmt = conn.createStatement();
+        try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
@@ -214,7 +199,6 @@ public class ReclamationServices {
         return null;
     }
 
-    // Méthodes pour les médecins
     public List<Medecin> getAllMedecins() throws SQLException {
         List<Medecin> medecins = new ArrayList<>();
         String query = "SELECT id, nom FROM medecin ORDER BY nom";
@@ -249,35 +233,25 @@ public class ReclamationServices {
         return null;
     }
 
-    public boolean typeExists(String typeId) throws SQLException {
+    public boolean typeExists(int typeId) throws SQLException {
         String sql = "SELECT COUNT(*) FROM type_reclamation WHERE id = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, Integer.parseInt(typeId));
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, typeId);
             try (ResultSet rs = stmt.executeQuery()) {
                 return rs.next() && rs.getInt(1) > 0;
             }
         }
     }
 
-    public boolean medecinExists(String medecinId) throws SQLException {
+    public boolean medecinExists(int medecinId) throws SQLException {
         String query = "SELECT COUNT(*) FROM medecin WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, Integer.parseInt(medecinId));
-
+            ps.setInt(1, medecinId);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getInt(1) > 0;
-                }
+                return rs.next() && rs.getInt(1) > 0;
             }
         }
-        return false;
     }
-
-
-
-
-    // Dans ReclamationServices.java
 
     public void addType(TypeReclamation type) throws SQLException {
         String query = "INSERT INTO type_reclamation (nom) VALUES (?)";
@@ -307,6 +281,34 @@ public class ReclamationServices {
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, id);
             return ps.executeUpdate() > 0;
+        }
+    }
+
+    public void close() {
+        try {
+            if (connection != null && !connection.isClosed()) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            System.err.println("Error closing connection: " + e.getMessage());
+        }
+    }
+
+
+    public void updateStatus(int id, String newStatus) throws SQLException {
+        String query = "UPDATE reclamation SET status = ? WHERE id = ?";
+        try (Connection conn = connBD.getConnection();
+             java.sql.PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, newStatus);
+            stmt.setInt(2, id);
+            stmt.executeUpdate();
+        }
+    }
+
+    public void executeUpdate(String sql) throws SQLException {
+        try (Connection conn = connBD.getConnection();
+             java.sql.Statement stmt = conn.createStatement()) {
+            stmt.executeUpdate(sql);
         }
     }
 

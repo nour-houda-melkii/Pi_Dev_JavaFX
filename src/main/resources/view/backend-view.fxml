@@ -5,43 +5,96 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-
-<BorderPane xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.BackendController"
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BackendController"
             prefWidth="1000" prefHeight="700">
+
+    <!-- Top Header -->
+    <top>
+        <VBox>
+
+            <!-- Navigation Bar -->
+            <HBox style="-fx-background-color: white; -fx-padding: 10; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;">
+                <Label text="Tableau de Bord" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <Region HBox.hgrow="ALWAYS" />
+                <HBox spacing="5" alignment="CENTER_RIGHT">
+                    <Label text="Accueil / " style="-fx-text-fill: #7a7a7a;"/>
+                    <Label text="Tableau de Bord" style="-fx-text-fill: #7a7a7a;"/>
+                </HBox>
+                <HBox alignment="CENTER_RIGHT" style="-fx-padding: 0 0 0 15;">
+                    <!-- Remplacé Circle par un Rectangle pour l'indicateur de statut -->
+                    <Pane style="-fx-background-color: #4cd964; -fx-background-radius: 5;" prefWidth="10" prefHeight="10"/>
+                </HBox>
+            </HBox>
+        </VBox>
+    </top>
 
     <!-- Left Sidebar -->
     <left>
-        <VBox style="-fx-background-color: #2c3e50;" spacing="10" prefWidth="200">
-            <Label text="SAHATECK" style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold; -fx-padding: 20 10 20 10; -fx-alignment: CENTER;"/>
+        <VBox style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 0 1 0 0;" prefWidth="200">
+            <VBox style="-fx-padding: 20 15 15 15;">
+                <Label text="SAHATECK" style="-fx-text-fill: #00b2ff; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+            </VBox>
 
-            <Separator style="-fx-background-color: #2c3e50;"/>
+            <Label text="PAGES" style="-fx-text-fill: #a0a0a0; -fx-font-size: 12px; -fx-padding: 10 0 5 15;"/>
 
-            <Button fx:id="typeReclamationBtn" text="Type Reclamation"
-                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20;"/>
-            <Button fx:id="reclamationBtn" text="Reclamation"
-                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20;"/>
-            <Button fx:id="reponseBtn" text="Réponses"
-                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20;"/>
+            <!-- Modification des IDs pour correspondre à BackendController.java -->
+            <Button fx:id="tableauDeBordBtn" text="type reclamation"
+                    style="-fx-background-color: #f0f7ff; -fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 10 10 10 15; -fx-border-color: #00b2ff; -fx-border-width: 0 0 0 3;"/>
 
-            <Separator style="-fx-background-color: #2c3e50;"/>
+            <Button fx:id="gestionProduitsBtn" text="reclamations"
+                    style="-fx-background-color: transparent; -fx-text-fill: #5a5a5a; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 10 10 10 15;"/>
 
-            <Button text="Sign Out" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 10 20;"/>
+            <Button fx:id="gestionUtilisateursBtn" text="reponses "
+                    style="-fx-background-color: transparent; -fx-text-fill: #5a5a5a; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 10 10 10 15;"/>
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <Button text="Profile"
+                    style="-fx-background-color: transparent; -fx-text-fill: #5a5a5a; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 10 10 10 15;"/>
+
+            <Button text="Déconnexion"
+                    style="-fx-background-color: transparent; -fx-text-fill: #5a5a5a; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 10 10 10 15; -fx-margin: 0 0 20 0;"/>
         </VBox>
     </left>
 
-
-
-    <!-- Center Content -->
+    <!-- Main Content Area -->
     <center>
-        <VBox spacing="20" style="-fx-padding: 20;">
-            <Label text="PANEAU D'ADMINISTRATION" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+        <VBox fx:id="contentArea" style="-fx-background-color: #f0f2f5; -fx-padding: 20;" spacing="20">
+            <!-- Statistics Cards -->
+            <HBox spacing="20">
+                <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);" HBox.hgrow="ALWAYS">
+                    <Label text="Total Users" style="-fx-text-fill: #7a7a7a; -fx-font-size: 14px;"/>
+                    <Label text="30" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
+                </VBox>
 
-            <VBox fx:id="contentArea" style="-fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-border-radius: 5; -fx-padding: 15;"
-                  VBox.vgrow="ALWAYS">
-                <!-- Content will be loaded here dynamically -->
-                <Label text="Sélectionnez une option dans le menu" style="-fx-font-size: 16px; -fx-text-fill: #2c3e50;"/>
+                <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);" HBox.hgrow="ALWAYS">
+                    <Label text="Doctors" style="-fx-text-fill: #7a7a7a; -fx-font-size: 14px;"/>
+                    <Label text="11" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
+                </VBox>
+
+                <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);" HBox.hgrow="ALWAYS">
+                    <Label text="Patients" style="-fx-text-fill: #7a7a7a; -fx-font-size: 14px;"/>
+                    <Label text="19" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
+                </VBox>
+            </HBox>
+
+            <!-- Content Section with Your Original Table -->
+            <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 5; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="PANEAU D'ADMINISTRATION" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                    <Region HBox.hgrow="ALWAYS" />
+                </HBox>
+
+                <!-- Your Original TableView -->
+                <TableView fx:id="reclamationTable" style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-border-radius: 3; -fx-padding: 5; -fx-margin: 15 0 0 0;">
+                    <columns>
+                        <TableColumn fx:id="descCol" text="Description" prefWidth="200"/>
+                        <TableColumn fx:id="dateCol" text="Date reclamation" prefWidth="150"/>
+                        <TableColumn fx:id="idCol" text="Idmeldedn" prefWidth="120"/>
+                        <TableColumn fx:id="photoCol" text="Photo" prefWidth="150"/>
+                        <TableColumn fx:id="typeCol" text="Type Reclamation" prefWidth="150"/>
+                    </columns>
+                </TableView>
             </VBox>
         </VBox>
     </center>

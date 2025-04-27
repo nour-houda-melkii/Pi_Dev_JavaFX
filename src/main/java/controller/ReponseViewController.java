@@ -6,27 +6,19 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 import services.ReponseService;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 public class ReponseViewController {
-    // Constantes de validation
     private static final int MIN_CONTENU_LENGTH = 10;
     private static final int MAX_CONTENU_LENGTH = 500;
 
-    // Composants FXML
-    @FXML private TableView<Reponse> reponseTable;
-    @FXML private TableColumn<Reponse, Integer> idColumn;
-    @FXML private TableColumn<Reponse, String> contenuColumn;
-    @FXML private TableColumn<Reponse, LocalDate> dateColumn;
-    @FXML private TableColumn<Reponse, Integer> reclamationIdColumn;
-    @FXML private TableColumn<Reponse, Void> actionColumn;
+    @FXML private FlowPane cardsContainer;
     @FXML private TextArea newReponseText;
     @FXML private Label errorLabel;
 
@@ -35,58 +27,89 @@ public class ReponseViewController {
 
     @FXML
     public void initialize() {
-        setupTableColumns();
         loadData();
-        addActionButtons();
-        setupTextValidation();
-    }
-
-    private void setupTableColumns() {
-        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        contenuColumn.setCellValueFactory(new PropertyValueFactory<>("contenu"));
-        dateColumn.setCellValueFactory(new PropertyValueFactory<>("dateReponse"));
-        reclamationIdColumn.setCellValueFactory(new PropertyValueFactory<>("reclamationId"));
     }
 
     private void loadData() {
         try {
             data.setAll(reponseService.getAllResponses());
-            reponseTable.setItems(data);
+            displayCards();
         } catch (Exception e) {
             showError("Erreur de chargement: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    private void addActionButtons() {
-        actionColumn.setCellFactory(param -> new TableCell<>() {
-            private final Button editBtn = new Button("Modifier");
-            private final Button deleteBtn = new Button("Supprimer");
-            private final HBox pane = new HBox(editBtn, deleteBtn);
+    private void displayCards() {
+        cardsContainer.getChildren().clear();
 
-            {
-                pane.setSpacing(5);
-                editBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white;");
-                deleteBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white;");
-
-                editBtn.setOnAction(event -> editReponse(getTableView().getItems().get(getIndex())));
-                deleteBtn.setOnAction(event -> deleteReponse(getTableView().getItems().get(getIndex())));
+        if (data.isEmpty()) {
+            Label emptyLabel = new Label("Aucune réponse trouvée");
+            cardsContainer.getChildren().add(emptyLabel);
+        } else {
+            for (Reponse reponse : data) {
+                VBox card = createCard(reponse);
+                cardsContainer.getChildren().add(card);
             }
-
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                setGraphic(empty ? null : pane);
-            }
-        });
+        }
     }
 
-    private void setupTextValidation() {
-        newReponseText.textProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal.length() > MAX_CONTENU_LENGTH) {
-                newReponseText.setText(oldVal);
-            }
+    private VBox createCard(Reponse reponse) {
+        VBox card = new VBox(10);
+        card.setStyle("-fx-background-color: white; -fx-background-radius: 10; " +
+                "-fx-border-radius: 10; -fx-border-color: #e0e0e0; " +
+                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1); " +
+                "-fx-padding: 15; -fx-spacing: 12; -fx-min-width: 300;");
+
+        // En-tête avec date
+        HBox header = new HBox();
+        Label dateLabel = new Label("Date: " + reponse.getDateReponse().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        dateLabel.setStyle("-fx-text-fill: #7f8c8d; -fx-font-size: 13;");
+
+        header.getChildren().add(dateLabel);
+        HBox.setHgrow(header, Priority.ALWAYS);
+
+        // Contenu de la réponse
+        TextArea contenuText = new TextArea(reponse.getContenu());
+        contenuText.setEditable(false);
+        contenuText.setWrapText(true);
+        contenuText.setStyle("-fx-text-fill: black; -fx-background-color: transparent; -fx-border-color: transparent;");
+        contenuText.setPrefHeight(60);
+
+        // Boutons d'action
+        HBox buttons = new HBox(10);
+        Button editBtn = new Button("Modifier");
+        editBtn.setOnAction(e -> editReponse(reponse));
+        editBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; " +
+                "-fx-background-radius: 5; -fx-padding: 5 10;");
+
+        Button deleteBtn = new Button("Supprimer");
+        deleteBtn.setOnAction(e -> deleteReponse(reponse));
+        deleteBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; " +
+                "-fx-background-radius: 5; -fx-padding: 5 10;");
+
+        buttons.getChildren().addAll(new Region(), editBtn, deleteBtn);
+        HBox.setHgrow(buttons.getChildren().get(0), Priority.ALWAYS);
+
+        // Effets de survol
+        card.setOnMouseEntered(e -> {
+            card.setStyle("-fx-background-color: #e0e0e0; " +
+                    "-fx-background-radius: 10; -fx-border-radius: 10; " +
+                    "-fx-border-color: #bbb; " +
+                    "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1); " +
+                    "-fx-padding: 15; -fx-spacing: 12; -fx-min-width: 300;");
         });
+
+        card.setOnMouseExited(e -> {
+            card.setStyle("-fx-background-color: white; " +
+                    "-fx-background-radius: 10; -fx-border-radius: 10; " +
+                    "-fx-border-color: #e0e0e0; " +
+                    "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1); " +
+                    "-fx-padding: 15; -fx-spacing: 12; -fx-min-width: 300;");
+        });
+
+        card.getChildren().addAll(header, contenuText, buttons);
+        return card;
     }
 
     @FXML
@@ -122,24 +145,20 @@ public class ReponseViewController {
         Dialog<Reponse> dialog = new Dialog<>();
         dialog.setTitle("Modifier la réponse");
 
-        // Configuration des boutons
         dialog.getDialogPane().getButtonTypes().addAll(
                 new ButtonType("Enregistrer", ButtonBar.ButtonData.OK_DONE),
                 ButtonType.CANCEL
         );
 
-        // Composants
         TextArea contenuArea = new TextArea(reponse.getContenu());
         contenuArea.setWrapText(true);
         Label validationLabel = new Label();
         validationLabel.setStyle("-fx-text-fill: red;");
 
-        // Validation en temps réel
         contenuArea.textProperty().addListener((obs, oldVal, newVal) -> {
             validationLabel.setText(validateContenu(newVal.trim()));
         });
 
-        // Layout
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
@@ -193,7 +212,6 @@ public class ReponseViewController {
         }
     }
 
-    // Méthodes utilitaires
     private String validateContenu(String contenu) {
         if (contenu.isEmpty()) return "Le contenu ne peut pas être vide";
         if (contenu.length() < MIN_CONTENU_LENGTH) {
@@ -211,8 +229,8 @@ public class ReponseViewController {
     }
 
     private int getSelectedReclamationId() {
-        // Implémentez la logique pour obtenir l'ID de la réclamation sélectionnée
-        return 1; // Valeur par défaut - à adapter
+        // À adapter selon votre logique
+        return 1;
     }
 
     private void showSuccess(String message) {

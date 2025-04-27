@@ -70,7 +70,7 @@ public class ReponseService {
                 Reponse reponse = new Reponse(
                         rs.getString("contenu"),
                         rs.getDate("date_reponse").toLocalDate(),
-                        rs.getInt("id_reclamation") // Changed column name
+                        rs.getInt("reclamation_id") // Changed column name
                 );
                 reponse.setId(rs.getInt("id"));
                 reponses.add(reponse);

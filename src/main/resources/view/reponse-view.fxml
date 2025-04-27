@@ -2,39 +2,17 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
 <?import javafx.geometry.Insets?>
 
 <VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="controller.ReponseViewController" spacing="15" style="-fx-padding: 20;">
+      fx:controller="controller.ReponseViewController"
+      spacing="15" style="-fx-padding: 20; -fx-background-color: #f5f7fa;">
 
-    <Label text="Liste des Réponses" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+    <Label text="Liste des Réponses"
+           style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
 
-    <TableView fx:id="reponseTable" VBox.vgrow="ALWAYS">
-        <columns>
-            <TableColumn fx:id="idColumn" text="ID" prefWidth="50"/>
-            <TableColumn fx:id="contenuColumn" text="Contenu" prefWidth="300"/>
-            <TableColumn fx:id="dateColumn" text="Date" prefWidth="120"/>
-            <TableColumn fx:id="reclamationIdColumn" text="ID Réclamation" prefWidth="100"/>
-            <TableColumn fx:id="actionColumn" text="Actions" prefWidth="150"/>
-        </columns>
-    </TableView>
-
-    <!-- Formulaire d'ajout avec validation -->
-    <GridPane hgap="10" vgap="10" style="-fx-padding: 20 0 0 0;">
-        <Label text="Nouvelle réponse:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-
-        <TextArea fx:id="newReponseText" promptText="Entrez votre réponse ici..."
-                  wrapText="true" GridPane.rowIndex="1" GridPane.columnIndex="0"
-                  GridPane.columnSpan="2">
-            <tooltip>
-                <Tooltip text="La réponse doit contenir entre 10 et 500 caractères"/>
-            </tooltip>
-        </TextArea>
-
-        <Label fx:id="errorLabel" style="-fx-text-fill: red;" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
-
-        <Button text="Ajouter" onAction="#handleAddReponse" GridPane.rowIndex="3" GridPane.columnIndex="0"
-                style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
-    </GridPane>
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER"
+                style="-fx-background: transparent; -fx-background-color: transparent;">
+        <FlowPane fx:id="cardsContainer" hgap="15" vgap="15" style="-fx-padding: 10;"/>
+    </ScrollPane>
 </VBox>

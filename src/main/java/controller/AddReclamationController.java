@@ -14,9 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import services.ReclamationServices;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ComboBox;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,8 +22,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-
-
 
 public class AddReclamationController {
     @FXML private ComboBox<String> typeComboBox;
@@ -38,207 +34,178 @@ public class AddReclamationController {
 
     private File selectedFile;
     private final ReclamationServices reclamationService = new ReclamationServices();
-    private final ReclamationServices service = new ReclamationServices();
-
+    private MainController mainController;
 
     @FXML
     public void initialize() {
         try {
-            // Charger les types
-            List<TypeReclamation> typesList = service.getAllTypes();
-            ObservableList<String> types = FXCollections.observableArrayList();
-            for (TypeReclamation type : typesList) {
-                types.add(type.getId() + " - " + type.getNom());
-            }
-            typeComboBox.setItems(types);
+            initializeComboBoxes(); // Initialise les ComboBox
+            datePicker.setValue(LocalDate.now()); // Date par défaut = aujourd'hui
 
-            // Charger les médecins
-            List<Medecin> medecinsList = service.getAllMedecins();
-            ObservableList<String> medecins = FXCollections.observableArrayList();
-            for (Medecin medecin : medecinsList) {
-                medecins.add(medecin.getId() + " - " + medecin.getNom());
-            }
-            medecinComboBox.setItems(medecins);
+            // Configuration des écouteurs d'événements
+            browseButton.setOnAction(event -> browsePhoto());
+            generateDescriptionButton.setOnAction(event -> generateDescription());
 
-            // Sélectionner le premier élément par défaut si disponible
-            if (!typeComboBox.getItems().isEmpty()) {
-                typeComboBox.getSelectionModel().selectFirst();
-            }
-            if (!medecinComboBox.getItems().isEmpty()) {
-                medecinComboBox.getSelectionModel().selectFirst();
-            }
-
-            // Définir la date par défaut à aujourd'hui
-            datePicker.setValue(LocalDate.now());
-
-        } catch (SQLException e) {
-            showAlert("Erreur", "Erreur de chargement: " + e.getMessage());
+        } catch (Exception e) {
+            showAlert("Erreur d'initialisation",
+                    "Erreur lors du démarrage: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
 
-    private void initializeTypeComboBox() {
-        try {
-            List<TypeReclamation> typesList = reclamationService.getAllTypes();
-            List<String> types = typesList.stream()
-                    .map(t -> t.getId() + " - " + t.getNom())
-                    .collect(Collectors.toList());
-            typeComboBox.setItems(FXCollections.observableArrayList(types));
-        } catch (SQLException e) {
-            showAlert("Erreur", "Erreur de chargement des types: " + e.getMessage());
-        }
-    }
-    private MainController mainController;
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
-
     private void initializeMedecinComboBox() {
         try {
             List<Medecin> medecinsList = reclamationService.getAllMedecins();
-            List<String> medecins = medecinsList.stream()
-                    .map(m -> m.getId() + " - " + m.getNom())
-                    .collect(Collectors.toList());
-            medecinComboBox.setItems(FXCollections.observableArrayList(medecins));
+            ObservableList<String> medecins = FXCollections.observableArrayList(
+                    medecinsList.stream()
+                            .map(m -> m.getId() + " - " + m.getNom())
+                            .collect(Collectors.toList())
+            );
+            medecinComboBox.setItems(medecins);
+
+            if (!medecins.isEmpty()) {
+                medecinComboBox.getSelectionModel().selectFirst();
+            }
         } catch (SQLException e) {
-            showAlert("Erreur", "Erreur de chargement des médecins: " + e.getMessage());
+            showAlert("Error", "Error loading doctors: " + e.getMessage());
         }
+    }
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
     }
 
     @FXML
     private void generateDescription() {
         String selectedType = typeComboBox.getValue();
         if (selectedType != null && !selectedType.isEmpty()) {
-            // Ici vous pourriez implémenter une génération automatique de description
-            // basée sur le type sélectionné, comme dans votre AddCategoryController
             String typeName = selectedType.split(" - ")[1];
-            descriptionField.setText("Description générée pour: " + typeName);
+            descriptionField.setText("Default description for: " + typeName);
         }
     }
 
     @FXML
     private void handleAdd() {
-        try {
-            // Vérifier qu'un type est sélectionné
-            if (typeComboBox.getValue() == null) {
-                showAlert("Erreur", "Veuillez sélectionner un type de réclamation");
-                return;
-            }
-
-            // Extraire l'ID correctement
-            String selected = typeComboBox.getValue();
-            String[] parts = selected.split(" - ");
-
-            if (parts.length < 2) {
-                showAlert("Erreur", "Format de type invalide");
-                return;
-            }
-
-            String typeId = parts[0]; // Contiendra 6, 7, 8 ou 9 selon votre BD
-            System.out.println("Type ID sélectionné: " + typeId); // Debug
-
-            // Créer la réclamation avec le bon ID
-            Reclamation nouvelleReclamation = new Reclamation(
-                    "0", // ID temporaire
-                    typeId,
-                    descriptionField.getText(),
-                    datePicker.getValue(),
-                    medecinComboBox.getValue().split(" - ")[0],
-                    selectedFile != null ? selectedFile.getAbsolutePath() : ""
-            );
-
-            // Ajouter à la base
-            service.addReclamation(nouvelleReclamation);
-            showAlert("Succès", "Réclamation ajoutée avec succès!");
-            clearFields();
-
-        } catch (Exception e) {
-            showAlert("Erreur", "Erreur lors de l'ajout: " + e.getMessage());
-            e.printStackTrace();
-        }
+        addReclamation();
     }
-
 
     @FXML
     private void addReclamation() {
-        // Validation des champs
+        // Field validation
         if (typeComboBox.getValue() == null) {
-            showAlert("Erreur", "Veuillez sélectionner un type de réclamation");
+            showAlert("Error", "Please select a claim type");
             return;
         }
 
         if (medecinComboBox.getValue() == null) {
-            showAlert("Erreur", "Veuillez sélectionner un médecin");
+            showAlert("Error", "Please select a doctor");
             return;
         }
 
         if (descriptionField.getText().trim().isEmpty()) {
-            showAlert("Erreur", "La description ne peut pas être vide");
+            showAlert("Error", "Description cannot be empty");
             return;
         }
 
         if (datePicker.getValue() == null) {
-            showAlert("Erreur", "Veuillez sélectionner une date");
+            showAlert("Error", "Please select a date");
             return;
         }
 
         try {
-            // Extraire les IDs
-            String typeId = typeComboBox.getValue().split(" - ")[0];
-            String medecinId = medecinComboBox.getValue().split(" - ")[0];
+            // Extract IDs
+            int typeId = Integer.parseInt(typeComboBox.getValue().split(" - ")[0]);
+            int medecinId = Integer.parseInt(medecinComboBox.getValue().split(" - ")[0]);
+            String photoPath = selectedFile != null ? selectedFile.getAbsolutePath() : null;
 
-            // Créer la réclamation
-            Reclamation nouvelleReclamation = new Reclamation(
-                    "0", // ID temporaire
-                    typeId,
-                    descriptionField.getText(),
-                    datePicker.getValue(),
-                    medecinId,
-                    selectedFile != null ? selectedFile.getAbsolutePath() : ""
-            );
+            // Create reclamation
+            Reclamation nouvelleReclamation = new Reclamation();
+            nouvelleReclamation.setTypeReclamationId(typeId);
+            nouvelleReclamation.setDescription(descriptionField.getText());
+            nouvelleReclamation.setDateReclamation(datePicker.getValue());
+            nouvelleReclamation.setMedecinId(medecinId);
+            nouvelleReclamation.setPhotoPath(photoPath);
 
-            // Debug: Afficher les valeurs avant l'ajout
-            System.out.println("Ajout réclamation avec:");
-            System.out.println("Type ID: " + typeId);
-            System.out.println("Médecin ID: " + medecinId);
-            System.out.println("Description: " + descriptionField.getText());
-            System.out.println("Date: " + datePicker.getValue());
-            System.out.println("Photo: " + (selectedFile != null ? selectedFile.getAbsolutePath() : "null"));
+            // Add to database
+            boolean success = reclamationService.addReclamation(nouvelleReclamation);
 
-            // Ajouter à la base
-            service.addReclamation(nouvelleReclamation);
+            if (success) {
+                showSuccessAlert("Success", "Claim added successfully!");
 
-            // Message de succès
-            showSuccessAlert("Succès", "Réclamation ajoutée avec succès!");
+                // Refresh main table if mainController is set
 
-            // Fermer la fenêtre si mainController est défini
-            if (mainController != null) {
-                mainController.refreshTable();
+
+                // Close the window
                 ((Stage) typeComboBox.getScene().getWindow()).close();
+            } else {
+                showAlert("Error", "Failed to add claim");
             }
 
+        } catch (NumberFormatException e) {
+            showAlert("Error", "Invalid ID format: " + e.getMessage());
         } catch (SQLException e) {
-            showAlert("Erreur SQL", "Erreur lors de l'ajout: " + e.getMessage());
+            showAlert("Database Error", "Error adding claim: " + e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
-            showAlert("Erreur", "Erreur inattendue: " + e.getMessage());
+            showAlert("Error", "Unexpected error: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
+    private void initializeComboBoxes() {
+        try {
+            // Initialisation ComboBox types
+            List<TypeReclamation> typesList = reclamationService.getAllTypes();
+            ObservableList<String> types = FXCollections.observableArrayList();
+
+            for (TypeReclamation type : typesList) {
+                types.add(type.getId() + " - " + type.getNom());
+            }
+
+            typeComboBox.setItems(types);
+
+            // Initialisation ComboBox médecins
+            List<Medecin> medecinsList = reclamationService.getAllMedecins();
+            ObservableList<String> medecins = FXCollections.observableArrayList();
+
+            for (Medecin medecin : medecinsList) {
+                medecins.add(medecin.getId() + " - " + medecin.getNom());
+            }
+
+            medecinComboBox.setItems(medecins);
+
+            // Sélection automatique du premier élément
+            if (!types.isEmpty()) {
+                typeComboBox.getSelectionModel().selectFirst();
+            }
+            if (!medecins.isEmpty()) {
+                medecinComboBox.getSelectionModel().selectFirst();
+            }
+
+        } catch (SQLException e) {
+            showAlert("Erreur de base de données",
+                    "Impossible de charger les listes: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     @FXML
     private void browsePhoto() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Sélectionner une photo");
+        fileChooser.setTitle("Select an image");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg")
+                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
         );
 
         selectedFile = fileChooser.showOpenDialog(browseButton.getScene().getWindow());
         if (selectedFile != null) {
-            photoView.setImage(new Image(selectedFile.toURI().toString()));
+            try {
+                Image image = new Image(selectedFile.toURI().toString());
+                photoView.setImage(image);
+            } catch (Exception e) {
+                showAlert("Error", "Could not load image: " + e.getMessage());
+            }
         }
     }
 
@@ -258,10 +225,10 @@ public class AddReclamationController {
             Parent root = FXMLLoader.load(getClass().getResource("/main-view.fxml"));
             Stage stage = (Stage) typeComboBox.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.setTitle("Tableau de bord");
+            stage.setTitle("Dashboard");
             stage.show();
         } catch (IOException e) {
-            showAlert("Erreur", "Impossible de charger le tableau de bord: " + e.getMessage());
+            showAlert("Error", "Could not load dashboard: " + e.getMessage());
         }
     }
 

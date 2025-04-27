@@ -31,9 +31,7 @@ public class EditTypeController {
 
         try {
             service.updateType(typeToEdit);
-            if (parentController != null) {
-                parentController.refreshTable();
-            }
+
 
             closeWindow();
         } catch (SQLException e) {
