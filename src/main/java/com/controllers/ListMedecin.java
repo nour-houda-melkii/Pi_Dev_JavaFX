@@ -21,13 +21,18 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.ResourceBundle;
+
+import static com.demo.enums.Specialite.Gynécologie;
 
 public class ListMedecin implements Initializable {
 
     @FXML private ListView<User> medecinListView;
     @FXML private TextField searchField;
+    @FXML private ComboBox<String> specialityComboBox;
     @FXML private Button searchButton;
+    @FXML private Button resetButton;
     @FXML private Button addButton;
     @FXML private Label titleLabel;
     @FXML private Label subtitleLabel;
@@ -40,6 +45,7 @@ public class ListMedecin implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         setupStyles();
         setupListView();
+        setupSpecialityComboBox();
         loadMedecins();
     }
 
@@ -55,13 +61,47 @@ public class ListMedecin implements Initializable {
         subtitleLabel.setFont(Font.font("Poppins", FontWeight.LIGHT, 13));
         subtitleLabel.setTextFill(Color.web("#6c757d"));
 
-        // Style de la barre de recherche
+        // Style de la barre de recherche et combo box
         searchField.setStyle("-fx-font-family: 'Poppins'; -fx-font-weight: 200; -fx-font-size: 13px;");
-        searchField.setPromptText("Search for a doctor...");
+        specialityComboBox.setStyle("-fx-font-family: 'Poppins'; -fx-font-weight: 200; -fx-font-size: 13px;");
 
         // Style des boutons
         searchButton.setStyle("-fx-background-color: #00B4D8; -fx-text-fill: white; -fx-font-family: 'Poppins';");
+        resetButton.setStyle("-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-family: 'Poppins';");
         addButton.setStyle("-fx-background-color: #00B4D8; -fx-text-fill: white; -fx-font-family: 'Poppins'; -fx-font-weight: bold;");
+    }
+
+    private void setupSpecialityComboBox() {
+        // Get all specialities from your application
+        // This is a placeholder - replace with actual specialities from your system
+        // You might need to fetch these from a service or use an enum
+        ObservableList<String> specialities = FXCollections.observableArrayList(
+                "All Specialities",
+                "Cardiologie",
+                "Dermatologie",
+                "Pédiatrie",
+                "Neurologie",
+                "Orthopédie",
+                "Gynécologie",
+                "Radiologie",
+                "Urologie",
+                "Ophtalmologie",
+                "Psychiatrie",
+                "Anesthésiologie",
+                "Oncologie",
+                "Endocrinologie",
+                "Gastroentérologie",
+                "Hématologie",
+                "Néphrologie",
+                "Pneumologie",
+                "Rhumatologie",
+                "Allergologie",
+                "Infectiologie",
+                "Gériatrie"
+        );
+
+        specialityComboBox.setItems(specialities);
+        specialityComboBox.getSelectionModel().selectFirst();
     }
 
     private void setupListView() {
@@ -163,23 +203,35 @@ public class ListMedecin implements Initializable {
     @FXML
     private void handleSearch() {
         String keyword = searchField.getText().toLowerCase();
-        if (keyword.isEmpty()) {
-            medecinListView.setItems(medecinList);
-            return;
-        }
+        String selectedSpeciality = specialityComboBox.getSelectionModel().getSelectedItem();
 
         ObservableList<User> filteredList = FXCollections.observableArrayList();
+
         for (User medecin : medecinList) {
-            if ((medecin.getFirstName() != null && medecin.getFirstName().toLowerCase().contains(keyword)) ||
+            boolean matchesKeyword = keyword.isEmpty() ||
+                    (medecin.getFirstName() != null && medecin.getFirstName().toLowerCase().contains(keyword)) ||
                     (medecin.getLastName() != null && medecin.getLastName().toLowerCase().contains(keyword)) ||
                     (medecin.getEmail() != null && medecin.getEmail().toLowerCase().contains(keyword)) ||
                     (medecin.getPhoneNumber() != null && medecin.getPhoneNumber().contains(keyword)) ||
-                    (medecin.getSpecialite() != null && medecin.getSpecialite().toString().toLowerCase().contains(keyword)) ||
-                    (medecin.getNumeroLicence() != null && medecin.getNumeroLicence().toLowerCase().contains(keyword))) {
+                    (medecin.getNumeroLicence() != null && medecin.getNumeroLicence().toLowerCase().contains(keyword));
+
+            boolean matchesSpeciality = "All Specialities".equals(selectedSpeciality) ||
+                    (medecin.getSpecialite() != null &&
+                            medecin.getSpecialite().toString().equals(selectedSpeciality));
+
+            if (matchesKeyword && matchesSpeciality) {
                 filteredList.add(medecin);
             }
         }
+
         medecinListView.setItems(filteredList);
+    }
+
+    @FXML
+    private void handleReset() {
+        searchField.clear();
+        specialityComboBox.getSelectionModel().selectFirst();
+        medecinListView.setItems(medecinList);
     }
 
     @FXML
@@ -308,5 +360,4 @@ public class ListMedecin implements Initializable {
             showAlert("Error", "Unable to open the unverified doctors page.");
         }
     }
-
 }

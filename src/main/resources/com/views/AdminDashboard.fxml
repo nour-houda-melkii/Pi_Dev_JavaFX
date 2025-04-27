@@ -156,23 +156,26 @@
         <StackPane fx:id="contentPane" style="-fx-background-color: #f8fafc;">
             <!-- Default content - Dashboard Stats -->
             <VBox style="-fx-padding: 20; -fx-spacing: 20;">
-                <HBox style="-fx-spacing: 20; -fx-alignment: CENTER;">
+                <HBox style="-fx-spacing: 20; -fx-alignment: CENTER; -fx-padding: 20;">
                     <!-- Total Users Card -->
-                    <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-spacing: 10; -fx-alignment: CENTER; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2); -fx-border-radius: 8; -fx-background-radius: 8;">
-                        <Label text="Total Users" style="-fx-text-fill: #64748b; -fx-font-size: 14px;"/>
-                        <Label fx:id="totalUsersLabel" text="0" style="-fx-text-fill: #1e293b; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+                    <VBox style="-fx-background-color: #ffffff; -fx-padding: 20; -fx-spacing: 10; -fx-alignment: CENTER; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3); -fx-border-radius: 10; -fx-background-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;">
+                        <Label text="USERS" style="-fx-text-fill: #64748b; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                        <Label fx:id="totalUsersLabel" text="35" style="-fx-text-fill: #1e40af; -fx-font-size: 32px; -fx-font-weight: bold;"/>
+                        <Label text="Verified" style="-fx-text-fill: #10b981; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 5 10 0 10;"/>
                     </VBox>
 
                     <!-- Doctors Card -->
-                    <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-spacing: 10; -fx-alignment: CENTER; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2); -fx-border-radius: 8; -fx-background-radius: 8;">
-                        <Label text="Doctors" style="-fx-text-fill: #64748b; -fx-font-size: 14px;"/>
-                        <Label fx:id="totalDoctorsLabel" text="0" style="-fx-text-fill: #1e293b; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+                    <VBox style="-fx-background-color: #ffffff; -fx-padding: 20; -fx-spacing: 10; -fx-alignment: CENTER; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3); -fx-border-radius: 10; -fx-background-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;">
+                        <Label text="DOCTORS" style="-fx-text-fill: #64748b; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                        <Label fx:id="totalDoctorsLabel" text="14" style="-fx-text-fill: #1e40af; -fx-font-size: 32px; -fx-font-weight: bold;"/>
+                        <Label text="Verified" style="-fx-text-fill: #10b981; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 5 10 0 10;"/>
                     </VBox>
 
                     <!-- Patients Card -->
-                    <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-spacing: 10; -fx-alignment: CENTER; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2); -fx-border-radius: 8; -fx-background-radius: 8;">
-                        <Label text="Patients" style="-fx-text-fill: #64748b; -fx-font-size: 14px;"/>
-                        <Label fx:id="totalPatientsLabel" text="0" style="-fx-text-fill: #1e293b; -fx-font-size: 24px; -fx-font-weight: bold;"/>
+                    <VBox style="-fx-background-color: #ffffff; -fx-padding: 20; -fx-spacing: 10; -fx-alignment: CENTER; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3); -fx-border-radius: 10; -fx-background-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;">
+                        <Label text="PATIENTS" style="-fx-text-fill: #64748b; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                        <Label fx:id="totalPatientsLabel" text="21" style="-fx-text-fill: #1e40af; -fx-font-size: 32px; -fx-font-weight: bold;"/>
+                        <Label text="Verified" style="-fx-text-fill: #10b981; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 5 10 0 10;"/>
                     </VBox>
                 </HBox>
 

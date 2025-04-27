@@ -4,27 +4,44 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
 
-<?import java.net.URL?>
 <VBox xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.controllers.UnverifiedDoctorsController"
-      spacing="15"
-      fx:id="mainContainer">
+      spacing="20"
+      style="-fx-background-color: #f8fafc; -fx-padding: 20;"
+      prefWidth="1024">
 
-    <!-- Titre et bouton de retour -->
-    <HBox spacing="10" alignment="CENTER_LEFT">
-        <Button text="← Back" onAction="#handleBackToList"
-                style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-family: 'Poppins';"/>
-        <Region HBox.hgrow="ALWAYS"/>
-        <Label fx:id="titleLabel" text="Unverified Doctors"/>
-    </HBox>
+    <!-- Container principal avec ombre et bord arrondi -->
+    <VBox style="-fx-background-color: white; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+        <!-- En-tête avec titre et description -->
+        <VBox style="-fx-padding: 20;">
+            <Label text="List of Unverified Doctors"
+                   style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #1e293b; -fx-font-family: 'Poppins';"/>
+            <Label text="Find here the list of unverified doctors. You can view their information and verify them if necessary."
+                   style="-fx-text-fill: #64748b; -fx-font-size: 14px; -fx-font-family: 'Poppins';"/>
+        </VBox>
 
-    <!-- ListView des médecins non vérifiés -->
-    <ListView fx:id="unverifiedDoctorsListView" VBox.vgrow="ALWAYS">
-        <placeholder>
-            <Label text="No unverified doctors found." style="-fx-text-fill: #6c757d; -fx-font-family: 'Poppins';"/>
-        </placeholder>
-    </ListView>
+        <!-- ListView des médecins non vérifiés -->
+        <ListView fx:id="unverifiedDoctorsListView" style="-fx-background-color: transparent; -fx-padding: 0 20 20 20;">
+            <placeholder>
+                <Label text="No unverified doctors found."
+                       style="-fx-text-fill: #6c757d; -fx-font-family: 'Poppins'; -fx-alignment: CENTER;"/>
+            </placeholder>
+        </ListView>
 
+        <!-- Bouton de retour -->
+        <HBox style="-fx-padding: 0 20 20 20; -fx-alignment: center-left;">
+            <Button text="Back to List" onAction="#handleBackToList"
+                    style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16; -fx-font-family: 'Poppins';">
+                <graphic>
+                    <ImageView fitWidth="16" fitHeight="16">
+                        <image>
+                        </image>
+                    </ImageView>
+                </graphic>
+            </Button>
+        </HBox>
+    </VBox>
 </VBox>
