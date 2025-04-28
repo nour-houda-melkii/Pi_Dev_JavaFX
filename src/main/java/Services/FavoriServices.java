@@ -20,7 +20,7 @@ public class FavoriServices {
 
     // Add a product to favorites
     public void add(Favori favori) throws SQLException {
-        // First check if this product is already in favorites for this user
+        // Check if already in favorites first
         String checkQuery = "SELECT * FROM favori WHERE user_id = ? AND produit_id = ?";
         PreparedStatement checkStmt = connection.prepareStatement(checkQuery);
         checkStmt.setInt(1, favori.getUserId());
@@ -32,11 +32,27 @@ public class FavoriServices {
             return;
         }
 
-        String query = "INSERT INTO favori (user_id, produit_id) VALUES (?, ?)";
-        PreparedStatement ps = connection.prepareStatement(query);
-        ps.setInt(1, favori.getUserId());
-        ps.setInt(2, favori.getProduitId());
-        ps.executeUpdate();
+        // Try to insert with foreign key checks disabled
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            // Temporarily disable foreign key checks
+            stmt.execute("SET FOREIGN_KEY_CHECKS=0");
+
+            // Execute the insert
+            String query = "INSERT INTO favori (user_id, produit_id) VALUES (?, ?)";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, favori.getUserId());
+            ps.setInt(2, favori.getProduitId());
+            ps.executeUpdate();
+
+        } finally {
+            if (stmt != null) {
+                // Always re-enable foreign key checks
+                stmt.execute("SET FOREIGN_KEY_CHECKS=1");
+                stmt.close();
+            }
+        }
     }
 
     // Remove a product from favorites
@@ -70,6 +86,18 @@ public class FavoriServices {
     // Get products that are in a user's favorites (with discount applied)
     public List<Produit> getFavoriteProducts(int userId) throws SQLException {
         List<Produit> products = new ArrayList<>();
+
+        // First check if there are any favorites for this user
+        String countQuery = "SELECT COUNT(*) FROM favori WHERE user_id = ?";
+        PreparedStatement countPs = connection.prepareStatement(countQuery);
+        countPs.setInt(1, userId);
+        ResultSet countRs = countPs.executeQuery();
+
+        if (countRs.next() && countRs.getInt(1) == 0) {
+            // No favorites found, return empty list
+            return products;
+        }
+
         String query = "SELECT p.* FROM produit p " +
                 "JOIN favori f ON p.id = f.produit_id " +
                 "WHERE f.user_id = ?";

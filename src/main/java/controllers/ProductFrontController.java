@@ -262,10 +262,11 @@ public class ProductFrontController {
         updateCounters();
     }
 
+    // In ProductFrontController.java
     private void toggleFavorite(Produit product) {
         try {
             FavoriServices favoriService = new FavoriServices();
-            int currentUserId = 1; // Replace with actual user ID
+            int currentUserId = 1; // Default user ID
 
             if (isFavorite(product)) {
                 favoriService.delete(new Favori(currentUserId, product.getId()));

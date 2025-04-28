@@ -12,3 +12,5 @@
 [2025-04-27 19:31:16] PRODUCT UPDATED: ID=30
 	OLD: Name=bbbbbb, Description=vxbvnvn, Price=100.00, Quantity=10, CategoryID=5, ImagePath=src/main/resources/images/sahatech_logo.png
 	NEW: Name=logoshateck, Description=vxbvnvn, Price=100.00, Quantity=10, CategoryID=5, ImagePath=src/main/resources/images/sahatech_logo.png
+[2025-04-28 18:30:01] PRODUCT DELETED: ID=35, Name=xxxxxxxxxx, Description=addd, Price=5.00, Quantity=10, CategoryID=7, ImagePath=src/main/resources/images/91607037_603896806862786_6080864746930700288_n.jpg
+[2025-04-28 18:30:31] PRODUCT ADDED: ID=36, Name=bandage , Description=category, Price=10.00, Quantity=10, CategoryID=11, ImagePath=src/main/resources/images/5dc960439a091f7496081fb64527880d.jpg

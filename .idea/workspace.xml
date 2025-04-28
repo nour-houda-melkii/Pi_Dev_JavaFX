@@ -6,18 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="67f812a0-6c1d-4f08-bb79-468f0bf5180a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ConfirmationPurchaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ConfirmationPurchaseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_history.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data_history.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Services/FavoriServices.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Services/FavoriServices.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ProductFrontController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ProductFrontController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/StripePaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/StripePaymentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/stripe_payment_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/stripe_payment_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ConfirmationPurchaseController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ConfirmationPurchaseController$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ConfirmationPurchaseController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ConfirmationPurchaseController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/DataHistoryController$HistoryEntryItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/DataHistoryController$HistoryEntryItem.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/DataHistoryController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/DataHistoryController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/StripePaymentController$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/StripePaymentController$JavaConnector.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/entities/user.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entities/user.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/controllers/StripePaymentController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/StripePaymentController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/data_history_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/data_history_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/stripe_payment_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/stripe_payment_view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -217,6 +211,8 @@
       <workItem from="1745827899470" duration="1504000" />
       <workItem from="1745833555037" duration="3386000" />
       <workItem from="1745841121245" duration="7000" />
+      <workItem from="1745842044399" duration="1751000" />
+      <workItem from="1745861373215" duration="2590000" />
     </task>
     <servers />
   </component>

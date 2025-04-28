@@ -198,7 +198,7 @@ public class StripePaymentController {
     @FXML
     private void handleBackToConfirmation() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/confiramtion_purchase.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/confirmation_purchase.fxml"));
             Parent root = loader.load();
 
             ConfirmationPurchaseController controller = loader.getController();

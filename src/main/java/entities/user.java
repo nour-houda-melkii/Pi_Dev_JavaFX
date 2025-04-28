@@ -189,21 +189,9 @@ public class user {
         return isVerified;
     }
 
-    public void setIsVerified(boolean isVerified) {
-        this.isVerified.set(isVerified);
-    }
 
-    public String getVerificationToken() {
-        return verificationToken.get();
-    }
 
-    public StringProperty verificationTokenProperty() {
-        return verificationToken;
-    }
 
-    public void setVerificationToken(String verificationToken) {
-        this.verificationToken.set(verificationToken);
-    }
 
     public String getPhone() {
         return null;
