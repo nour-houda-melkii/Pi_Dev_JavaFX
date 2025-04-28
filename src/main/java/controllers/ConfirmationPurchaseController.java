@@ -1,5 +1,6 @@
 package controllers;
 
+import Services.PaymentService;
 import entities.Commande;
 import entities.CommandeLigne;
 import entities.Produit;
@@ -40,21 +41,28 @@ public class ConfirmationPurchaseController {
     @FXML private Label totalAmountLabel;
     @FXML private Label itemCountLabel;
     @FXML private Button confirmButton;
-    @FXML private Button paymentButton; // New button for proceeding to payment
+    @FXML private Button paymentButton;
 
     private List<Produit> cartProducts;
     private Map<Integer, Integer> productQuantities = new HashMap<>();
     private String orderReference;
     private String totalAmount;
     private final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
-    private boolean orderProcessed = false; // Flag to track if order has been processed
+    private boolean orderProcessed = false;
 
     // Email configuration
     private static final String EMAIL_HOST = "smtp.gmail.com";
     private static final String EMAIL_PORT = "587";
-    private static final String SENDER_EMAIL = "nourmelki05@gmail.com"; // Change to your store email
-    private static final String SENDER_PASSWORD = "inom yuqm ciop jorf"; // Use app password for Gmail
+    private static final String SENDER_EMAIL = "nourmelki05@gmail.com";
+    private static final String SENDER_PASSWORD = "inom yuqm ciop jorf";
     private int currentUserId;
+
+    // Add payment service
+    private PaymentService paymentService;
+
+    public ConfirmationPurchaseController() {
+        this.paymentService = new PaymentService();
+    }
 
     public void setCurrentUserId(int userId) {
         this.currentUserId = userId;
@@ -155,6 +163,12 @@ public class ConfirmationPurchaseController {
             // Update order processed status
             orderProcessed = true;
 
+            // Show the payment button now that the order is processed
+            if (paymentButton != null) {
+                paymentButton.setVisible(true);
+                paymentButton.setManaged(true);
+            }
+
             // Proceed to payment
             proceedToStripePayment();
         } catch (SQLException e) {
@@ -188,7 +202,8 @@ public class ConfirmationPurchaseController {
                 })
                 .collect(Collectors.toList());
 
-        // Save to database
+        // Save to database using your service classes
+        // Example: commandeService.insert(commande, lignes);
     }
 
     @FXML
@@ -217,6 +232,50 @@ public class ConfirmationPurchaseController {
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Failed to navigate to Stripe payment view", e);
             showAlert("Error", "Failed to navigate to payment page: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleDirectStripeCheckout() {
+        if (!validateFields()) {
+            return;
+        }
+
+        try {
+            // Create order in database first
+            createOrderInDatabase();
+
+            // Calculate total amount (remove currency symbol and parse)
+            String amountStr = totalAmount.replaceAll("[^\\d.]", "");
+            double amount = Double.parseDouble(amountStr);
+
+            // Create Stripe Checkout session
+            String checkoutUrl = paymentService.createStripeCheckoutSession(
+                    amount,
+                    orderReference,
+                    fullNameField.getText(),
+                    emailField.getText()
+            );
+
+            // Open checkout URL in browser
+            java.awt.Desktop.getDesktop().browse(java.net.URI.create(checkoutUrl));
+
+            // Show instructions to user
+            showAlert("Stripe Checkout", "Please complete your payment in the browser window that has opened. " +
+                    "After payment, please return to this application.");
+
+            // Update order processed status
+            orderProcessed = true;
+
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to create order", e);
+            showAlert("Order Error", "Failed to create order: " + e.getMessage());
+        } catch (com.stripe.exception.StripeException e) {
+            LOGGER.log(Level.SEVERE, "Failed to create Stripe Checkout session", e);
+            showAlert("Payment Error", "Failed to create payment session: " + e.getMessage());
+        } catch (IOException e) {
+            LOGGER.log(Level.SEVERE, "Failed to open browser", e);
+            showAlert("Error", "Failed to open payment page in browser: " + e.getMessage());
         }
     }
 
@@ -256,17 +315,6 @@ public class ConfirmationPurchaseController {
 
     /**
      * Public method to send confirmation email
-     *
-     * @param toEmail Recipient email address
-     * @param password Customer password
-     * @param name Customer full name
-     * @param address Customer shipping address
-     * @param phone Customer phone number
-     * @param orderRef Order reference number
-     * @param amount Total order amount
-     * @param products Products in order
-     * @param quantities Product quantities
-     * @return boolean indicating if email was sent successfully
      */
     public boolean sendConfirmationEmail(String toEmail, String password, String name, String address,
                                          String phone, String orderRef, String amount,
@@ -331,7 +379,7 @@ public class ConfirmationPurchaseController {
             // Payment information - Modified to show payment is pending
             emailContent.append("<div class='payment-info'>");
             emailContent.append("<p><strong>Payment Status:</strong> Pending</p>");
-            emailContent.append("<p><strong>Payment Method:</strong> Not yet selected</p>");
+            emailContent.append("<p><strong>Payment Method:</strong> Stripe (Online Payment)</p>");
             emailContent.append("</div>");
 
             // Order information box
@@ -370,12 +418,12 @@ public class ConfirmationPurchaseController {
             emailContent.append("</tr>");
             emailContent.append("</table>");
 
-            // Payment reminder
-            emailContent.append("<p><strong>Please note:</strong> You still need to complete your payment to finalize your order. You can pay online or contact our customer service team.</p>");
+            // Payment instructions
+            emailContent.append("<p><strong>Payment Instructions:</strong> You'll be redirected to our secure payment page to complete your purchase. If you experience any issues, please contact our support team.</p>");
 
-            // Call to action button
+            // Call to action button for payment
             emailContent.append("<div style='text-align: center;'>");
-            emailContent.append("<a href='https://sahatech.com/track-order?ref=").append(orderRef).append("' class='btn'>Track Your Order</a>");
+            emailContent.append("<a href='https://sahatech.com/payment?ref=").append(orderRef).append("' class='btn'>Complete Payment</a>");
             emailContent.append("</div>");
 
             emailContent.append("<p>If you have any questions or need assistance, please don't hesitate to contact our customer service at <a href='mailto:support@sahatech.com'>support@sahatech.com</a>.</p>");

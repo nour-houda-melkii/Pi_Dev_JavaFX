@@ -6,36 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="67f812a0-6c1d-4f08-bb79-468f0bf5180a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_history.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data_history.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AddCategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AddCategoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/AdminDashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/AdminDashboardController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ConfirmationPurchaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ConfirmationPurchaseController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/DataHistoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/DataHistoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/EditCategoryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/EditCategoryController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/EditProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/EditProductController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ListeProduitController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ListeProduitController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controllers/StripePaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/StripePaymentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/entities/Produit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entities/Produit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/entities/user.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entities/user.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/data_history_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data_history_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/AddCategoryController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/AddCategoryController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/AdminDashboardController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/AdminDashboardController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/stripe_payment_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/stripe_payment_view.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/controllers/ConfirmationPurchaseController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ConfirmationPurchaseController$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/controllers/ConfirmationPurchaseController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ConfirmationPurchaseController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/controllers/DataHistoryController$HistoryEntryItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/DataHistoryController$HistoryEntryItem.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/controllers/DataHistoryController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/DataHistoryController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/EditCategoryController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/EditCategoryController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/EditProductController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/EditProductController$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/EditProductController$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/EditProductController$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/EditProductController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/EditProductController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ListeProduitController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ListeProduitController$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ListeProduitController$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ListeProduitController$2.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/ListeProduitController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/ListeProduitController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/StripePaymentController$JavaConnector.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/StripePaymentController$JavaConnector.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/StripePaymentController$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/controllers/StripePaymentController$JavaConnector.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/controllers/StripePaymentController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/StripePaymentController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/data_history_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/data_history_view.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/entities/user.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/entities/user.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/stripe_payment_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/stripe_payment_view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,8 +28,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Kotlin Class" />
-        <option value="FxmlFile" />
         <option value="Class" />
+        <option value="FxmlFile" />
       </list>
     </option>
   </component>
@@ -79,34 +61,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "Application.produit.executor": "Run",
-    "Maven.produit [clean].executor": "Run",
-    "Maven.produit [compile].executor": "Run",
-    "Maven.produit [install].executor": "Run",
-    "Maven.produit [org.openjfx:javafx-maven-plugin:0.0.8:run].executor": "Run",
-    "Notification.DisplayName-DoNotAsk-Vcs Important Messages": "VCS important messages",
-    "Notification.DoNotAsk-Vcs Important Messages": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "gestion__produit",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/nourm/OneDrive/Bureau/krayett zahy/gestion_produit_copy",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "preferences.JavaFX",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.produit.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.produit [clean].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.produit [compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.produit [install].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.produit [org.openjfx:javafx-maven-plugin:0.0.8:run].executor&quot;: &quot;Run&quot;,
+    &quot;Notification.DisplayName-DoNotAsk-Vcs Important Messages&quot;: &quot;VCS important messages&quot;,
+    &quot;Notification.DoNotAsk-Vcs Important Messages&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;gestion__produit&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/nourm/OneDrive/Bureau/krayett zahy/gestion_produit&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.JavaFX&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
       <recent name="controllers" />
@@ -232,6 +214,9 @@
       <workItem from="1745773875617" duration="751000" />
       <workItem from="1745776644012" duration="3814000" />
       <workItem from="1745780760397" duration="5000" />
+      <workItem from="1745827899470" duration="1504000" />
+      <workItem from="1745833555037" duration="3386000" />
+      <workItem from="1745841121245" duration="7000" />
     </task>
     <servers />
   </component>
