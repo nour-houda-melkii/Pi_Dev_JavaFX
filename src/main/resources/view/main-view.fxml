@@ -24,14 +24,27 @@
             <Button fx:id="backendButton" onAction="#handleBackend"
                     style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 8 15;"
                     text="Backend" />
+
+
         </HBox>
     </top>
 
     <!-- Center: Content -->
     <center>
+
         <VBox spacing="15" style="-fx-padding: 20; -fx-background-color: #f5f7fa;">
+
+            <!-- Label Notification (au début, invisible) -->
+            <Label fx:id="notificationLabel" text=""
+                   style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 10; -fx-font-weight: bold;
+                  -fx-background-radius: 5; -fx-alignment: center; -fx-font-size: 14px;"
+                   visible="false" managed="false"/>
+
             <!-- Header avec bouton d'ajout -->
             <HBox alignment="CENTER_LEFT" spacing="20">
+
+                <TextField fx:id="searchField" promptText="Rechercher par description, date ou médecin..."
+                           style="-fx-background-radius: 5; -fx-padding: 8 15; -fx-pref-width: 300;"/>
                 <Region HBox.hgrow="ALWAYS"/>
                 <Button  fx:id="addBtn" text="+ Ajouter" onAction="#handleAdd"
                         style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;

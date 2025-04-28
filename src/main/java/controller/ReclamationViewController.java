@@ -29,6 +29,7 @@ public class ReclamationViewController {
     @FXML private FlowPane cardsContainer;
     @FXML private ComboBox<String> typeFilter;
     @FXML private ComboBox<String> statusFilter;
+    @FXML private TextField searchField;
 
     private final ReclamationServices reclamationService = new ReclamationServices();
     private final ReponseService reponseService = new ReponseService();
@@ -38,6 +39,7 @@ public class ReclamationViewController {
     public void initialize() {
         setupFilters();
         loadData();
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> applyFilters());
     }
 
     private void setupFilters() {
@@ -58,9 +60,7 @@ public class ReclamationViewController {
         }
 
         // Setup status filter options
-        statusFilter.getItems().addAll("Tous les statuts", "En attente", "Traitée", "Rejetée");
-        statusFilter.setValue("Tous les statuts");
-        statusFilter.setOnAction(e -> applyFilters());
+        statusFilter.setVisible(false); // Cacher le ComboBox de statut
     }
 
     @FXML
@@ -70,23 +70,25 @@ public class ReclamationViewController {
 
     private void applyFilters() {
         String selectedType = typeFilter.getValue();
-        String selectedStatus = statusFilter.getValue();
+        String searchText = searchField.getText().toLowerCase().trim();
 
         try {
             List<Reclamation> allReclamations = reclamationService.getAllReclamationsWithNames();
             List<Reclamation> filteredList = new ArrayList<>(allReclamations);
 
-            // Apply type filter if not "Tous les types"
-            if (!"Tous les types".equals(selectedType)) {
+            if (selectedType != null && !"Tous les types".equals(selectedType)) {
                 filteredList = filteredList.stream()
-                        .filter(r -> selectedType.equals(r.getTypeReclamationName()))
+                        .filter(r -> selectedType.equalsIgnoreCase(r.getTypeReclamationName()))
                         .collect(Collectors.toList());
             }
 
-            // Apply status filter if not "Tous les statuts"
-            if (!"Tous les statuts".equals(selectedStatus)) {
+            if (!searchText.isEmpty()) {
                 filteredList = filteredList.stream()
-                        .filter(r -> selectedStatus.equals(r.getStatus()))
+                        .filter(r ->
+                                (r.getDescription() != null && r.getDescription().toLowerCase().contains(searchText)) ||
+                                        (r.getFormattedDate() != null && r.getFormattedDate().toLowerCase().contains(searchText)) ||
+                                        (r.getMedecinName() != null && r.getMedecinName().toLowerCase().contains(searchText))
+                        )
                         .collect(Collectors.toList());
             }
 
@@ -118,38 +120,15 @@ public class ReclamationViewController {
             card.setPrefWidth(300);
             card.setMaxWidth(300);
 
-            // Card header with ID and type
+            // Card header with type only (ID removed)
             HBox header = new HBox();
             header.setAlignment(Pos.CENTER_LEFT);
             header.setSpacing(10);
 
-            Label idLabel = new Label("#" + reclamation.getId());
-            idLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-
             Label typeLabel = new Label(reclamation.getTypeReclamationName());
             typeLabel.setStyle("-fx-background-color: #f0f0f0; -fx-padding: 3 8; -fx-background-radius: 4;");
 
-            header.getChildren().addAll(idLabel, typeLabel);
-
-            // Status indicator
-            String status = reclamation.getStatus() != null ? reclamation.getStatus() : "En attente";
-            Label statusLabel = new Label(status);
-            String statusColor;
-
-            switch (status) {
-                case "Traitée":
-                    statusColor = "#28a745";
-                    break;
-                case "Rejetée":
-                    statusColor = "#dc3545";
-                    break;
-                default:
-                    statusColor = "#ffc107";
-                    break;
-            }
-
-            statusLabel.setStyle("-fx-background-color: " + statusColor + "; -fx-text-fill: white; " +
-                    "-fx-padding: 3 8; -fx-background-radius: 4;");
+            header.getChildren().add(typeLabel);
 
             // Date info
             Label dateLabel = new Label("Date: " + reclamation.getFormattedDate());
@@ -182,7 +161,6 @@ public class ReclamationViewController {
             // Add all elements to card
             card.getChildren().addAll(
                     header,
-                    statusLabel,
                     dateLabel,
                     medecinLabel,
                     descriptionTitle,
@@ -204,7 +182,7 @@ public class ReclamationViewController {
         }
 
         Dialog<Void> dialog = new Dialog<>();
-        dialog.setTitle("Réponses pour la réclamation #" + reclamation.getId());
+        dialog.setTitle("Réponses pour cette réclamation");
 
         VBox content = new VBox(10);
         content.setPadding(new Insets(20));
@@ -235,7 +213,7 @@ public class ReclamationViewController {
 
     private void showResponseDialog(Reclamation reclamation) {
         Dialog<Reponse> dialog = new Dialog<>();
-        dialog.setTitle("Répondre à la réclamation #" + reclamation.getId());
+        dialog.setTitle("Répondre à la réclamation");
 
         // Configuration des boutons
         ButtonType saveButtonType = new ButtonType("Enregistrer", ButtonBar.ButtonData.OK_DONE);
@@ -290,18 +268,15 @@ public class ReclamationViewController {
                 reponseService.addResponse(reponse);
                 showAlert("Succès", "Réponse enregistrée avec succès!", Alert.AlertType.INFORMATION);
 
-                // Update status to "Traitée"
+                // Update status to "Traitée" (gardé pour la fonctionnalité interne)
                 try {
-                    // Assuming your ReclamationServices has a method to update status
                     reclamationService.updateStatus(reclamation.getId(), "Traitée");
                 } catch (Exception ex) {
-                    // Fallback - attempt direct SQL update if method doesn't exist
                     try {
                         String updateQuery = "UPDATE reclamation SET status = 'Traitée' WHERE id = " + reclamation.getId();
                         reclamationService.executeUpdate(updateQuery);
                     } catch (Exception e) {
-                        showAlert("Avertissement", "La réponse a été enregistrée mais le statut n'a pas pu être mis à jour.",
-                                Alert.AlertType.WARNING);
+                        // Pas d'alerte car nous ne montrons plus le statut
                     }
                 }
 

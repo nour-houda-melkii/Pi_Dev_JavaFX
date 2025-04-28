@@ -1,6 +1,8 @@
 package controller;
 
 import entity.Reclamation;
+import entity.Reponse;
+import javafx.animation.FadeTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -12,8 +14,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import services.ReclamationServices;
 import javafx.event.ActionEvent;
+import javafx.animation.FadeTransition;
+import javafx.util.Duration;
 
 
 import java.io.*;
@@ -31,6 +36,10 @@ public class MainController {
     @FXML private Button editBtn;
     @FXML private Button deleteBtn;
     @FXML private Button addBtn;
+    @FXML private TextField searchField;
+    @FXML private Label notificationLabel;
+
+
 
     private final ReclamationServices service = new ReclamationServices();
     private Reclamation selectedReclamation;
@@ -44,6 +53,44 @@ public class MainController {
         stage.setTitle("Gestion des Réclamations");
         stage.show();
     }
+    private void setupSearchField() {
+        if (searchField != null) {
+            searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+                filterReclamations(newValue);
+            });
+        }
+    }
+
+    private void filterReclamations(String keyword) {
+        try {
+            List<Reclamation> reclamations = service.getAllReclamationsWithNames();
+            cardsContainer.getChildren().clear();
+
+            for (Reclamation reclamation : reclamations) {
+                // Vérifie si la description ou le type correspond au texte saisi
+                if (reclamation.getDescription().toLowerCase().contains(keyword.toLowerCase()) ||
+                        reclamation.getTypeReclamationName().toLowerCase().contains(keyword.toLowerCase()) ||
+                        reclamation.getMedecinName().toLowerCase().contains(keyword.toLowerCase())) {
+
+                    VBox card = createCard(reclamation);
+                    cardsContainer.getChildren().add(card);
+                }
+            }
+
+
+
+            if (cardsContainer.getChildren().isEmpty()) {
+                Label emptyLabel = new Label("Aucune réclamation correspondante");
+                cardsContainer.getChildren().add(emptyLabel);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Erreur de base de données:");
+            e.printStackTrace();
+        }
+    }
+
+
 
     @FXML
     public void initialize() {
@@ -51,6 +98,7 @@ public class MainController {
         try {
             loadReclamations();
             setupSelectionButtons();
+            setupSearchField(); // <-- ajouter ceci
             System.out.println("Initialisation du contrôleur terminée");
         } catch (Exception e) {
             System.err.println("Erreur dans initialize():");
@@ -58,15 +106,12 @@ public class MainController {
         }
 
         if(addBtn != null) {
-            addBtn.setOnAction(e -> {
-                System.out.println("Bouton cliqué"); // Test
-                handleAdd();
-            });
+            addBtn.setOnAction(e -> handleAdd());
         } else {
-            System.err.println("Erreur: generateDescriptionButton est null!");
+            System.err.println("Erreur: addBtn est null!");
         }
-
     }
+
 
 
     private void loadReclamations() {
@@ -94,6 +139,8 @@ public class MainController {
             cardsContainer.getChildren().add(errorLabel);
         }
     }
+
+
 
     private VBox createCard(Reclamation reclamation) {
         VBox card = new VBox(10);
@@ -350,6 +397,62 @@ public class MainController {
 
     public void refreshReclamations() {
         loadReclamations();
+    }
+
+
+    // Add these methods to your MainController class
+
+    /**
+     * Shows a notification message in the main view
+     * @param message The message to display
+     * @param isError Whether this is an error message
+     */
+    public void showNotification(String message, boolean isError) {
+        if (notificationLabel != null) {
+            notificationLabel.setText(message);
+
+            // Style based on message type
+            if (isError) {
+                notificationLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
+            } else {
+                notificationLabel.setStyle("-fx-text-fill: #2ecc71; -fx-font-weight: bold;");
+            }
+
+            // Make the notification visible
+            notificationLabel.setVisible(true);
+
+            // Create a fade-out effect after a few seconds
+            FadeTransition fadeOut = new FadeTransition(Duration.seconds(5), notificationLabel);
+            fadeOut.setFromValue(1.0);
+            fadeOut.setToValue(0.0);
+            fadeOut.setDelay(Duration.seconds(3));
+            fadeOut.play();
+
+            // Hide the label after animation completes
+            fadeOut.setOnFinished(e -> notificationLabel.setVisible(false));
+        }
+    }
+
+    /**
+     * Called when a response is added to a reclamation
+     * @param reclamationId The ID of the reclamation
+     * @param responseText The response text that was added
+     */
+    public void onResponseAdded(int reclamationId, String responseText) {
+        try {
+            // Fetch the updated reclamation with the new response
+            Reclamation updatedReclamation = service.getReclamationByIdWithNames(reclamationId);
+
+            if (updatedReclamation != null) {
+                // Show a notification
+                showNotification("Réponse ajoutée à la réclamation #" + reclamationId, false);
+
+                // Refresh the view to show the updated data
+                loadReclamations();
+            }
+        } catch (SQLException e) {
+            showAlert("Erreur", "Impossible de charger la réclamation mise à jour: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
 }

@@ -9,6 +9,9 @@ import java.util.List;
 
 public class ReponseService {
 
+    private Connection connection;
+
+
     public void addResponse(Reponse reponse) {
         String sql = "INSERT INTO reponse (contenu, date_reponse, reclamation_id) VALUES (?, ?, ?)";
 
@@ -33,6 +36,48 @@ public class ReponseService {
             throw new RuntimeException("Erreur lors de l'ajout de la réponse", e);
         }
     }
+
+    public Reponse getReponseById(int id) throws SQLException {
+        String query = "SELECT * FROM reponse WHERE id = ?";
+
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            pst.setInt(1, id);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    Reponse reponse = new Reponse();
+                    reponse.setId(rs.getInt("id"));
+                    reponse.setContenu(rs.getString("contenu"));
+                    reponse.setDateReponse(rs.getDate("date_reponse").toLocalDate());
+                    reponse.setReclamationId(rs.getInt("id_reclamation"));
+                    return reponse;
+                }
+            }
+        }
+        return null;
+    }
+
+    public List<Reponse> getReponsesByReclamationId(int reclamationId) throws SQLException {
+        List<Reponse> reponses = new ArrayList<>();
+        String query = "SELECT * FROM reponse WHERE id_reclamation = ? ORDER BY date_reponse DESC";
+
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            pst.setInt(1, reclamationId);
+
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    Reponse reponse = new Reponse();
+                    reponse.setId(rs.getInt("id"));
+                    reponse.setContenu(rs.getString("contenu"));
+                    reponse.setDateReponse(rs.getDate("date_reponse").toLocalDate());
+                    reponse.setReclamationId(rs.getInt("id_reclamation"));
+                    reponses.add(reponse);
+                }
+            }
+        }
+        return reponses;
+    }
+
 
     public List<Reponse> getAllResponses() throws SQLException {
         List<Reponse> reponses = new ArrayList<>();

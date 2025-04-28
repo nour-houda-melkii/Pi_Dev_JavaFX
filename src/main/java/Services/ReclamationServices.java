@@ -34,6 +34,16 @@ public class ReclamationServices {
         }
     }
 
+    public void addResponseToReclamation(int reclamationId, String response) throws SQLException {
+        String query = "UPDATE reclamation SET reponse = ? WHERE id = ?";
+
+        try (PreparedStatement pst = connection.prepareStatement(query)) {
+            pst.setString(1, response);
+            pst.setInt(2, reclamationId);
+            pst.executeUpdate();
+        }
+    }
+
     public boolean reclamationExistsExcludingCurrent(Reclamation reclamation) throws SQLException {
         String query = "SELECT COUNT(*) FROM reclamation WHERE " +
                 "type_reclamation_id = ? AND medecin_id = ? AND date_reclamation = ? " +
@@ -311,6 +321,7 @@ public class ReclamationServices {
             stmt.executeUpdate(sql);
         }
     }
+
 
 
 }

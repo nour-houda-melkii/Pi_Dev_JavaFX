@@ -11,13 +11,17 @@
     <Label text="Liste des Réclamations" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
 
     <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Label text="Recherche:"/>
+        <TextField fx:id="searchField" promptText="Tapez pour rechercher..."/>
+
+        <Button text="Actualiser" onAction="#refreshReclamations"/>
+
         <Label text="Filtrer par type:"/>
         <ComboBox fx:id="typeFilter" promptText="Tous les types"/>
 
-        <Label text="Filtrer par statut:"/>
-        <ComboBox fx:id="statusFilter" promptText="Tous les statuts"/>
-
-        <Button text="Actualiser" onAction="#refreshReclamations"/>
+        <!-- Nous gardons le ComboBox dans le FXML mais le rendons invisible via le code Java -->
+        <Label text="Filtrer par statut:" visible="false"/>
+        <ComboBox fx:id="statusFilter" promptText="Tous les statuts" visible="false"/>
     </HBox>
 
     <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
