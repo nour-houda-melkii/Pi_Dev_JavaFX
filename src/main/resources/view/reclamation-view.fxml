@@ -22,6 +22,8 @@
         <!-- Nous gardons le ComboBox dans le FXML mais le rendons invisible via le code Java -->
         <Label text="Filtrer par statut:" visible="false"/>
         <ComboBox fx:id="statusFilter" promptText="Tous les statuts" visible="false"/>
+
+
     </HBox>
 
     <ScrollPane fitToWidth="true" hbarPolicy="NEVER">

@@ -3,6 +3,7 @@ package controller;
 import entity.Reclamation;
 import entity.Reponse;
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -16,10 +17,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import services.ReclamationServices;
+import services.NotificationService;
 import javafx.event.ActionEvent;
-import javafx.animation.FadeTransition;
-import javafx.util.Duration;
-
+import javafx.geometry.Insets;
 
 import java.io.*;
 import java.net.URL;
@@ -28,36 +28,257 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import utils.NotificationManager;
+import utils.NotificationManager.NotificationType;
 
 public class MainController {
-    @FXML private ScrollPane scrollPane;
-    @FXML private FlowPane cardsContainer;
-    @FXML private Button editBtn;
-    @FXML private Button deleteBtn;
-    @FXML private Button addBtn;
-    @FXML private TextField searchField;
-    @FXML private Label notificationLabel;
+    @FXML
+    private ScrollPane scrollPane;
+    @FXML
+    private FlowPane cardsContainer;
+    @FXML
+    private Button editBtn;
+    @FXML
+    private Button deleteBtn;
+    @FXML
+    private Button addBtn;
+    @FXML
+    private TextField searchField;
+    @FXML
+    private Label notificationLabel;
+    @FXML
+    private StackPane notificationBellContainer;
+    @FXML
+    private Label notificationCountLabel;
+    @FXML
+    private Button notificationBellButton;
 
-
-
+    private int notificationCount = 0;
+    private List<String> pendingNotifications = new ArrayList<>();
     private final ReclamationServices service = new ReclamationServices();
     private Reclamation selectedReclamation;
 
-    public static void show(Stage stage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(MainController.class.getResource("/view/main-view.fxml"));
-        Parent root = loader.load();
+    @FXML
+    public void initialize() {
+        System.out.println("Initialisation du MainController démarrée");
 
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.setTitle("Gestion des Réclamations");
-        stage.show();
+        // S'abonner au service de notification
+        NotificationService.getInstance().addNotificationListener(this::addNotification);
+
+        // Initialiser les éléments de notification
+        notificationCount = 0;
+        pendingNotifications = new ArrayList<>();
+
+        // Vérifier les éléments d'interface
+        if (notificationCountLabel != null) {
+            notificationCountLabel.setVisible(false);
+            System.out.println("notificationCountLabel initialisé correctement");
+        } else {
+            System.err.println("ERREUR: notificationCountLabel est null dans initialize()");
+        }
+
+        if (notificationBellButton != null) {
+            System.out.println("notificationBellButton initialisé correctement");
+        } else {
+            System.err.println("ERREUR: notificationBellButton est null dans initialize()");
+        }
+
+        try {
+            loadReclamations();
+        } catch (Exception e) {
+            System.err.println("Erreur lors du chargement des réclamations: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        try {
+            setupSelectionButtons();
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la configuration des boutons de sélection: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        try {
+            setupSearchField();
+        } catch (Exception e) {
+            System.err.println("Erreur lors de la configuration du champ de recherche: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        if (addBtn != null) {
+            addBtn.setOnAction(e -> handleAdd());
+        } else {
+            System.err.println("Erreur: addBtn est null!");
+        }
+
+        if (scrollPane != null) {
+            scrollPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
+                if (newScene != null) {
+                    newScene.setUserData(this);
+                    System.out.println("MainController défini comme userData de la scène");
+                }
+            });
+        } else {
+            System.err.println("Erreur: scrollPane est null!");
+        }
+
+        System.out.println("Initialisation du MainController terminée");
     }
+
+    @FXML
+    private void handleNotificationBell(ActionEvent event) {
+        System.out.println("Clic sur la cloche de notification détecté");
+        System.out.println("Nombre de notifications en attente : " + pendingNotifications.size());
+
+        if (pendingNotifications.isEmpty()) {
+            showAlert("Notifications", "Aucune nouvelle notification", Alert.AlertType.INFORMATION);
+            return;
+        }
+
+        try {
+            // Afficher les notifications dans une fenêtre
+            Dialog<Void> dialog = new Dialog<>();
+            dialog.setTitle("Notifications");
+            dialog.setHeaderText("Nouvelles réponses");
+
+            VBox content = new VBox(10);
+            content.setPadding(new Insets(20));
+
+            for (String notification : pendingNotifications) {
+                Label notifLabel = new Label(notification);
+                notifLabel.setWrapText(true);
+                notifLabel.setStyle("-fx-padding: 10; -fx-background-color: #f8f9fa; -fx-border-color: #e0e0e0; -fx-border-radius: 5;");
+                content.getChildren().add(notifLabel);
+            }
+
+            ScrollPane scrollPane = new ScrollPane(content);
+            scrollPane.setFitToWidth(true);
+            scrollPane.setPrefHeight(400);
+
+            dialog.getDialogPane().setContent(scrollPane);
+
+            // Ajouter un bouton de fermeture
+            ButtonType closeButton = ButtonType.CLOSE;
+            dialog.getDialogPane().getButtonTypes().add(closeButton);
+
+            // Réinitialiser le compteur après lecture
+            dialog.setOnCloseRequest(e -> {
+                resetNotificationCount();
+            });
+
+            System.out.println("Affichage de la fenêtre de dialogue des notifications");
+            dialog.showAndWait();
+            System.out.println("Fenêtre de dialogue des notifications fermée");
+        } catch (Exception e) {
+            System.err.println("ERREUR lors de l'affichage des notifications: " + e.getMessage());
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible d'afficher les notifications: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+    public void addNotification(String message) {
+        System.out.println("addNotification appelée avec message: " + message);
+
+        notificationCount++;
+        pendingNotifications.add(message);
+
+        // Important: utilisez Platform.runLater pour mettre à jour l'UI depuis un autre thread
+        Platform.runLater(() -> updateNotificationCount());
+    }
+
+    private void updateNotificationCount() {
+        System.out.println("updateNotificationCount appelée, count=" + notificationCount);
+
+        if (notificationCountLabel == null) {
+            System.err.println("ERREUR: notificationCountLabel est null!");
+            return;
+        }
+
+        if (notificationCount > 0) {
+            notificationCountLabel.setText(String.valueOf(notificationCount));
+            notificationCountLabel.setVisible(true);
+            System.out.println("Notification count affiché: " + notificationCountLabel.getText());
+        } else {
+            notificationCountLabel.setVisible(false);
+        }
+    }
+
+    private void resetNotificationCount() {
+        notificationCount = 0;
+        pendingNotifications.clear();
+        updateNotificationCount();
+    }
+
+    /**
+     * Ouvre la vue des réclamations
+     */
+    @FXML
+    private void handleReclamationsView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/reclamation-view.fxml"));
+            Parent root = loader.load();
+
+            ReclamationViewController controller = loader.getController();
+            controller.setMainController(this);
+            System.out.println("MainController passé à ReclamationViewController");
+
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.setTitle("Gestion des Réclamations");
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(scrollPane.getScene().getWindow());
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible d'ouvrir la vue des réclamations: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+    @FXML
+    private void handleBackend(ActionEvent event) {
+        try {
+            InputStream fxmlStream = getClass().getResourceAsStream("/view/backend-view.fxml");
+            if (fxmlStream == null) {
+                throw new IOException("Fichier backend-view.fxml introuvable dans les ressources");
+            }
+
+            FXMLLoader loader = new FXMLLoader();
+            Parent root = loader.load(fxmlStream);
+
+            // Si backend-view contient ReclamationViewController, configurez-le
+            if (loader.getController() instanceof ReclamationViewController) {
+                ReclamationViewController controller = (ReclamationViewController) loader.getController();
+                controller.setMainController(this);
+                System.out.println("MainController passé à ReclamationViewController dans handleBackend");
+            }
+
+            Stage stage = new Stage();
+            Scene scene = new Scene(root);
+            scene.setUserData(this);
+            stage.setScene(scene);
+            stage.setTitle("Administration SAHATECK");
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(((Node) event.getSource()).getScene().getWindow());
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setContentText("Erreur lors du chargement de l'interface admin: " + e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
     private void setupSearchField() {
         if (searchField != null) {
             searchField.textProperty().addListener((observable, oldValue, newValue) -> {
                 filterReclamations(newValue);
             });
+        } else {
+            System.err.println("ATTENTION: searchField est null dans setupSearchField()");
         }
     }
 
@@ -77,8 +298,6 @@ public class MainController {
                 }
             }
 
-
-
             if (cardsContainer.getChildren().isEmpty()) {
                 Label emptyLabel = new Label("Aucune réclamation correspondante");
                 cardsContainer.getChildren().add(emptyLabel);
@@ -89,30 +308,6 @@ public class MainController {
             e.printStackTrace();
         }
     }
-
-
-
-    @FXML
-    public void initialize() {
-        System.out.println("Initialisation du contrôleur démarrée");
-        try {
-            loadReclamations();
-            setupSelectionButtons();
-            setupSearchField(); // <-- ajouter ceci
-            System.out.println("Initialisation du contrôleur terminée");
-        } catch (Exception e) {
-            System.err.println("Erreur dans initialize():");
-            e.printStackTrace();
-        }
-
-        if(addBtn != null) {
-            addBtn.setOnAction(e -> handleAdd());
-        } else {
-            System.err.println("Erreur: addBtn est null!");
-        }
-    }
-
-
 
     private void loadReclamations() {
         try {
@@ -139,8 +334,6 @@ public class MainController {
             cardsContainer.getChildren().add(errorLabel);
         }
     }
-
-
 
     private VBox createCard(Reclamation reclamation) {
         VBox card = new VBox(10);
@@ -187,17 +380,17 @@ public class MainController {
 
         // Boutons
         HBox buttons = new HBox(10);
-        Button editBtn = new Button("Edit");
-        editBtn.setOnAction(e -> handleEdit(reclamation));
-        editBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; " +
+        Button localEditBtn = new Button("Edit");
+        localEditBtn.setOnAction(e -> handleEdit(reclamation));
+        localEditBtn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; " +
                 "-fx-background-radius: 5; -fx-padding: 5 10;");
 
-        Button deleteBtn = new Button("Delete");
-        deleteBtn.setOnAction(e -> handleDelete(reclamation));
-        deleteBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; " +
+        Button localDeleteBtn = new Button("Delete");
+        localDeleteBtn.setOnAction(e -> handleDelete(reclamation));
+        localDeleteBtn.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; " +
                 "-fx-background-radius: 5; -fx-padding: 5 10;");
 
-        buttons.getChildren().addAll(new Region(), editBtn, deleteBtn);
+        buttons.getChildren().addAll(new Region(), localEditBtn, localDeleteBtn);
         HBox.setHgrow(buttons.getChildren().get(0), Priority.ALWAYS);
 
         // Effet de survol
@@ -224,8 +417,14 @@ public class MainController {
                     c.setStyle("-fx-background-color: white; -fx-border-color: #e0e0e0;")
             );
             card.setStyle("-fx-background-color: #d4e6f1; -fx-border-color: #3498db;");
-            this.editBtn.setDisable(false);
-            this.deleteBtn.setDisable(false);
+
+            // Activer les boutons de la carte sélectionnée
+            if (editBtn != null) {
+                editBtn.setDisable(false);
+            }
+            if (deleteBtn != null) {
+                deleteBtn.setDisable(false);
+            }
         });
 
         card.getChildren().addAll(header, descriptionText, imageContainer, medecinLabel, buttons);
@@ -233,8 +432,17 @@ public class MainController {
     }
 
     private void setupSelectionButtons() {
-        editBtn.setDisable(true);
-        deleteBtn.setDisable(true);
+        if (editBtn != null) {
+            editBtn.setDisable(true);
+        } else {
+            System.err.println("ATTENTION: editBtn est null dans setupSelectionButtons()");
+        }
+
+        if (deleteBtn != null) {
+            deleteBtn.setDisable(true);
+        } else {
+            System.err.println("ATTENTION: deleteBtn est null dans setupSelectionButtons()");
+        }
     }
 
     private void handleEdit(Reclamation reclamation) {
@@ -250,37 +458,24 @@ public class MainController {
     @FXML
     private void handleAdd() {
         try {
-            // Charger le fichier FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/add-reclamation.fxml"));
             Parent root = loader.load();
 
-            // Configurer le contrôleur
             AddReclamationController controller = loader.getController();
             controller.setMainController(this);
-            if(controller == null) {
-                System.err.println("ERREUR: Controller non initialisé!");
-            }
 
-            // Initialiser les ComboBox avec les données
-
-
-            // Créer et afficher la fenêtre
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Ajouter une réclamation");
-            stage.initModality(Modality.APPLICATION_MODAL); // Rend la fenêtre modale
-            stage.showAndWait(); // Attend la fermeture de la fenêtre
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.showAndWait();
 
-            // Rafraîchir après fermeture
             loadReclamations();
-
         } catch (IOException e) {
             showAlert("Erreur", "Impossible d'ouvrir la fenêtre d'ajout : " + e.getMessage(), Alert.AlertType.ERROR);
             e.printStackTrace();
         }
     }
-
-
 
     @FXML
     private void handleEdit() {
@@ -292,8 +487,6 @@ public class MainController {
                 EditReclamationController controller = loader.getController();
                 controller.setReclamationToEdit(selectedReclamation);
                 controller.setMainController(this);
-
-                // Initialiser les ComboBox
                 controller.initialize();
 
                 Stage stage = new Stage();
@@ -316,74 +509,21 @@ public class MainController {
     private void handleDelete() {
         if (selectedReclamation != null) {
             try {
-                // Supprimer la conversion inutile puisque getId() retourne déjà un int
                 service.deleteReclamation(selectedReclamation.getId());
-                showAlert("Succès", "Réclamation supprimée !", Alert.AlertType.ERROR);
+                showAlert("Succès", "Réclamation supprimée !", Alert.AlertType.INFORMATION);
                 loadReclamations();
                 selectedReclamation = null;
-                editBtn.setDisable(true);
-                deleteBtn.setDisable(true);
+
+                if (editBtn != null) {
+                    editBtn.setDisable(true);
+                }
+                if (deleteBtn != null) {
+                    deleteBtn.setDisable(true);
+                }
             } catch (SQLException e) {
                 showAlert("Erreur", "Échec de suppression: " + e.getMessage(), Alert.AlertType.ERROR);
             }
         }
-    }
-
-    @FXML
-    private void handleBackend(ActionEvent event) {
-        try {
-            InputStream fxmlStream = getClass().getResourceAsStream("/view/backend-view.fxml");
-            if (fxmlStream == null) {
-                throw new IOException("Fichier backend-view.fxml introuvable dans les ressources");
-            }
-
-            FXMLLoader loader = new FXMLLoader();
-            Parent root = loader.load(fxmlStream);
-
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Administration SAHATECK");
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.initOwner(((Node)event.getSource()).getScene().getWindow());
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setContentText("Erreur lors du chargement de l'interface admin: " + e.getMessage());
-            alert.showAndWait();
-        }
-    }
-
-    private void listAllFilesInResources() {
-        try {
-            System.out.println("Contenu de resources:");
-            Files.walk(Paths.get("src/main/resources"))
-                    .forEach(System.out::println);
-        } catch (IOException e) {
-            System.out.println("Erreur lecture resources: " + e.getMessage());
-        }
-    }
-
-    private void showDetailedError(String title, Exception e) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText("Échec du chargement");
-
-        TextArea textArea = new TextArea(
-                "Message: " + e.getMessage() + "\n\n" +
-                        "Stack Trace:\n" + getStackTraceAsString(e));
-        textArea.setEditable(false);
-
-        alert.getDialogPane().setContent(textArea);
-        alert.showAndWait();
-    }
-
-    private String getStackTraceAsString(Exception e) {
-        StringWriter sw = new StringWriter();
-        e.printStackTrace(new PrintWriter(sw));
-        return sw.toString();
     }
 
     private void showAlert(String title, String message, Alert.AlertType type) {
@@ -394,65 +534,44 @@ public class MainController {
         alert.showAndWait();
     }
 
-
     public void refreshReclamations() {
         loadReclamations();
     }
 
+    public void showSimpleNotification(String message) {
+        NotificationManager.showInlineNotification(notificationLabel, message, NotificationType.SUCCESS);
+    }
 
-    // Add these methods to your MainController class
-
-    /**
-     * Shows a notification message in the main view
-     * @param message The message to display
-     * @param isError Whether this is an error message
-     */
     public void showNotification(String message, boolean isError) {
+        NotificationType type = isError ? NotificationType.ERROR : NotificationType.SUCCESS;
+        NotificationManager.showInlineNotification(notificationLabel, message, type);
+
         if (notificationLabel != null) {
             notificationLabel.setText(message);
 
-            // Style based on message type
             if (isError) {
                 notificationLabel.setStyle("-fx-text-fill: #e74c3c; -fx-font-weight: bold;");
             } else {
                 notificationLabel.setStyle("-fx-text-fill: #2ecc71; -fx-font-weight: bold;");
             }
 
-            // Make the notification visible
             notificationLabel.setVisible(true);
 
-            // Create a fade-out effect after a few seconds
             FadeTransition fadeOut = new FadeTransition(Duration.seconds(5), notificationLabel);
             fadeOut.setFromValue(1.0);
             fadeOut.setToValue(0.0);
             fadeOut.setDelay(Duration.seconds(3));
             fadeOut.play();
 
-            // Hide the label after animation completes
             fadeOut.setOnFinished(e -> notificationLabel.setVisible(false));
         }
     }
 
-    /**
-     * Called when a response is added to a reclamation
-     * @param reclamationId The ID of the reclamation
-     * @param responseText The response text that was added
-     */
-    public void onResponseAdded(int reclamationId, String responseText) {
-        try {
-            // Fetch the updated reclamation with the new response
-            Reclamation updatedReclamation = service.getReclamationByIdWithNames(reclamationId);
-
-            if (updatedReclamation != null) {
-                // Show a notification
-                showNotification("Réponse ajoutée à la réclamation #" + reclamationId, false);
-
-                // Refresh the view to show the updated data
-                loadReclamations();
-            }
-        } catch (SQLException e) {
-            showAlert("Erreur", "Impossible de charger la réclamation mise à jour: " + e.getMessage(), Alert.AlertType.ERROR);
-        }
+    // Méthode de test pour vérifier le système de notification
+    @FXML
+    private void testNotification() {
+        String testMsg = "Test de notification " + System.currentTimeMillis();
+        addNotification(testMsg);
+        showSimpleNotification("Notification de test envoyée");
     }
-
 }

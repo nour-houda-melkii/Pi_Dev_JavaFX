@@ -31,9 +31,11 @@
       <change afterPath="$PROJECT_DIR$/src/main/java/entity/TypeReclamation.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/main.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/services/MedecinService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/services/NotificationService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/services/ReclamationServices.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/services/ReponseService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/services/TypeReclamationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/utils/NotificationManager.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/utils/connBD.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/client_reclamation.fxml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/styles/main.css" afterDir="false" />
@@ -202,7 +204,8 @@
       <workItem from="1745750813287" duration="11656000" />
       <workItem from="1745766405191" duration="3153000" />
       <workItem from="1745770524362" duration="22070000" />
-      <workItem from="1745825055678" duration="8599000" />
+      <workItem from="1745825055678" duration="8863000" />
+      <workItem from="1745859879806" duration="29626000" />
     </task>
     <servers />
   </component>
