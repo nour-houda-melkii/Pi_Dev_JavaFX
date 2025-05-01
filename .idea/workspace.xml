@@ -30,6 +30,7 @@
       <change afterPath="$PROJECT_DIR$/src/main/java/entity/Reponse.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/entity/TypeReclamation.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/services/EmailService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/services/MedecinService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/services/NotificationService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/services/ReclamationServices.java" afterDir="false" />
@@ -206,6 +207,10 @@
       <workItem from="1745770524362" duration="22070000" />
       <workItem from="1745825055678" duration="8863000" />
       <workItem from="1745859879806" duration="29626000" />
+      <workItem from="1745915045103" duration="7269000" />
+      <workItem from="1746034042423" duration="607000" />
+      <workItem from="1746037841161" duration="1752000" />
+      <workItem from="1746107321354" duration="8090000" />
     </task>
     <servers />
   </component>
@@ -219,11 +224,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/services/TypeReclamationService.java</url>
           <line>62</line>
           <option name="timeStamp" value="3" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/services/ReponseService.java</url>
-          <line>117</line>
-          <option name="timeStamp" value="6" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

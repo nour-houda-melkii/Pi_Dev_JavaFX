@@ -15,10 +15,19 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.stage.FileChooser;
 import services.ReclamationServices;
 import services.ReponseService;
 import services.NotificationService;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -36,6 +45,8 @@ public class ReclamationViewController {
     private ComboBox<String> statusFilter;
     @FXML
     private TextField searchField;
+    @FXML
+    private Button exportPdfBtn; // Bouton pour l'export PDF
 
     private final ReclamationServices reclamationService = new ReclamationServices();
     private final ReponseService reponseService = new ReponseService();
@@ -58,6 +69,251 @@ public class ReclamationViewController {
         } else {
             System.err.println("ERREUR: searchField est null dans ReclamationViewController");
         }
+
+        // Configuration du bouton d'export PDF
+        if (exportPdfBtn != null) {
+            exportPdfBtn.setOnAction(e -> exportToPdf());
+        } else {
+            System.err.println("ERREUR: exportPdfBtn est null dans ReclamationViewController");
+        }
+    }
+
+    // Méthode pour exporter les réclamations en PDF
+    // Méthode pour exporter les réclamations en PDF - version téléchargement direct
+    @FXML
+    private void exportToPdf() {
+        try {
+            if (data.isEmpty()) {
+                // Si pas de données, simplement retourner sans message
+                return;
+            }
+
+            // Ouvrir le dialogue de sauvegarde de fichier
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Enregistrer le PDF");
+            fileChooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("Fichiers PDF", "*.pdf"));
+            fileChooser.setInitialFileName("reclamations.pdf");
+
+            File file = fileChooser.showSaveDialog(cardsContainer.getScene().getWindow());
+
+            if (file != null) {
+                // Créer le document PDF sans notification ni alerte
+                generatePdf(file.getAbsolutePath(), data);
+
+                // Aucune notification ni alerte n'est affichée pour un téléchargement direct
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur lors de l'export PDF: " + e.getMessage());
+            e.printStackTrace();
+            // Même en cas d'erreur, on n'affiche pas de message pour garder l'interface propre
+        }
+    }
+
+    // Méthode pour générer le contenu du PDF avec une meilleure gestion des caractères spéciaux
+    private void generatePdf(String filePath, List<Reclamation> reclamations) throws IOException {
+        try (PDDocument document = new PDDocument()) {
+            float yPosition = 750;
+            PDPage currentPage = new PDPage(PDRectangle.A4);
+            document.addPage(currentPage);
+
+            // Créer le flux de contenu
+            PDPageContentStream contentStream = new PDPageContentStream(document, currentPage);
+
+            // Ajouter un titre
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 18);
+            contentStream.newLineAtOffset(50, yPosition);
+            contentStream.showText("Liste des Réclamations");
+            contentStream.endText();
+            yPosition -= 20;
+
+            // Ajouter la date d'export
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA, 12);
+            contentStream.newLineAtOffset(50, yPosition);
+            contentStream.showText("Date d'export: " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+            contentStream.endText();
+            yPosition -= 20;
+
+            // Ajouter une légende pour le nombre de réclamations
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA, 11);
+            contentStream.newLineAtOffset(50, yPosition);
+            contentStream.showText("Nombre total de réclamations: " + reclamations.size());
+            contentStream.endText();
+            yPosition -= 20;
+
+            // En-têtes de colonne
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+            contentStream.newLineAtOffset(50, yPosition);
+            contentStream.showText("Type");
+            contentStream.newLineAtOffset(100, 0);
+            contentStream.showText("Date");
+            contentStream.newLineAtOffset(100, 0);
+            contentStream.showText("Médecin");
+            contentStream.newLineAtOffset(100, 0);
+            contentStream.showText("Description");
+            contentStream.endText();
+
+            // Ligne de séparation
+            contentStream.moveTo(50, yPosition - 5);
+            contentStream.lineTo(550, yPosition - 5);
+            contentStream.stroke();
+
+            // Contenu - réclamations
+            yPosition -= 20;
+
+            // Définir des couleurs alternées pour les lignes
+            boolean alternate = false;
+
+            for (Reclamation reclamation : reclamations) {
+                // Vérifier s'il reste assez d'espace sur la page
+                if (yPosition < 100) {
+                    // Fermer le flux de contenu actuel
+                    contentStream.close();
+
+                    // Créer une nouvelle page
+                    currentPage = new PDPage(PDRectangle.A4);
+                    document.addPage(currentPage);
+
+                    // Créer un nouveau flux de contenu pour la nouvelle page
+                    contentStream = new PDPageContentStream(document, currentPage);
+
+                    // Remettre la position verticale au haut de la page
+                    yPosition = 750;
+
+                    // Ajouter un en-tête pour la nouvelle page
+                    contentStream.beginText();
+                    contentStream.setFont(PDType1Font.HELVETICA, 10);
+                    contentStream.newLineAtOffset(50, yPosition);
+                    contentStream.showText("Liste des Réclamations (suite)");
+                    contentStream.endText();
+                    yPosition -= 20;
+
+                    // En-têtes de colonne sur la nouvelle page
+                    contentStream.beginText();
+                    contentStream.setFont(PDType1Font.HELVETICA_BOLD, 10);
+                    contentStream.newLineAtOffset(50, yPosition);
+                    contentStream.showText("Type");
+                    contentStream.newLineAtOffset(100, 0);
+                    contentStream.showText("Date");
+                    contentStream.newLineAtOffset(100, 0);
+                    contentStream.showText("Médecin");
+                    contentStream.newLineAtOffset(100, 0);
+                    contentStream.showText("Description");
+                    contentStream.endText();
+
+                    // Ligne de séparation
+                    contentStream.moveTo(50, yPosition - 5);
+                    contentStream.lineTo(550, yPosition - 5);
+                    contentStream.stroke();
+
+                    yPosition -= 20;
+                }
+
+                // Couleur de fond alternée pour les lignes (effet visuel)
+                if (alternate) {
+                    contentStream.setNonStrokingColor(0.95f, 0.95f, 0.95f);
+                    contentStream.addRect(50, yPosition - 3, 500, 15);
+                    contentStream.fill();
+                    contentStream.setNonStrokingColor(0, 0, 0); // Reset to black
+                }
+                alternate = !alternate;
+
+                // Type de réclamation
+                contentStream.beginText();
+                contentStream.setFont(PDType1Font.HELVETICA, 10);
+                contentStream.newLineAtOffset(50, yPosition);
+
+                try {
+                    // Traiter le texte pour enlever les caractères problématiques
+                    contentStream.showText(sanitizeText(reclamation.getTypeReclamationName(), 15));
+                } catch (Exception e) {
+                    contentStream.showText("[Type]");
+                }
+
+                // Date
+                contentStream.newLineAtOffset(100, 0);
+                try {
+                    contentStream.showText(sanitizeText(reclamation.getFormattedDate(), 15));
+                } catch (Exception e) {
+                    contentStream.showText("[Date]");
+                }
+
+                // Médecin
+                contentStream.newLineAtOffset(100, 0);
+                try {
+                    contentStream.showText(sanitizeText(reclamation.getMedecinName(), 15));
+                } catch (Exception e) {
+                    contentStream.showText("[Médecin]");
+                }
+
+                // Description
+                contentStream.newLineAtOffset(100, 0);
+                try {
+                    String description = reclamation.getDescription();
+                    if (description != null) {
+                        contentStream.showText(sanitizeText(description, 30));
+                    } else {
+                        contentStream.showText("N/A");
+                    }
+                } catch (Exception e) {
+                    contentStream.showText("[Description non affichable]");
+                }
+
+                contentStream.endText();
+
+                yPosition -= 15;
+            }
+
+            // Ajouter un pied de page
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA, 8); // Remplacé HELVETICA_ITALIC par HELVETICA
+            contentStream.newLineAtOffset(50, 30);
+            contentStream.showText("Document généré le " +
+                    LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) +
+                    " à " + java.time.LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")));
+            contentStream.endText();
+
+            // Pagination
+            contentStream.beginText();
+            contentStream.setFont(PDType1Font.HELVETICA, 8);
+            contentStream.newLineAtOffset(500, 30);
+            contentStream.showText("Page " + document.getNumberOfPages());
+            contentStream.endText();
+
+            // Fermer le dernier flux de contenu
+            contentStream.close();
+
+            // Enregistrer le document
+            document.save(filePath);
+        }
+    }
+
+    // Méthode utilitaire pour nettoyer et tronquer le texte
+    private String sanitizeText(String text, int maxLength) {
+        if (text == null) return "N/A";
+
+        // Remplacer tous les caractères problématiques
+        StringBuilder sb = new StringBuilder();
+        for (char c : text.toCharArray()) {
+            // Remplacer les caractères non imprimables ou spéciaux
+            if (c == '\n' || c == '\r' || c == '\t' || c < 32 || c > 126) {
+                sb.append(' ');
+            } else {
+                sb.append(c);
+            }
+        }
+
+        String cleanText = sb.toString().trim();
+
+        // Supprimer les espaces multiples
+        cleanText = cleanText.replaceAll("\\s+", " ");
+
+        // Tronquer si nécessaire
+        return cleanText.length() > maxLength ? cleanText.substring(0, maxLength) + "..." : cleanText;
     }
 
     private void setupFilters() {

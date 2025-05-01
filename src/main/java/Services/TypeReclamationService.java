@@ -67,4 +67,8 @@ public class TypeReclamationService {
             stmt.executeUpdate();
         }
     }
+
+
+
+
 }

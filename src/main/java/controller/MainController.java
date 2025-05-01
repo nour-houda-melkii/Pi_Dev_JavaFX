@@ -21,6 +21,10 @@ import services.NotificationService;
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.util.Properties;
+
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Files;
@@ -59,6 +63,7 @@ public class MainController {
     private List<String> pendingNotifications = new ArrayList<>();
     private final ReclamationServices service = new ReclamationServices();
     private Reclamation selectedReclamation;
+    private List<Reclamation> lastLoadedReclamations = new ArrayList<>();
 
     @FXML
     public void initialize() {
@@ -326,12 +331,98 @@ public class MainController {
                     cardsContainer.getChildren().add(card);
                 }
             }
+
+            // Vérifier si une nouvelle réclamation a été ajoutée
+            checkForNewReclamations(reclamations);
+
+            // Sauvegarder la liste de réclamations pour la comparaison future
+            lastLoadedReclamations = new ArrayList<>(reclamations);
+
         } catch (SQLException e) {
             System.err.println("Erreur de base de données:");
             e.printStackTrace();
 
             Label errorLabel = new Label("Erreur de connexion à la base de données");
             cardsContainer.getChildren().add(errorLabel);
+        }
+    }
+
+
+    private void checkForNewReclamations(List<Reclamation> currentReclamations) {
+        if (lastLoadedReclamations.isEmpty() || currentReclamations.isEmpty()) {
+            return; // Première charge ou pas de réclamations
+        }
+
+        // Si nous avons plus de réclamations qu'avant
+        if (currentReclamations.size() > lastLoadedReclamations.size()) {
+            // Présumer que les nouvelles réclamations sont à la fin de la liste
+            for (int i = lastLoadedReclamations.size(); i < currentReclamations.size(); i++) {
+                Reclamation newReclamation = currentReclamations.get(i);
+
+                // Envoyer un email pour la nouvelle réclamation
+                new Thread(() -> {
+                    sendEmailForReclamation(newReclamation);
+                }).start();
+            }
+        }
+    }
+
+
+    private void sendEmailForReclamation(Reclamation reclamation) {
+        try {
+            // Construction du contenu de l'email
+            String subject = "Nouvelle réclamation: " + reclamation.getTypeReclamationName();
+
+            StringBuilder messageContent = new StringBuilder();
+            messageContent.append("Une nouvelle réclamation a été ajoutée dans le système SAHATECK.\n\n");
+            messageContent.append("Détails de la réclamation:\n");
+            messageContent.append("---------------------------\n");
+            messageContent.append("Type: ").append(reclamation.getTypeReclamationName()).append("\n");
+            messageContent.append("Médecin concerné: ").append(reclamation.getMedecinName()).append("\n");
+            messageContent.append("Date: ").append(reclamation.getDateReclamation().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))).append("\n");
+            messageContent.append("Description: ").append(reclamation.getDescription()).append("\n\n");
+            messageContent.append("Veuillez consulter l'application SAHATECK pour traiter cette réclamation.");
+
+            // Envoi de l'email
+            sendEmail("sourournajjar2@gmail.com", subject, messageContent.toString());
+        } catch (Exception e) {
+            System.err.println("Erreur lors de l'envoi d'email: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
+    private void sendEmail(String to, String subject, String content) {
+        try {
+            // Configuration des propriétés pour l'envoi d'email
+            Properties props = new Properties();
+            props.put("mail.smtp.host", "smtp.gmail.com");
+            props.put("mail.smtp.port", "587");
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+
+            // Créer une session avec authentification
+            Session session = Session.getInstance(props, new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication("sourournajjar2@gmail.com", "runa hfvh forx yjuz");
+                }
+            });
+
+            // Créer le message
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress("sourournajjar2@gmail.com"));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
+            message.setSubject(subject);
+            message.setText(content);
+
+            // Envoyer le message
+            Transport.send(message);
+            System.out.println("Email envoyé avec succès à " + to);
+        } catch (MessagingException e) {
+            System.err.println("Échec de l'envoi d'email: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -573,5 +664,17 @@ public class MainController {
         String testMsg = "Test de notification " + System.currentTimeMillis();
         addNotification(testMsg);
         showSimpleNotification("Notification de test envoyée");
+    }
+
+    /**
+     * Méthode de test pour vérifier l'envoi d'emails
+     */
+    @FXML
+    private void testEmail() {
+        new Thread(() -> {
+            sendEmail("sourournajjar2@gmail.com", "Test d'envoi d'email",
+                    "Ceci est un test d'envoi d'email depuis l'application SAHATECK.");
+        }).start();
+        showSimpleNotification("Email de test envoyé");
     }
 }

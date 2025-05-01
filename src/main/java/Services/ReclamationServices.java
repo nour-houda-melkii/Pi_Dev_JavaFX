@@ -217,17 +217,18 @@ public class ReclamationServices {
              ResultSet rs = stmt.executeQuery(query)) {
 
             while (rs.next()) {
-                medecins.add(new Medecin(
+                Medecin m = new Medecin(
                         rs.getInt("id"),
                         rs.getString("nom")
-                ));
+                );
+                medecins.add(m);
             }
         }
         return medecins;
     }
 
     public Medecin getMedecinById(int id) throws SQLException {
-        String query = "SELECT * FROM medecin WHERE id = ?";
+        String query = "SELECT id, nom FROM medecin WHERE id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, id);
 
@@ -304,7 +305,6 @@ public class ReclamationServices {
         }
     }
 
-
     public void updateStatus(int id, String newStatus) throws SQLException {
         String query = "UPDATE reclamation SET status = ? WHERE id = ?";
         try (Connection conn = connBD.getConnection();
@@ -321,7 +321,4 @@ public class ReclamationServices {
             stmt.executeUpdate(sql);
         }
     }
-
-
-
 }

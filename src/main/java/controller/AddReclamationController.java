@@ -16,6 +16,10 @@ import javafx.stage.Stage;
 import services.ReclamationServices;
 import javafx.collections.ObservableList;
 
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.util.Properties;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -44,7 +48,11 @@ public class AddReclamationController {
 
             // Configuration des écouteurs d'événements
             browseButton.setOnAction(event -> browsePhoto());
-            generateDescriptionButton.setOnAction(event -> generateDescription());
+
+            // Vérifier si le bouton existe avant d'y ajouter un écouteur
+            if (generateDescriptionButton != null) {
+                generateDescriptionButton.setOnAction(event -> generateDescription());
+            }
 
         } catch (Exception e) {
             showAlert("Erreur d'initialisation",
@@ -52,7 +60,6 @@ public class AddReclamationController {
             e.printStackTrace();
         }
     }
-
 
     private void initializeMedecinComboBox() {
         try {
@@ -81,7 +88,7 @@ public class AddReclamationController {
         String selectedType = typeComboBox.getValue();
         if (selectedType != null && !selectedType.isEmpty()) {
             String typeName = selectedType.split(" - ")[1];
-            descriptionField.setText("Default description for: " + typeName);
+            descriptionField.setText("Description par défaut pour: " + typeName);
         }
     }
 
@@ -94,30 +101,36 @@ public class AddReclamationController {
     private void addReclamation() {
         // Field validation
         if (typeComboBox.getValue() == null) {
-            showAlert("Error", "Please select a claim type");
+            showAlert("Erreur", "Veuillez sélectionner un type de réclamation");
             return;
         }
 
         if (medecinComboBox.getValue() == null) {
-            showAlert("Error", "Please select a doctor");
+            showAlert("Erreur", "Veuillez sélectionner un médecin");
             return;
         }
 
         if (descriptionField.getText().trim().isEmpty()) {
-            showAlert("Error", "Description cannot be empty");
+            showAlert("Erreur", "La description ne peut pas être vide");
             return;
         }
 
         if (datePicker.getValue() == null) {
-            showAlert("Error", "Please select a date");
+            showAlert("Erreur", "Veuillez sélectionner une date");
             return;
         }
 
         try {
-            // Extract IDs
-            int typeId = Integer.parseInt(typeComboBox.getValue().split(" - ")[0]);
-            int medecinId = Integer.parseInt(medecinComboBox.getValue().split(" - ")[0]);
+            // Extract IDs and names
+            String[] typeInfo = typeComboBox.getValue().split(" - ");
+            String[] medecinInfo = medecinComboBox.getValue().split(" - ");
+
+            int typeId = Integer.parseInt(typeInfo[0]);
+            int medecinId = Integer.parseInt(medecinInfo[0]);
             String photoPath = selectedFile != null ? selectedFile.getAbsolutePath() : null;
+
+            String typeName = typeInfo.length > 1 ? typeInfo[1] : "";
+            String medecinName = medecinInfo.length > 1 ? medecinInfo[1] : "";
 
             // Create reclamation
             Reclamation nouvelleReclamation = new Reclamation();
@@ -131,24 +144,88 @@ public class AddReclamationController {
             boolean success = reclamationService.addReclamation(nouvelleReclamation);
 
             if (success) {
-                showSuccessAlert("Success", "Claim added successfully!");
+                // Envoyer un email directement ici
+                new Thread(() -> {
+                    sendEmailNotification(typeName, descriptionField.getText(), medecinName,
+                            datePicker.getValue().toString());
+                }).start();
+
+                showSuccessAlert("Succès", "Réclamation ajoutée avec succès! Un email a été envoyé.");
 
                 // Refresh main table if mainController is set
-
+                if (mainController != null) {
+                    mainController.refreshReclamations();
+                    mainController.showNotification("Réclamation ajoutée avec succès", false);
+                }
 
                 // Close the window
                 ((Stage) typeComboBox.getScene().getWindow()).close();
             } else {
-                showAlert("Error", "Failed to add claim");
+                showAlert("Erreur", "Échec de l'ajout de la réclamation");
             }
 
         } catch (NumberFormatException e) {
-            showAlert("Error", "Invalid ID format: " + e.getMessage());
+            showAlert("Erreur", "Format d'ID invalide: " + e.getMessage());
         } catch (SQLException e) {
-            showAlert("Database Error", "Error adding claim: " + e.getMessage());
+            showAlert("Erreur de base de données", "Erreur lors de l'ajout de la réclamation: " + e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
-            showAlert("Error", "Unexpected error: " + e.getMessage());
+            showAlert("Erreur", "Erreur inattendue: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    // Méthode d'envoi d'email directement intégrée
+    private void sendEmailNotification(String typeName, String description, String medecinName, String date) {
+        try {
+            // Configuration pour Gmail
+            Properties props = new Properties();
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.host", "smtp.gmail.com");
+            props.put("mail.smtp.port", "587");
+            props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+
+            // Informations d'authentification (utilisez un mot de passe d'application)
+            final String username = "sourournajjar2@gmail.com";
+            final String password = "runa hfvh forx yjuz"; // Remplacez par votre mot de passe d'application
+
+            // Créer une session avec authentification
+            Session session = Session.getInstance(props, new Authenticator() {
+                @Override
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(username, password);
+                }
+            });
+
+            // Pour le débogage
+            // session.setDebug(true);
+
+            // Créer le contenu de l'email
+            String subject = "Nouvelle réclamation: " + typeName;
+
+            StringBuilder messageContent = new StringBuilder();
+            messageContent.append("Une nouvelle réclamation a été ajoutée dans le système SAHATECK.\n\n");
+            messageContent.append("Détails de la réclamation:\n");
+            messageContent.append("---------------------------\n");
+            messageContent.append("Type: ").append(typeName).append("\n");
+            messageContent.append("Médecin concerné: ").append(medecinName).append("\n");
+            messageContent.append("Date: ").append(date).append("\n");
+            messageContent.append("Description: ").append(description).append("\n\n");
+            messageContent.append("Veuillez consulter l'application SAHATECK pour traiter cette réclamation.");
+
+            // Créer le message
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse("sourournajjar2@gmail.com"));
+            message.setSubject(subject);
+            message.setText(messageContent.toString());
+
+            // Envoyer le message
+            Transport.send(message);
+            System.out.println("Email envoyé avec succès!");
+        } catch (MessagingException e) {
+            System.err.println("Erreur lors de l'envoi de l'email: " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -193,9 +270,9 @@ public class AddReclamationController {
     @FXML
     private void browsePhoto() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select an image");
+        fileChooser.setTitle("Sélectionner une image");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.jpeg")
+                new FileChooser.ExtensionFilter("Fichiers image", "*.png", "*.jpg", "*.jpeg")
         );
 
         selectedFile = fileChooser.showOpenDialog(browseButton.getScene().getWindow());
@@ -204,7 +281,7 @@ public class AddReclamationController {
                 Image image = new Image(selectedFile.toURI().toString());
                 photoView.setImage(image);
             } catch (Exception e) {
-                showAlert("Error", "Could not load image: " + e.getMessage());
+                showAlert("Erreur", "Impossible de charger l'image: " + e.getMessage());
             }
         }
     }
@@ -222,13 +299,13 @@ public class AddReclamationController {
     @FXML
     private void navigateToDashboard() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/main-view.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/view/main-view.fxml"));
             Stage stage = (Stage) typeComboBox.getScene().getWindow();
             stage.setScene(new Scene(root));
-            stage.setTitle("Dashboard");
+            stage.setTitle("Tableau de bord");
             stage.show();
         } catch (IOException e) {
-            showAlert("Error", "Could not load dashboard: " + e.getMessage());
+            showAlert("Erreur", "Impossible de charger le tableau de bord: " + e.getMessage());
         }
     }
 
