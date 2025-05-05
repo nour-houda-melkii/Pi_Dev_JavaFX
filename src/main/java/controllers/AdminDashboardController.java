@@ -131,7 +131,7 @@ public class AdminDashboardController {
         nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-padding: 0 10 0 10;");
         nameLabel.setWrapText(true);
 
-        Label priceLabel = new Label(String.format("$%.2f", product.getPrice()));
+        Label priceLabel = new Label(String.format("%.2f", product.getPrice()));
         priceLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #16a085; -fx-padding: 0 10 5 10;");
 
         // Create container for buttons

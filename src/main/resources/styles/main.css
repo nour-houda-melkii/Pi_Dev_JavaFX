@@ -1,0 +1,92 @@
+/* Base styles */
+.root {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-font-size: 14px;
+}
+
+/* Notification styles */
+.notification-item {
+    -fx-background-color: white;
+    -fx-padding: 10px;
+    -fx-border-radius: 4px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 2, 0, 0);
+    -fx-spacing: 5px;
+}
+
+.notification-title {
+    -fx-font-weight: bold;
+    -fx-text-fill: #007bff;
+}
+
+.notification-body {
+    -fx-text-fill: #333;
+    -fx-font-size: 14px;
+}
+
+.notification-date {
+    -fx-text-fill: #666;
+    -fx-font-size: 12px;
+    -fx-alignment: center-right;
+}
+
+/* Button styles */
+.btn-pill {
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+}
+
+.btn-outline-primary {
+    -fx-background-color: transparent;
+    -fx-border-color: #007bff;
+    -fx-text-fill: #007bff;
+}
+
+.btn-outline-primary:hover {
+    -fx-background-color: #007bff;
+    -fx-text-fill: white;
+}
+
+/* Text field styles */
+.search-field {
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-border-color: #ced4da;
+    -fx-padding: 5px 10px 5px 30px;
+}
+
+/* Header styles */
+.header {
+    -fx-background-color: #f8f9fa;
+}
+
+.main-nav {
+    -fx-background-color: white;
+    -fx-padding: 10px;
+    -fx-spacing: 15px;
+    -fx-border-color: #e9ecef;
+    -fx-border-width: 0 0 1px 0;
+}
+
+/* Footer styles */
+.footer {
+    -fx-background-color: #f8f9fa;
+    -fx-padding: 20px;
+}
+
+.footer-text {
+    -fx-fill: #6c757d;
+}
+
+.footer-link {
+    -fx-fill: #007bff;
+    -fx-cursor: hand;
+}
+
+.footer-link:hover {
+    -fx-underline: true;
+}
+
+/* Content area styles */
+.content-pane {
+    -fx-padding: 20px;
+}

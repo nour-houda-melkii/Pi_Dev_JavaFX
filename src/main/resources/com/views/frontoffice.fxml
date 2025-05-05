@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.paint.*?>
+<?import java.net.URL?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.FrontOfficeController">
+    <stylesheets>
+        <URL value="@../../styles/styleFrontOffice/styles.css" />
+    </stylesheets>
+
+    <!-- Top - Header -->
+    <top>
+        <VBox>
+            <!-- Première ligne du header -->
+            <HBox style="-fx-border-color: #f3f4f6; -fx-border-width: 0 0 1 0;" alignment="CENTER_LEFT" spacing="10" styleClass="header">
+                <padding>
+                    <Insets top="10" right="15" bottom="10" left="15"/>
+                </padding>
+                <children>
+                    <Text fill="#1E90FF" style="-fx-font-family: 'Pacifico'; -fx-font-size: 24px;">SAHATECH</Text>
+                    <Region HBox.hgrow="ALWAYS" />
+                    <HBox spacing="10" alignment="CENTER_RIGHT">
+                        <Button styleClass="icon-button">
+                            <graphic>
+                                <ImageView fitWidth="20" fitHeight="20">
+                                    <image>
+                                        <!-- Image à ajouter -->
+                                    </image>
+                                </ImageView>
+                            </graphic>
+                        </Button>
+                        <Button fx:id="connexionButton" text="CONNEXION" styleClass="outline-button" />
+                        <Button fx:id="inscriptionButton" text="INSCRIPTION" styleClass="primary-button" />
+                        <Button fx:id="deconnexionButton" text="DÉCONNEXION" styleClass="danger-button" visible="false" />
+                    </HBox>
+                </children>
+            </HBox>
+
+            <!-- Navigation -->
+            <HBox style="-fx-border-color: #f3f4f6; -fx-border-width: 0 0 1 0;" alignment="CENTER" spacing="20">
+                <padding>
+                    <Insets top="10" right="15" bottom="10" left="15"/>
+                </padding>
+                <children>
+                    <HBox spacing="30" alignment="CENTER_LEFT">
+                        <Hyperlink fx:id="accueilLink" text="Accueil" style="-fx-text-fill: #1E90FF; -fx-font-weight: bold;" />
+                        <Hyperlink fx:id="produitsLink" text="Produits" />
+                        <Hyperlink fx:id="evenementsLink" text="Événements" />
+                        <Hyperlink fx:id="articlesLink" text="Articles" />
+                        <Hyperlink fx:id="profileLink" text="Profil" visible="false" />
+                    </HBox>
+                    <Region HBox.hgrow="ALWAYS" />
+                    <HBox spacing="10" alignment="CENTER_RIGHT">
+                        <HBox style="-fx-background-color: #f9fafb; -fx-background-radius: 20;" alignment="CENTER_LEFT" spacing="5">
+                            <padding>
+                                <Insets top="5" right="10" bottom="5" left="10"/>
+                            </padding>
+                            <ImageView fitWidth="16" fitHeight="16">
+                                <image>
+                                    <!-- Icône de recherche -->
+                                </image>
+                            </ImageView>
+                            <TextField fx:id="searchField" promptText="Rechercher..." style="-fx-background-color: transparent; -fx-padding: 0 0 0 5;" />
+                        </HBox>
+                        <Button styleClass="icon-button">
+                            <graphic>
+                                <StackPane>
+                                    <ImageView fitWidth="20" fitHeight="20">
+                                        <image>
+                                            <!-- Icône de notification -->
+                                        </image>
+                                    </ImageView>
+                                    <Circle radius="8" fill="#e5e7eb" />
+                                    <Text text="0" style="-fx-font-size: 10px;" />
+                                </StackPane>
+                            </graphic>
+                        </Button>
+                    </HBox>
+                </children>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Center - Contenu dynamique -->
+    <center>
+        <StackPane fx:id="contentPane">
+            <!-- Contenu par défaut (accueil) -->
+            <HBox alignment="TOP_CENTER" spacing="50" style="-fx-background-color: white;">
+                <padding>
+                    <Insets top="50" right="30" bottom="50" left="30"/>
+                </padding>
+                <children>
+                    <!-- Votre contenu d'accueil actuel -->
+                    <!-- ... -->
+                </children>
+            </HBox>
+        </StackPane>
+    </center>
+
+    <!-- Bottom - Footer -->
+    <bottom>
+        <VBox style="-fx-background-color: #f9fafb;">
+            <!-- Votre footer actuel -->
+            <!-- ... -->
+        </VBox>
+    </bottom>
+</BorderPane>

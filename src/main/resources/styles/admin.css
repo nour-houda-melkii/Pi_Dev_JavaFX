@@ -1,0 +1,92 @@
+/* Police Pacifico pour le logo */
+@font-face {
+    font-family: 'Pacifico';
+}
+
+.root {
+    -fx-font-family: 'Inter', sans-serif;
+    -fx-background-color: #f8fafc;
+}
+
+/* Styles pour les cartes */
+.stat-card {
+    -fx-background-color: white;
+    -fx-padding: 20;
+    -fx-spacing: 10;
+    -fx-alignment: center;
+    -fx-pref-width: 200;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.stat-title {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 14px;
+}
+
+.stat-value {
+    -fx-text-fill: #1e293b;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+/* Styles pour les boutons */
+.button {
+    -fx-background-radius: 8;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-opacity: 0.9;
+}
+
+/* Styles pour les cartes de produits */
+.product-card {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);
+    -fx-pref-width: 200;
+    -fx-pref-height: 320;
+}
+
+/* Styles pour la sidebar */
+.sidebar {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 0 1 0 0;
+    -fx-pref-width: 250;
+}
+
+/* Styles pour les sous-menus */
+.submenu {
+    -fx-background-color: #f8fafc;
+    -fx-padding: 0 0 0 20;
+}
+
+/* Styles pour le header */
+.header {
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 0, 1, 3, 0);
+    -fx-padding: 15;
+}
+
+/* Styles pour les titres */
+.title {
+    -fx-text-fill: #1e293b;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* Styles pour les labels */
+.label {
+    -fx-text-fill: #1e293b;
+}
+
+.secondary-label {
+    -fx-text-fill: #64748b;
+    -fx-font-size: 14px;
+}

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.controllers.DetailsMedecinController"
+      spacing="20"
+      style="-fx-padding: 25; -fx-background-color: #f8f9fa;"
+      stylesheets="@/styles/styleDetailsMedecin/details.css">
+
+    <!-- Title and back button -->
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Button onAction="#handleClose" styleClass="btn-back">
+            <graphic>
+                <Text text="←" styleClass="back-icon"/>
+            </graphic>
+        </Button>
+        <Label fx:id="titleLabel" text="Doctor Details" styleClass="title-label"/>
+    </HBox>
+
+    <!-- Details card -->
+    <GridPane styleClass="detail-card" hgap="20" vgap="15">
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" minWidth="100"/>
+            <ColumnConstraints halignment="LEFT" minWidth="200"/>
+        </columnConstraints>
+
+        <!-- Row 1 - Full Name -->
+        <Label text="Full Name:" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="field-label"/>
+        <Label fx:id="fullNameLabel" GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="value-label"/>
+
+        <!-- Row 2 - Email -->
+        <Label text="Email:" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="field-label"/>
+        <Label fx:id="emailLabel" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="value-label"/>
+
+        <!-- Row 3 - Phone -->
+        <Label text="Phone:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="field-label"/>
+        <Label fx:id="phoneLabel" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="value-label"/>
+
+        <!-- Row 4 - Address -->
+        <Label text="Address:" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="field-label"/>
+        <Label fx:id="addressLabel" GridPane.rowIndex="4" GridPane.columnIndex="1" styleClass="value-label"/>
+
+        <!-- Row 5 - Age -->
+        <Label text="Age:" GridPane.rowIndex="5" GridPane.columnIndex="0" styleClass="field-label"/>
+        <Label fx:id="ageLabel" GridPane.rowIndex="5" GridPane.columnIndex="1" styleClass="value-label"/>
+
+        <!-- Row 6 - Gender -->
+        <Label text="Gender:" GridPane.rowIndex="6" GridPane.columnIndex="0" styleClass="field-label"/>
+        <Label fx:id="genderLabel" GridPane.rowIndex="6" GridPane.columnIndex="1" styleClass="value-label"/>
+
+        <!-- Row 7 - Speciality -->
+        <Label text="Speciality:" GridPane.rowIndex="7" GridPane.columnIndex="0" styleClass="field-label"/>
+        <Label fx:id="specialiteLabel" GridPane.rowIndex="7" GridPane.columnIndex="1" styleClass="value-label"/>
+
+        <!-- Row 8 - Licence Number -->
+        <Label text="Licence Number:" GridPane.rowIndex="8" GridPane.columnIndex="0" styleClass="field-label"/>
+        <Label fx:id="licenceLabel" GridPane.rowIndex="8" GridPane.columnIndex="1" styleClass="value-label"/>
+    </GridPane>
+</VBox>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.controllers.nour.CommentsDialogController"
+      spacing="10" style="-fx-padding: 10;">
+
+    <Label text="Comments" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background: white; -fx-border-color: lightgray;">
+        <VBox fx:id="commentsContainer" spacing="10" style="-fx-padding: 5;"/>
+    </ScrollPane>
+
+    <VBox spacing="5" style="-fx-padding: 5;">
+        <Label text="Add a comment:"/>
+        <TextArea fx:id="newCommentText" wrapText="true" style="-fx-min-height: 60px;"/>
+        <Button fx:id="addCommentButton" text="Post Comment" style="-fx-alignment: center-right;"/>
+    </VBox>
+</VBox>

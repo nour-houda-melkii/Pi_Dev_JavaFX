@@ -1,0 +1,87 @@
+/* Police Poppins */
+@font-face {
+    font-family: 'Poppins';
+
+}
+
+/* Styles de base */
+.root {
+    -fx-font-family: 'Poppins';
+}
+
+/* Titres */
+.title-label {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #012970;
+}
+
+.description-label {
+    -fx-font-size: 13px;
+    -fx-font-weight: 200;
+    -fx-text-fill: #6c757d;
+    -fx-wrap-text: true;
+}
+
+/* Labels des champs */
+.form-label {
+    -fx-font-weight: 500;
+    -fx-text-fill: #333;
+}
+
+/* Champs de formulaire */
+.form-control {
+    -fx-padding: 10px;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-font-size: 14px;
+}
+
+.form-control:focused {
+    -fx-border-color: #00B4D8;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,180,216,0.5), 0, 0, 0, 0);
+}
+
+/* Boutons */
+.btn-primary {
+    -fx-background-color: #00B4D8;
+    -fx-text-fill: white;
+    -fx-font-weight: 500;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #0096C7;
+}
+
+.btn-secondary {
+    -fx-background-color: #6c757d;
+    -fx-text-fill: white;
+    -fx-font-weight: 500;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-cursor: hand;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: #5a6268;
+}
+
+/* Messages d'erreur */
+.error-label {
+    -fx-text-fill: #dc3545;
+    -fx-font-size: 12px;
+}
+
+/* Icônes */
+.icon {
+    -fx-font-family: 'FontAwesome';
+    -fx-font-size: 14px;
+}

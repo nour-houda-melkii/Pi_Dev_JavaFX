@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane prefHeight="500.0" prefWidth="700.0"
+            xmlns:fx="http://javafx.com/fxml/1"
+            xmlns="http://javafx.com/javafx/23.0.1"
+            fx:controller="com.controllers.CalendarController">
+
+    <VBox fx:id="calendrierSection" alignment="CENTER" spacing="15" AnchorPane.topAnchor="20.0"
+          AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.bottomAnchor="20.0">
+
+        <Label style="-fx-font-size: 24; -fx-font-weight: bold;" text="Calendrier des Rendez-vous" />
+
+        <!-- Navigation du mois -->
+        <HBox alignment="CENTER" spacing="20">
+            <Button fx:id="prevMonthButton" text="&lt;" onAction="#naviguerMoisPrecedent" />
+            <Label fx:id="moisAnneeCourant" style="-fx-font-size: 18; -fx-font-weight: bold;" text="Mois Année" />
+            <Button fx:id="nextMonthButton" text="&gt;" onAction="#naviguerMoisSuivant" />
+        </HBox>
+
+        <!-- En-têtes des jours de la semaine -->
+        <HBox alignment="CENTER" spacing="5">
+            <Label text="Lun" style="-fx-font-weight: bold;" prefWidth="50" alignment="CENTER" />
+            <Label text="Mar" style="-fx-font-weight: bold;" prefWidth="50" alignment="CENTER" />
+            <Label text="Mer" style="-fx-font-weight: bold;" prefWidth="50" alignment="CENTER" />
+            <Label text="Jeu" style="-fx-font-weight: bold;" prefWidth="50" alignment="CENTER" />
+            <Label text="Ven" style="-fx-font-weight: bold;" prefWidth="50" alignment="CENTER" />
+            <Label text="Sam" style="-fx-font-weight: bold;" prefWidth="50" alignment="CENTER" />
+            <Label text="Dim" style="-fx-font-weight: bold;" prefWidth="50" alignment="CENTER" />
+        </HBox>
+
+        <!-- Grille pour les jours du mois -->
+        <GridPane fx:id="calendrierGrid" alignment="CENTER" hgap="5" vgap="5">
+            <!-- Les boutons des jours seront ajoutés ici programmatiquement -->
+        </GridPane>
+
+    </VBox>
+
+</AnchorPane>

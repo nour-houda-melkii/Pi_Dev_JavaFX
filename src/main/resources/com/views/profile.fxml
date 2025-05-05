@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.controllers.ProfileController"
+            stylesheets="@/styles/styleProfil/style.css"
+            prefWidth="1000" prefHeight="600">
+
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
+            <VBox spacing="20" alignment="TOP_CENTER" style="-fx-padding: 30;">
+                <!-- Page title -->
+                <Text text="Profile" styleClass="page-title"/>
+
+                <HBox spacing="20" alignment="TOP_LEFT">
+                    <!-- Left column - Profile card -->
+                    <VBox styleClass="profile-card" spacing="15" prefWidth="300">
+                        <StackPane alignment="CENTER">
+                            <ImageView fx:id="profileImage" fitWidth="100" fitHeight="100" styleClass="profile-image">
+                                <image>
+                                </image>
+                            </ImageView>
+                            <Button styleClass="edit-icon-button" onAction="#handleEditImage">
+                                <graphic>
+                                </graphic>
+                            </Button>
+                        </StackPane>
+
+                        <Label fx:id="userNameLabel" styleClass="profile-name"/>
+                        <Label fx:id="userRoleLabel" styleClass="profile-role"/>
+
+                        <HBox spacing="10" alignment="CENTER">
+                            <ImageView fitWidth="24" fitHeight="24" styleClass="social-icon twitter">
+                                <Image url="@/assets/img/twitter.png" />
+                            </ImageView>
+                            <ImageView fitWidth="24" fitHeight="24" styleClass="social-icon facebook">
+                                <Image url="@/assets/img/facebook.png" />
+                            </ImageView>
+                            <ImageView fitWidth="24" fitHeight="24" styleClass="social-icon instagram">
+                                <Image url="@/assets/img/instagram.png" />
+                            </ImageView>
+                            <ImageView fitWidth="24" fitHeight="24" styleClass="social-icon linkedin">
+                                <Image url="@/assets/img/linkedin.png" />
+                            </ImageView>
+                        </HBox>
+
+                        <!-- Delete Account button -->
+                        <Button text="Delete Account" styleClass="delete-button"
+                                onAction="#handleDeleteAccount" style="-fx-margin-top: 20;"/>
+                    </VBox>
+
+                    <!-- Right column - Tabs -->
+                    <VBox styleClass="profile-tabs-container" spacing="10">
+                        <TabPane styleClass="profile-tabs">
+                            <tabs>
+                                <Tab text="Overview" styleClass="profile-tab">
+                                    <VBox styleClass="tab-content" spacing="15">
+                                        <Label text="About" styleClass="section-title"/>
+                                        <Label text="Welcome to your profile. You can view and edit your personal information here."
+                                               styleClass="about-text"/>
+
+                                        <Label text="Profile Details" styleClass="section-title"/>
+
+                                        <GridPane hgap="10" vgap="10" styleClass="profile-details-grid">
+                                            <Label text="Full Name:" styleClass="detail-label"
+                                                   GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                            <Label fx:id="fullNameLabel" styleClass="detail-value"
+                                                   GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                                            <Label text="Email:" styleClass="detail-label"
+                                                   GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                            <Label fx:id="emailLabel" styleClass="detail-value"
+                                                   GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                                            <Label text="Phone:" styleClass="detail-label"
+                                                   GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                            <Label fx:id="phoneLabel" styleClass="detail-value"
+                                                   GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                                            <Label text="Address:" styleClass="detail-label"
+                                                   GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                                            <Label fx:id="addressLabel" styleClass="detail-value"
+                                                   GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                                            <Label text="Age:" styleClass="detail-label"
+                                                   GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                                            <Label fx:id="ageLabel" styleClass="detail-value"
+                                                   GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                                            <Label text="Gender:" styleClass="detail-label"
+                                                   GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                                            <Label fx:id="genderLabel" styleClass="detail-value"
+                                                   GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                                            <!-- Doctor section (visible only for doctors) -->
+                                            <VBox fx:id="doctorDetailsSection" visible="false" spacing="10"
+                                                  GridPane.rowIndex="6" GridPane.columnIndex="0" GridPane.columnSpan="2">
+                                                <Label text="Specialty:" styleClass="detail-label"/>
+                                                <Label fx:id="specialityLabel" styleClass="detail-value"/>
+
+                                                <Label text="License Number:" styleClass="detail-label"/>
+                                                <Label fx:id="licenseLabel" styleClass="detail-value"/>
+                                            </VBox>
+                                        </GridPane>
+                                    </VBox>
+                                </Tab>
+
+                                <Tab text="Edit Profile" styleClass="profile-tab">
+                                    <ScrollPane fitToWidth="true">
+                                        <VBox styleClass="tab-content" spacing="15">
+                                            <GridPane hgap="15" vgap="15" styleClass="edit-form-grid">
+                                                <Label text="First Name:" styleClass="form-label"
+                                                       GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                                <TextField fx:id="firstNameField" styleClass="form-field"
+                                                           GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                                                <Label text="Last Name:" styleClass="form-label"
+                                                       GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                                <TextField fx:id="lastNameField" styleClass="form-field"
+                                                           GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                                                <Label text="Email:" styleClass="form-label"
+                                                       GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                                <TextField fx:id="emailField" styleClass="form-field"
+                                                           GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                                                <Label text="Phone:" styleClass="form-label"
+                                                       GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                                                <TextField fx:id="phoneField" styleClass="form-field"
+                                                           GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+                                                <Label text="Address:" styleClass="form-label"
+                                                       GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                                                <TextField fx:id="addressField" styleClass="form-field"
+                                                           GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+                                                <Label text="Age:" styleClass="form-label"
+                                                       GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+                                                <TextField fx:id="ageField" styleClass="form-field"
+                                                           GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+                                                <Label text="Gender:" styleClass="form-label"
+                                                       GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+                                                <ComboBox fx:id="genderCombo" styleClass="form-field"
+                                                          GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+                                                <!-- Doctor section (visible only for doctors) -->
+                                                <VBox fx:id="doctorEditSection" visible="false" spacing="10"
+                                                      GridPane.rowIndex="7" GridPane.columnIndex="0" GridPane.columnSpan="2">
+                                                    <Label text="Specialty:" styleClass="form-label"/>
+                                                    <ComboBox fx:id="specialityCombo" styleClass="form-field"/>
+
+                                                    <Label text="License Number:" styleClass="form-label"/>
+                                                    <TextField fx:id="licenseField" styleClass="form-field"/>
+                                                </VBox>
+
+                                                <HBox alignment="CENTER" spacing="15"
+                                                      GridPane.rowIndex="8" GridPane.columnIndex="0" GridPane.columnSpan="2">
+                                                    <Button text="Save Changes" styleClass="save-button"
+                                                            onAction="#handleSaveProfile"/>
+                                                </HBox>
+                                            </GridPane>
+                                        </VBox>
+                                    </ScrollPane>
+                                </Tab>
+
+                                <!-- Medical File tab (visible only for patients) -->
+                                <Tab fx:id="medicalFileTab" text="Medical File" styleClass="profile-tab">
+                                    <VBox styleClass="tab-content" spacing="15">
+                                        <Label text="Medical File" styleClass="section-title"/>
+                                        <Label text="Upload or manage your medical file (PDF, JPEG, PNG)"
+                                               styleClass="form-hint"/>
+
+                                        <!-- File display section -->
+                                        <VBox spacing="10" styleClass="file-section">
+                                            <HBox spacing="10" alignment="CENTER_LEFT">
+                                                <Label text="Current file:" styleClass="file-label"/>
+                                                <Label fx:id="medicalFileNameLabel" styleClass="file-name-label"/>
+                                            </HBox>
+
+                                            <!-- Action buttons -->
+                                            <HBox spacing="15" alignment="CENTER_LEFT">
+                                                <Button text="Browse..." styleClass="browse-button"
+                                                        onAction="#handleBrowseMedicalFile"/>
+                                                <Button text="Upload" styleClass="action-button"
+                                                        onAction="#handleSaveMedicalFile"/>
+                                                <Button text="View" styleClass="action-button"
+                                                        onAction="#handleViewMedicalFile" disable=""/>
+                                                <Button text="Download" styleClass="action-button"
+                                                        onAction="#handleDownloadMedicalFile" disable=""/>
+                                            </HBox>
+                                        </VBox>
+
+                                        <!-- Status message -->
+                                        <Label fx:id="medicalFileStatusLabel" styleClass="status-message" visible="false"/>
+                                    </VBox>
+                                </Tab>
+
+                                <Tab text="Change Password" styleClass="profile-tab">
+                                    <VBox styleClass="tab-content" spacing="15">
+                                        <Label text="Change Password" styleClass="section-title"/>
+
+                                        <GridPane hgap="15" vgap="15" styleClass="password-form-grid">
+                                            <Label text="Current Password:" styleClass="form-label"
+                                                   GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                                            <PasswordField fx:id="currentPasswordField" styleClass="form-field"
+                                                           GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                                            <Label text="New Password:" styleClass="form-label"
+                                                   GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                                            <PasswordField fx:id="newPasswordField" styleClass="form-field"
+                                                           GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                                            <Label text="Confirm Password:" styleClass="form-label"
+                                                   GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                                            <PasswordField fx:id="confirmPasswordField" styleClass="form-field"
+                                                           GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                                            <HBox alignment="CENTER_RIGHT" spacing="15"
+                                                  GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2">
+                                                <Button text="Change Password" styleClass="save-button"
+                                                        onAction="#handleChangePassword"/>
+                                            </HBox>
+                                        </GridPane>
+                                    </VBox>
+                                </Tab>
+                            </tabs>
+                        </TabPane>
+                    </VBox>
+                </HBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+</BorderPane>

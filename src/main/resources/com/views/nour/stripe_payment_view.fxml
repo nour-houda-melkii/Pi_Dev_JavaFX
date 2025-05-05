@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.effect.DropShadow?>
+
+<BorderPane prefHeight="500.0" prefWidth="600.0" style="-fx-background-color: #f8f9fa;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.nour.StripePaymentController">
+    <top>
+        <VBox alignment="CENTER" spacing="10.0" style="-fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 0 0 2 0;" BorderPane.alignment="CENTER">
+            <children>
+                <Label text="SahaTech Payment" textFill="#0056b3">
+                    <font>
+                        <Font name="System Bold" size="28.0" />
+                    </font>
+                    <effect>
+                        <DropShadow color="#00000040" radius="3.0" spread="0.1" />
+                    </effect>
+                </Label>
+                <Label text="Complete your payment securely">
+                    <font>
+                        <Font size="16.0" />
+                    </font>
+                </Label>
+            </children>
+            <padding>
+                <Insets bottom="25.0" left="20.0" right="20.0" top="25.0" />
+            </padding>
+        </VBox>
+    </top>
+    <center>
+        <VBox spacing="20.0" BorderPane.alignment="CENTER">
+            <children>
+                <VBox spacing="15.0" style="-fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 2; -fx-border-radius: 5; -fx-background-radius: 5;">
+                    <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                    </padding>
+                    <children>
+                        <Label text="Order Summary" textFill="#0056b3">
+                            <font>
+                                <Font name="System Bold" size="16.0" />
+                            </font>
+                        </Label>
+                        <Separator />
+                        <GridPane hgap="10.0" vgap="10.0">
+                            <columnConstraints>
+                                <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="10.0" prefWidth="150.0" />
+                                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="350.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <children>
+                                <Label text="Order Reference:" style="-fx-font-weight: bold;">
+                                    <font>
+                                        <Font name="System Bold" size="14.0" />
+                                    </font>
+                                </Label>
+                                <Label text="Total Amount:" GridPane.rowIndex="1" style="-fx-font-weight: bold;">
+                                    <font>
+                                        <Font name="System Bold" size="14.0" />
+                                    </font>
+                                </Label>
+                                <Label text="Customer Name:" GridPane.rowIndex="2" style="-fx-font-weight: bold;">
+                                    <font>
+                                        <Font name="System Bold" size="14.0" />
+                                    </font>
+                                </Label>
+                                <Label text="Customer Email:" GridPane.rowIndex="3" style="-fx-font-weight: bold;">
+                                    <font>
+                                        <Font name="System Bold" size="14.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="orderReferenceLabel" text="REF12345" style="-fx-text-fill: #212529;" GridPane.columnIndex="1">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="totalAmountLabel" text="100.00 D" style="-fx-text-fill: #28a745; -fx-font-weight: bold;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="customerNameLabel" text="John Doe" style="-fx-text-fill: #212529;" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Label>
+                                <Label fx:id="customerEmailLabel" text="john.doe@example.com" style="-fx-text-fill: #212529;" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                    <font>
+                                        <Font size="14.0" />
+                                    </font>
+                                </Label>
+                            </children>
+                        </GridPane>
+                    </children>
+                </VBox>
+            </children>
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+        </VBox>
+    </center>
+    <bottom>
+        <VBox style="-fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-width: 2 0 0 0;" BorderPane.alignment="CENTER">
+            <children>
+                <HBox alignment="CENTER" spacing="20.0">
+                    <children>
+                        <Button fx:id="useStripeCheckoutButton" mnemonicParsing="false" onAction="#handleStripeCheckout" prefHeight="45.0" prefWidth="220.0" style="-fx-background-color: #28a745; -fx-border-color: #000000; -fx-border-width: 1; -fx-border-radius: 25; -fx-background-radius: 25;" text="Proceed to Stripe Checkout" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="16.0" />
+                            </font>
+                            <effect>
+                                <DropShadow color="#00000040" radius="5.0" spread="0.1" />
+                            </effect>
+                        </Button>
+                        <Button fx:id="backButton" cancelButton="true" mnemonicParsing="false" onAction="#handleBackToConfirmation" prefHeight="45.0" prefWidth="140.0" style="-fx-background-color: #dc3545; -fx-border-color: #000000; -fx-border-width: 1; -fx-border-radius: 25; -fx-background-radius: 25;" text="Back" textFill="WHITE">
+                            <font>
+                                <Font name="System Bold" size="16.0" />
+                            </font>
+                            <effect>
+                                <DropShadow color="#00000040" radius="5.0" spread="0.1" />
+                            </effect>
+                        </Button>
+                    </children>
+                </HBox>
+            </children>
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+        </VBox>
+    </bottom>
+</BorderPane>

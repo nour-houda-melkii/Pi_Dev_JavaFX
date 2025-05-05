@@ -180,15 +180,15 @@ public class ProductFrontController {
         priceBox.setStyle("-fx-padding: 0 10 5 10;");
 
         if (isFav) {
-            Label originalPriceLabel = new Label(String.format("$%.2f", product.getPrice()));
+            Label originalPriceLabel = new Label(String.format("%.2f", product.getPrice()));
             originalPriceLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #7f8c8d; -fx-strikethrough: true;");
 
-            Label discountedPriceLabel = new Label(String.format("$%.2f", discountedPrice));
+            Label discountedPriceLabel = new Label(String.format("%.2f", discountedPrice));
             discountedPriceLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #e74c3c; -fx-font-weight: bold;");
 
             priceBox.getChildren().addAll(originalPriceLabel, discountedPriceLabel);
         } else {
-            Label priceLabel = new Label(String.format("$%.2f", product.getPrice()));
+            Label priceLabel = new Label(String.format("%.2f", product.getPrice()));
             priceLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #33ccff;");
             priceBox.getChildren().add(priceLabel);
         }
@@ -284,7 +284,7 @@ public class ProductFrontController {
 
     private boolean isFavorite(Produit product) {
         try {
-            int currentUserId = 1; // Replace with actual user ID
+            int currentUserId = 1;
             FavoriServices favoriService = new FavoriServices();
             return favoriService.isProductInFavorites(currentUserId, product.getId());
         } catch (SQLException e) {

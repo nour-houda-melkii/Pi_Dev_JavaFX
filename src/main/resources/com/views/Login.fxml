@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.controllers.LoginController"
+            stylesheets="@/styles/styleLogin/login.css"
+            prefWidth="1000" prefHeight="600">
+
+    <!-- Partie gauche - Image -->
+    <left>
+        <StackPane style="-fx-background-color: #CAF0F8;" BorderPane.alignment="CENTER">
+            <ImageView fitWidth="400" preserveRatio="true">
+                <Image url="@/assets/img/undraw_access-account_aydp.png" />
+            </ImageView>
+        </StackPane>
+    </left>
+
+    <!-- Partie droite - Formulaire -->
+    <center>
+        <VBox spacing="20" alignment="CENTER" style="-fx-padding: 40; -fx-background-color: #f8f9fa;">
+            <!-- Logo -->
+            <ImageView fitWidth="100" fitHeight="80">
+                <Image url="@/assets/img/logo.png" />
+            </ImageView>
+
+            <!-- Titre -->
+            <Text text="Sign in to your account" styleClass="title" />
+
+            <!-- Message d'erreur -->
+            <Label fx:id="errorLabel" styleClass="error-message" visible="false" />
+
+            <!-- Formulaire -->
+            <VBox alignment="CENTER_LEFT" spacing="15" style="-fx-padding: 20 0;" prefWidth="300">
+                <!-- Email -->
+                <VBox spacing="5" prefWidth="300">
+                    <Label text="Email *" styleClass="form-label" />
+                    <TextField fx:id="emailField" styleClass="form-control" promptText="Enter your email" />
+                </VBox>
+
+                <!-- Mot de passe -->
+                <VBox spacing="5" prefWidth="300">
+                    <Label text="Password *" styleClass="form-label" />
+                    <PasswordField fx:id="passwordField" styleClass="form-control" promptText="Enter your password" />
+                </VBox>
+
+                <!-- Se souvenir de moi -->
+                <CheckBox fx:id="rememberMeCheckbox" text="Keep me logged in" styleClass="remember-me" />
+
+                <!-- Bouton de connexion -->
+                <Button text="Login" styleClass="login-button" onAction="#handleLogin" maxWidth="Infinity" prefWidth="300"/>
+            </VBox>
+
+            <!-- Lien vers l'inscription -->
+            <HBox alignment="CENTER" spacing="5">
+                <Label text="Don't have an account?" styleClass="form-label" />
+                <Button text="Sign up" styleClass="forgot-password" onAction="#handleSignUp" />
+            </HBox>
+
+            <!-- Mot de passe oublié -->
+            <HBox alignment="CENTER_RIGHT">
+                <Button text="Forgot password?" styleClass="forgot-password" onAction="#handleForgotPassword" />
+            </HBox>
+
+            <!-- Connexion sociale -->
+            <VBox spacing="10" alignment="CENTER">
+                <Text text="Or sign in with" styleClass="social-text" />
+                <HBox spacing="15" alignment="CENTER">
+                    <!-- Google -->
+                    <ImageView fitWidth="22" fitHeight="22" onMouseClicked="#handleGoogleLogin">
+                        <Image url="@/assets/img/google.png" />
+                    </ImageView>
+
+                    <!-- Facebook -->
+                    <ImageView fitWidth="22" fitHeight="22" onMouseClicked="#handleFacebookLogin">
+                        <Image url="@/assets/img/facebook.png" />
+                    </ImageView>
+                </HBox>
+            </VBox>
+
+        </VBox>
+    </center>
+</BorderPane>

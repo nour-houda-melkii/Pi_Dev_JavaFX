@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.ScrollPane?>
+<AnchorPane prefHeight="600" prefWidth="800" stylesheets="" xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.Ajout">
+   <!-- En-tête avec le logo et le nom de l'application -->
+   <VBox spacing="10" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <!-- Titre de l'application -->
+      <HBox alignment="CENTER" style="-fx-background-color: #f0f8ff; -fx-padding: 10px;">
+         <Label text="SAHATECH" style="-fx-font-size: 36; -fx-font-weight: bold; -fx-text-fill: #1E90FF;">
+            <font>
+               <Font name="System Bold" size="36.0" />
+            </font>
+         </Label>
+      </HBox>
+
+      <!-- Navbar en haut - visible="false" par défaut pour qu'elle n'apparaisse pas pendant la connexion -->
+      <HBox fx:id="navbar" alignment="CENTER" spacing="20" style="-fx-background-color: #2C3E50; -fx-padding: 10px;" visible="false">
+         <Button onAction="#populateDoctorGrid" styleClass="button-navbar" text="Prendre Rendez-vous" />
+         <Button onAction="#showAppointmentsListPane" styleClass="button-navbar" text="Voir mes Rendez-vous" />
+         <Button onAction="#showOnlineAppointmentsPane" styleClass="button-navbar" text="Mes Consultations En Ligne " />
+
+         <Button onAction="#showNotificationsPane" styleClass="button-navbar" text="Voir mes Notifications" />
+
+         <Button onAction="#showChatbotPane" styleClass="button-navbar" text="Assistant Médical" />
+
+
+      </HBox>
+   </VBox>
+
+
+
+   <!-- Notifications - avec plus d'espace depuis le haut -->
+   <VBox fx:id="notificationsPane" layoutX="20" layoutY="150" spacing="15" visible="false" AnchorPane.topAnchor="150.0">
+      <padding>
+         <Insets bottom="10" left="10" right="10" top="10" />
+      </padding>
+      <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2C3E50;" text="Vos Notifications :" />
+      <GridPane fx:id="notificationsGrid" gridLinesVisible="true" hgap="10" vgap="10" />
+      <Label fx:id="notificationsMessage" textFill="green" />
+   </VBox>
+
+   <!-- Liste des Médecins - avec plus d'espace depuis le haut -->
+   <VBox fx:id="doctorPane" layoutX="20" layoutY="150" spacing="15" visible="false" AnchorPane.topAnchor="150.0">
+      <padding>
+         <Insets bottom="10" left="10" right="10" top="10" />
+      </padding>
+      <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2C3E50;" text="Médecins disponibles :" />
+
+      <!-- Recherche par spécialité -->
+      <HBox alignment="CENTER_LEFT" spacing="10">
+         <Label text="Rechercher par spécialité:" />
+         <TextField fx:id="specialitySearchField" promptText="Entrez une spécialité" prefWidth="200" />
+         <Button onAction="#searchDoctorsBySpeciality" text="Rechercher" styleClass="button-primary" />
+         <Button onAction="#resetDoctorSearch" text="Réinitialiser" styleClass="button-secondary" />
+      </HBox>
+
+      <GridPane fx:id="doctorGrid" hgap="10" vgap="10" />
+      <Label fx:id="doctorMessage" textFill="red" />
+   </VBox>
+
+   <!-- Formulaire de Prise de Rendez-vous - avec plus d'espace depuis le haut -->
+   <VBox fx:id="appointmentPane" layoutX="250" layoutY="150" prefHeight="294.0" prefWidth="282.0" spacing="15" visible="false" AnchorPane.topAnchor="150.0">
+      <padding>
+         <Insets bottom="10" left="10" right="10" top="10" />
+      </padding>
+      <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2C3E50;" text="Prenez un RendezVous:" />
+      <ChoiceBox fx:id="stateChoiceBox" prefWidth="250" />
+      <HBox alignment="CENTER_LEFT" spacing="10">
+         <Label text="Date :" />
+         <DatePicker fx:id="datePicker" />
+      </HBox>
+      <HBox alignment="CENTER_LEFT" spacing="10">
+         <Label text="Heure :" />
+         <ComboBox fx:id="timeComboBox" promptText="Sélectionnez une heure" />
+      </HBox>
+      <Button onAction="#handleAppointmentCreation" prefWidth="150" styleClass="button-primary" text="Prendre Rendez-vous" />
+      <Label fx:id="appointmentMessage" textFill="green" />
+   </VBox>
+
+   <!-- Affichage manuel des Rendez-vous - avec plus d'espace depuis le haut -->
+   <VBox fx:id="appointmentsListPane" layoutX="20" layoutY="150" spacing="15" visible="false" AnchorPane.topAnchor="150.0">
+      <padding>
+         <Insets bottom="10" left="10" right="10" top="10" />
+      </padding>
+      <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2C3E50;" text="Vos Rendez-vous :" />
+
+      <!-- Contrôles de tri -->
+      <HBox alignment="CENTER_LEFT" spacing="10">
+         <Label text="Trier par date:" />
+         <Button onAction="#sortAppointmentsByDateAsc" text="Croissant" styleClass="button-secondary" />
+         <Button onAction="#sortAppointmentsByDateDesc" text="Décroissant" styleClass="button-secondary" />
+      </HBox>
+
+      <GridPane fx:id="appointmentsGrid" gridLinesVisible="true" hgap="10" vgap="10" />
+      <Label fx:id="appointmentsMessage" textFill="green" />
+   </VBox>
+
+   <!-- Affichage des Rendez-vous en ligne -->
+   <VBox fx:id="onlineAppointmentsPane" layoutX="20" layoutY="150" spacing="15" visible="false" AnchorPane.topAnchor="150.0">
+      <padding>
+         <Insets bottom="10" left="10" right="10" top="10" />
+      </padding>
+      <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2C3E50;" text="Vos Rendez-vous en ligne :" />
+
+      <GridPane fx:id="onlineAppointmentsGrid" gridLinesVisible="true" hgap="10" vgap="10" />
+      <Label fx:id="onlineAppointmentsMessage" textFill="green" />
+
+      <!-- Bouton pour rejoindre la consultation -->
+      <HBox alignment="CENTER" spacing="10">
+         <Button fx:id="joinMeetingButton" onAction="#joinOnlineMeeting" styleClass="button-primary" text="Rejoindre la consultation" />
+      </HBox>
+   </VBox>
+   <!-- Interface du Chatbot Médical -->
+   <VBox fx:id="chatbotPane" layoutX="20" layoutY="150" spacing="15" visible="false" AnchorPane.topAnchor="150.0">
+      <padding>
+         <Insets bottom="10" left="10" right="10" top="10" />
+      </padding>
+      <Label style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2C3E50;" text="Assistant Médical - Chatbot" />
+
+      <!-- Zone d'historique des messages -->
+      <ScrollPane fitToWidth="true" prefHeight="300" style="-fx-background: white;">
+         <VBox fx:id="chatHistoryBox" spacing="10" style="-fx-padding: 10;" />
+      </ScrollPane>
+
+      <!-- Zone de saisie et bouton d'envoi -->
+      <HBox spacing="10" alignment="CENTER_LEFT">
+         <TextField fx:id="chatInputField" promptText="Posez votre question médicale ici..." HBox.hgrow="ALWAYS" onAction="#sendChatMessage" />
+         <Button text="Envoyer" onAction="#sendChatMessage" styleClass="button-primary" />
+      </HBox>
+
+      <!-- Indicateur de chargement -->
+      <ProgressIndicator fx:id="chatLoadingIndicator" visible="false" />
+      <Label fx:id="chatbotMessage" textFill="green" />
+   </VBox>
+</AnchorPane>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.controllers.AjouterMedecin"
+            prefHeight="550.0" prefWidth="700.0"
+            style="-fx-background-color: #f8f9fa;"
+            stylesheets="@../../styles/styleAjouterMedecin/styles.css">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Main Card -->
+    <VBox style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);"
+          AnchorPane.topAnchor="20" AnchorPane.rightAnchor="20"
+          AnchorPane.bottomAnchor="20" AnchorPane.leftAnchor="20">
+
+        <padding>
+            <Insets top="20" right="20" bottom="20" left="20"/>
+        </padding>
+
+        <!-- Title -->
+        <Label text="Add a New Doctor" styleClass="card-title" />
+        <Text text="Use this form to add a new doctor to our application.&#10;Make sure to fill in all required fields to correctly register the doctor."
+              fill="#333" />
+
+        <Separator style="-fx-padding: 10 0 10 0;" />
+
+        <!-- Form -->
+        <GridPane hgap="20" vgap="15">
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" minWidth="250" />
+                <ColumnConstraints hgrow="ALWAYS" minWidth="250" />
+            </columnConstraints>
+
+            <!-- Left Column -->
+            <VBox spacing="15" GridPane.columnIndex="0">
+                <!-- First Name -->
+                <VBox spacing="5">
+                    <Label text="First Name" styleClass="form-label" />
+                    <TextField fx:id="firstNameField" styleClass="form-control" promptText="Enter first name" />
+                    <Label fx:id="firstNameError" styleClass="text-error" />
+                </VBox>
+
+                <!-- Email -->
+                <VBox spacing="5">
+                    <Label text="Email" styleClass="form-label" />
+                    <TextField fx:id="emailField" styleClass="form-control" promptText="Enter email" />
+                    <Label fx:id="emailError" styleClass="text-error" />
+                </VBox>
+
+                <!-- Address -->
+                <VBox spacing="5">
+                    <Label text="Address" styleClass="form-label" />
+                    <TextField fx:id="addressField" styleClass="form-control" promptText="Enter address" />
+                    <Label fx:id="addressError" styleClass="text-error" />
+                </VBox>
+
+                <!-- Age -->
+                <VBox spacing="5">
+                    <Label text="Age" styleClass="form-label" />
+                    <TextField fx:id="ageField" styleClass="form-control" promptText="Enter age" />
+                    <Label fx:id="ageError" styleClass="text-error" />
+                </VBox>
+
+                <!-- Speciality -->
+                <VBox spacing="5">
+                    <Label text="Speciality" styleClass="form-label" />
+                    <ComboBox fx:id="specialiteComboBox" styleClass="form-control" />
+                    <Label fx:id="specialiteError" styleClass="text-error" />
+                </VBox>
+            </VBox>
+
+            <!-- Right Column -->
+            <VBox spacing="15" GridPane.columnIndex="1">
+                <!-- Last Name -->
+                <VBox spacing="5">
+                    <Label text="Last Name" styleClass="form-label" />
+                    <TextField fx:id="lastNameField" styleClass="form-control" promptText="Enter last name" />
+                    <Label fx:id="lastNameError" styleClass="text-error" />
+                </VBox>
+
+                <!-- Phone Number -->
+                <VBox spacing="5">
+                    <Label text="Phone Number" styleClass="form-label" />
+                    <TextField fx:id="phoneField" styleClass="form-control" promptText="Enter phone number" />
+                    <Label fx:id="phoneError" styleClass="text-error" />
+                </VBox>
+
+                <!-- Gender -->
+                <VBox spacing="5">
+                    <Label text="Gender" styleClass="form-label" />
+                    <ComboBox fx:id="genderComboBox" styleClass="form-control" />
+                    <Label fx:id="genderError" styleClass="text-error" />
+                </VBox>
+
+                <!-- Licence Number -->
+                <VBox spacing="5">
+                    <Label text="Licence Number" styleClass="form-label" />
+                    <TextField fx:id="licenceField" styleClass="form-control" promptText="Enter licence number" />
+                    <Label fx:id="licenceError" styleClass="text-error" />
+                </VBox>
+
+                <!-- Buttons -->
+                <HBox spacing="10" style="-fx-padding: 20 0 0 0;">
+                    <Button fx:id="backButton" text="Back to List" onAction="#handleCancel"
+                            styleClass="btn-secondary"/>
+                    <Button text="Save" styleClass="btn-primary" onAction="#handleSave" />
+                </HBox>
+            </VBox>
+        </GridPane>
+    </VBox>
+</AnchorPane>

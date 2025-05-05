@@ -122,10 +122,8 @@ public class ConfirmationPurchaseController {
 
     private void processOrder() {
         try {
-            // Create the order in database
             createOrderInDatabase();
 
-            // Send confirmation email
             boolean emailSent = sendConfirmationEmail(
                     emailField.getText(),
                     passwordField.getText(),
@@ -145,10 +143,8 @@ public class ConfirmationPurchaseController {
                 showAlert("Email Notification", "We couldn't send a confirmation email. Please check your email address.");
             }
 
-            // Generate and show QR code
             showQRCode();
 
-            // Show confirmation message
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Order Confirmed");
             alert.setHeaderText("Thank you for your purchase!");
@@ -160,10 +156,8 @@ public class ConfirmationPurchaseController {
                     "You will now be redirected to the payment page.");
             alert.showAndWait();
 
-            // Update order processed status
             orderProcessed = true;
 
-            // Show the payment button now that the order is processed
             if (paymentButton != null) {
                 paymentButton.setVisible(true);
                 paymentButton.setManaged(true);
@@ -178,21 +172,18 @@ public class ConfirmationPurchaseController {
     }
 
     private void createOrderInDatabase() throws SQLException {
-        // Calculate total amount
         double total = 0;
         for (Produit product : cartProducts) {
             int quantity = productQuantities.getOrDefault(product.getId(), 1);
             total += product.getPrice() * quantity;
         }
 
-        // Create commande
         Commande commande = new Commande();
         commande.setUserId(currentUserId);
         commande.setDateCommande(LocalDate.now());
         commande.setStatut("Pending Payment");
         commande.setTotal(total);
 
-        // Create commande lignes
         List<CommandeLigne> lignes = cartProducts.stream()
                 .map(product -> {
                     CommandeLigne ligne = new CommandeLigne();
@@ -202,8 +193,7 @@ public class ConfirmationPurchaseController {
                 })
                 .collect(Collectors.toList());
 
-        // Save to database using your service classes
-        // Example: commandeService.insert(commande, lignes);
+
     }
 
     @FXML
@@ -213,7 +203,6 @@ public class ConfirmationPurchaseController {
             Parent root = loader.load();
 
             StripePaymentController controller = loader.getController();
-            // Pass all relevant customer and order info to stripe controller
             controller.setPaymentInfo(
                     cartProducts,
                     productQuantities,
@@ -242,14 +231,11 @@ public class ConfirmationPurchaseController {
         }
 
         try {
-            // Create order in database first
             createOrderInDatabase();
 
-            // Calculate total amount (remove currency symbol and parse)
             String amountStr = totalAmount.replaceAll("[^\\d.]", "");
             double amount = Double.parseDouble(amountStr);
 
-            // Create Stripe Checkout session
             String checkoutUrl = paymentService.createStripeCheckoutSession(
                     amount,
                     orderReference,
@@ -257,10 +243,8 @@ public class ConfirmationPurchaseController {
                     emailField.getText()
             );
 
-            // Open checkout URL in browser
             java.awt.Desktop.getDesktop().browse(java.net.URI.create(checkoutUrl));
 
-            // Show instructions to user
             showAlert("Stripe Checkout", "Please complete your payment in the browser window that has opened. " +
                     "After payment, please return to this application.");
 
@@ -320,30 +304,25 @@ public class ConfirmationPurchaseController {
                                          String phone, String orderRef, String amount,
                                          List<Produit> products, Map<Integer, Integer> quantities) {
         try {
-            // Set up mail server properties
             Properties properties = new Properties();
             properties.put("mail.smtp.host", EMAIL_HOST);
             properties.put("mail.smtp.port", EMAIL_PORT);
             properties.put("mail.smtp.auth", "true");
             properties.put("mail.smtp.starttls.enable", "true");
 
-            // Create authenticator with credentials
             Authenticator auth = new Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
                     return new PasswordAuthentication(SENDER_EMAIL, SENDER_PASSWORD);
                 }
             };
 
-            // Create mail session
             Session session = Session.getInstance(properties, auth);
 
-            // Create the email message
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(SENDER_EMAIL));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
             message.setSubject("SahaTech - Order Confirmation - " + orderRef);
 
-            // Build email content with enhanced design and logo
             StringBuilder emailContent = new StringBuilder();
             emailContent.append("<!DOCTYPE html>");
             emailContent.append("<html><head>");
@@ -376,13 +355,11 @@ public class ConfirmationPurchaseController {
             emailContent.append("<p>Dear ").append(name).append(",</p>");
             emailContent.append("<p>Your order has been confirmed and is being processed. Below are your order details:</p>");
 
-            // Payment information - Modified to show payment is pending
             emailContent.append("<div class='payment-info'>");
             emailContent.append("<p><strong>Payment Status:</strong> Pending</p>");
             emailContent.append("<p><strong>Payment Method:</strong> Stripe (Online Payment)</p>");
             emailContent.append("</div>");
 
-            // Order information box
             emailContent.append("<div class='order-info'>");
             emailContent.append("<p><strong>Order Reference:</strong> ").append(orderRef).append("</p>");
             emailContent.append("<p><strong>Order Date:</strong> ").append(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date())).append("</p>");
@@ -392,7 +369,6 @@ public class ConfirmationPurchaseController {
             emailContent.append("<p><strong>Phone:</strong> ").append(phone).append("</p>");
             emailContent.append("</div>");
 
-            // Order details table
             emailContent.append("<h3>Order Summary</h3>");
             emailContent.append("<table class='order-details'>");
             emailContent.append("<tr><th>Product</th><th>Quantity</th><th>Price</th><th>Total</th></tr>");

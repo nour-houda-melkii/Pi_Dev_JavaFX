@@ -32,11 +32,22 @@ public class CartViewController {
     private List<Produit> cartProducts;
     private Map<Integer, Integer> productQuantities = new HashMap<>();
     private String orderReference;
-    private final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
+    private final NumberFormat currencyFormat = createCustomCurrencyFormat();
+
+    // Create custom currency format that displays "D" instead of "$"
+    private NumberFormat createCustomCurrencyFormat() {
+        NumberFormat format = NumberFormat.getNumberInstance(Locale.getDefault());
+        format.setMinimumFractionDigits(2);
+        format.setMaximumFractionDigits(2);
+        return format;
+    }
+
+    private String formatCurrency(double amount) {
+        return createCustomCurrencyFormat().format(amount) + " D";
+    }
 
     @FXML
     public void initialize() {
-        // Generate a unique order reference on initialization
         orderReference = generateOrderReference();
     }
 
@@ -50,7 +61,7 @@ public class CartViewController {
             int quantity = productQuantities.getOrDefault(product.getId(), 1);
             total += product.getPrice() * quantity;
         }
-        totalAmountLabel.setText(currencyFormat.format(total));
+        totalAmountLabel.setText(formatCurrency(total));
     }
 
     @FXML
@@ -135,13 +146,13 @@ public class CartViewController {
         int quantity = productQuantities.getOrDefault(product.getId(), 1);
         double totalPrice = product.getPrice() * quantity;
 
-        Label priceLabel = new Label(String.format("Price: %s", currencyFormat.format(product.getPrice())));
+        Label priceLabel = new Label(String.format("Price: %s", formatCurrency(product.getPrice())));
         priceLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #33ccff; -fx-padding: 0 10 0 10;");
 
         Label quantityLabel = new Label(String.format("Quantity: %d", quantity));
         quantityLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #333333; -fx-padding: 0 10 0 10;");
 
-        Label totalLabel = new Label(String.format("Total: %s", currencyFormat.format(totalPrice)));
+        Label totalLabel = new Label(String.format("Total: %s", formatCurrency(totalPrice)));
         totalLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #27ae60; -fx-padding: 0 10 5 10;");
 
         // Quantity control buttons

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+
+<?import javafx.scene.shape.Circle?>
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.controllers.AdminDashboardController" stylesheets="@/styles/admin.css">
+
+    <!-- Top - Header -->
+    <top>
+        <HBox style="-fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 0, 1, 3, 0); -fx-padding: 15;">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <!-- Menu Toggle Button (visible only on mobile) -->
+                <Button id="sidebarToggle" style="-fx-background-color: transparent; -fx-padding: 5;" onAction="#toggleSidebar">
+                    <graphic>
+                        <ImageView fitWidth="20" fitHeight="20">
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </HBox>
+
+            <HBox alignment="CENTER_RIGHT" spacing="10" HBox.hgrow="ALWAYS">
+                <!-- Notification Button -->
+                <Button style="-fx-background-color: transparent; -fx-padding: 5;">
+                    <graphic>
+                        <StackPane>
+                            <ImageView fitWidth="20" fitHeight="20">
+                            </ImageView>
+                            <Circle radius="5" fill="#10b981" style="-fx-translate-x: 5; -fx-translate-y: -5;"/>
+                        </StackPane>
+                    </graphic>
+                </Button>
+
+                <!-- Settings Button -->
+                <Button style="-fx-background-color: transparent; -fx-padding: 5;">
+                    <graphic>
+                        <ImageView fitWidth="20" fitHeight="20">
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- Left - Sidebar -->
+    <left>
+        <VBox fx:id="sidebar" style="-fx-background-color: white; -fx-border-color: #e2e8f0; -fx-border-width: 0 1 0 0; -fx-pref-width: 250; -fx-spacing: 0;">
+            <!-- Logo Section -->
+            <HBox style="-fx-padding: 15; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1 0; -fx-alignment: CENTER_LEFT;">
+                <Label text="SAHATECK" style="-fx-text-fill: #0ea5e9; -fx-font-size: 24px; -fx-font-family: 'Pacifico';"/>
+            </HBox>
+
+            <!-- Pages Section -->
+            <Label text="PAGES" style="-fx-text-fill: #94a3b8; -fx-font-size: 12px; -fx-padding: 10 15 5 15; -fx-font-weight: bold;"/>
+
+            <!-- Dashboard Button -->
+            <Button  text="Tableau de Bord" onAction="#showDashboard" style="-fx-background-color: #f0f9ff; -fx-border-color: #0ea5e9; -fx-border-width: 0 0 0 4; -fx-text-fill: #0ea5e9; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-font-size: 14px;">
+                <graphic>
+                    <ImageView fitWidth="20" fitHeight="20">
+                    </ImageView>
+                </graphic>
+            </Button>
+
+            <!-- Product Management -->
+            <Button text="Gestion des Produits" onAction="#toggleProductMenu" style="-fx-background-color: transparent; -fx-text-fill: #1e293b; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-font-size: 14px;">
+                <graphic>
+                    <ImageView fitWidth="20" fitHeight="20">
+                    </ImageView>
+                </graphic>
+                <HBox style="-fx-alignment: CENTER_RIGHT; -fx-hgrow: ALWAYS;">
+                    <ImageView fitWidth="16" fitHeight="16">
+                    </ImageView>
+                </HBox>
+            </Button>
+
+            <!-- Product Submenu -->
+            <VBox fx:id="productMenu" style="-fx-background-color: #f8fafc; -fx-padding: 0 0 0 20; -fx-spacing: 5;" managed="false" visible="false">
+                <Button text="Front View" onAction="#handleFrontView" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
+                <Button text="View Categories" onAction="#handleViewCategories" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
+                <Button text="Add Category" onAction="#handleAddCategory" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
+                <Button text="Add Product" onAction="#handleTableViewButton" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
+                <Button text="Data History" onAction="#handleDataHistory" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
+                <Button text="Favorites Stats" onAction="#handleFavoritesStatistics" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
+            </VBox>
+
+            <!-- User Management -->
+            <Button text="Gestion des Utilisateurs" onAction="#toggleUserMenu" style="-fx-background-color: transparent; -fx-text-fill: #1e293b; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-font-size: 14px;">
+                <graphic>
+                    <ImageView fitWidth="20" fitHeight="20">
+                    </ImageView>
+                </graphic>
+                <HBox style="-fx-alignment: CENTER_RIGHT; -fx-hgrow: ALWAYS;">
+                    <ImageView fitWidth="16" fitHeight="16">
+                    </ImageView>
+                </HBox>
+            </Button>
+
+            <!-- User Submenu -->
+            <VBox fx:id="userMenu" style="-fx-background-color: #f8fafc; -fx-padding: 0 0 0 20; -fx-spacing: 5;" managed="false" visible="false">
+                <Button text="Doctors" onAction="#showDoctors" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
+                <Button text="Patients" onAction="#showPatients" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
+            </VBox>
+
+            <!-- Appointment Management -->
+            <Button text="Gestion des Rendez-vous" onAction="#toggleAppointmentMenu" style="-fx-background-color: transparent; -fx-text-fill: #1e293b; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-font-size: 14px;">
+                <graphic>
+                    <ImageView fitWidth="20" fitHeight="20">
+                    </ImageView>
+                </graphic>
+                <HBox style="-fx-alignment: CENTER_RIGHT; -fx-hgrow: ALWAYS;">
+                    <ImageView fitWidth="16" fitHeight="16">
+                    </ImageView>
+                </HBox>
+            </Button>
+
+            <!-- Appointment Submenu -->
+            <VBox fx:id="appointmentMenu" style="-fx-background-color: #f8fafc; -fx-padding: 0 0 0 20; -fx-spacing: 5;" managed="false" visible="false">
+                <Button text="Manage Appointments" onAction="#showAppointmentManagement" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
+                <Button text="Medecin" onAction="#medecin" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
+                <Button text="Patient" onAction="#showAjoutView" style="-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-alignment: CENTER_LEFT; -fx-padding: 10 15; -fx-font-size: 13px;"/>
+            </VBox>
+
+            <!-- Profile & Logout -->
+            <VBox fx:id="profileSection" style="-fx-spacing: 5; -fx-padding: 20 0 0 0; -fx-border-color: #e2e8f0; -fx-border-width: 1 0 0 0;">
+                <Button fx:id="profileButton" text="Profile" onAction="#showProfile" style="-fx-background-color: transparent; -fx-text-fill: #1e293b; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-font-size: 14px;">
+                    <graphic>
+                        <ImageView fitWidth="20" fitHeight="20">
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </VBox>
+             <VBox>
+                <Button text="Déconnexion" onAction="#logout" style="-fx-background-color: transparent; -fx-text-fill: #1e293b; -fx-alignment: CENTER_LEFT; -fx-padding: 15 20; -fx-font-size: 14px;">
+                    <graphic>
+                        <ImageView fitWidth="20" fitHeight="20">
+                        </ImageView>
+                    </graphic>
+                </Button>
+            </VBox>
+        </VBox> <!-- Fermeture du VBox principal du sidebar -->
+    </left> <!-- Fermeture de la balise left -->
+
+    <!-- Center - Content Area -->
+    <center>
+        <StackPane fx:id="contentPane" style="-fx-background-color: #f8fafc;">
+            <!-- Default content - Dashboard Stats -->
+            <VBox style="-fx-padding: 20; -fx-spacing: 20;">
+                <HBox style="-fx-spacing: 20; -fx-alignment: CENTER; -fx-padding: 20;">
+                    <!-- Total Users Card -->
+                    <VBox style="-fx-background-color: #ffffff; -fx-padding: 20; -fx-spacing: 10; -fx-alignment: CENTER; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3); -fx-border-radius: 10; -fx-background-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;">
+                        <Label text="USERS" style="-fx-text-fill: #64748b; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                        <Label fx:id="totalUsersLabel" text="35" style="-fx-text-fill: #1e40af; -fx-font-size: 32px; -fx-font-weight: bold;"/>
+                        <Label text="Verified" style="-fx-text-fill: #10b981; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 5 10 0 10;"/>
+                    </VBox>
+
+                    <!-- Doctors Card -->
+                    <VBox style="-fx-background-color: #ffffff; -fx-padding: 20; -fx-spacing: 10; -fx-alignment: CENTER; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3); -fx-border-radius: 10; -fx-background-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;">
+                        <Label text="DOCTORS" style="-fx-text-fill: #64748b; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                        <Label fx:id="totalDoctorsLabel" text="14" style="-fx-text-fill: #1e40af; -fx-font-size: 32px; -fx-font-weight: bold;"/>
+                        <Label text="Verified" style="-fx-text-fill: #10b981; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 5 10 0 10;"/>
+                    </VBox>
+
+                    <!-- Patients Card -->
+                    <VBox style="-fx-background-color: #ffffff; -fx-padding: 20; -fx-spacing: 10; -fx-alignment: CENTER; -fx-pref-width: 200; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3); -fx-border-radius: 10; -fx-background-radius: 10; -fx-border-color: #e2e8f0; -fx-border-width: 1;">
+                        <Label text="PATIENTS" style="-fx-text-fill: #64748b; -fx-font-size: 14px; -fx-font-weight: bold;"/>
+                        <Label fx:id="totalPatientsLabel" text="21" style="-fx-text-fill: #1e40af; -fx-font-size: 32px; -fx-font-weight: bold;"/>
+                        <Label text="Verified" style="-fx-text-fill: #10b981; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 5 10 0 10;"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Product Management Section -->
+                <VBox style="-fx-spacing: 15; -fx-padding: 20; -fx-background-color: white; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2); -fx-border-radius: 8; -fx-background-radius: 8;">
+                    <Label text="Product Management" style="-fx-text-fill: #1e293b; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+                    <!-- Sorting Options -->
+                    <HBox style="-fx-spacing: 10; -fx-alignment: CENTER_LEFT;">
+                        <Label text="Sort by:" style="-fx-text-fill: #64748b; -fx-font-size: 14px;"/>
+                        <ComboBox fx:id="sortComboBox" style="-fx-background-radius: 4; -fx-pref-width: 150;"/>
+                    </HBox>
+
+                    <!-- Product Cards Container -->
+                    <ScrollPane style="-fx-background-color: transparent; -fx-fit-to-width: true;">
+                        <FlowPane fx:id="productContainer" style="-fx-padding: 10; -fx-hgap: 20; -fx-vgap: 20;"/>
+                    </ScrollPane>
+                </VBox>
+            </VBox>
+        </StackPane>
+    </center>
+</BorderPane>

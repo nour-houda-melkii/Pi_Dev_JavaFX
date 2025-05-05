@@ -7,11 +7,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -30,6 +33,11 @@ public class FavoritesViewController {
     @FXML
     public void initialize() {
         // Will be initialized when products are set
+        // Set spacing and styling for the favorites container
+        favoritesContainer.setHgap(20);
+        favoritesContainer.setVgap(20);
+        favoritesContainer.setPrefWidth(800);
+        favoritesContainer.setStyle("-fx-background-color: #f8f9fa; -fx-padding: 20;");
     }
 
     public void setFavoriteProducts(List<Produit> favoriteProducts) {
@@ -42,9 +50,36 @@ public class FavoritesViewController {
         favoritesContainer.getChildren().clear();
 
         if (favoriteProducts.isEmpty()) {
+            VBox emptyBox = new VBox();
+            emptyBox.setStyle("-fx-background-color: white; " +
+                    "-fx-border-color: #000000; " +
+                    "-fx-border-width: 2; " +
+                    "-fx-border-radius: 10; " +
+                    "-fx-background-radius: 10; " +
+                    "-fx-padding: 40; " +
+                    "-fx-alignment: center;");
+            emptyBox.setPrefWidth(600);
+            emptyBox.setPrefHeight(200);
+
+            Label emptyIcon = new Label("♡");
+            emptyIcon.setStyle("-fx-font-size: 40px; -fx-text-fill: #dc3545;");
+
             Label emptyLabel = new Label("You don't have any favorite products yet");
-            emptyLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #7f8c8d; -fx-padding: 20;");
-            favoritesContainer.getChildren().add(emptyLabel);
+            emptyLabel.setStyle("-fx-font-size: 18px; -fx-text-fill: #495057; -fx-padding: 10;");
+
+            Button browseButton = new Button("Browse Products");
+            browseButton.setStyle("-fx-background-color: #007bff; " +
+                    "-fx-text-fill: white; " +
+                    "-fx-border-color: #000000; " +
+                    "-fx-border-width: 1; " +
+                    "-fx-border-radius: 20; " +
+                    "-fx-background-radius: 20; " +
+                    "-fx-font-size: 14px; " +
+                    "-fx-padding: 10 20;");
+            browseButton.setOnAction(e -> handleBackToProducts());
+
+            emptyBox.getChildren().addAll(emptyIcon, emptyLabel, browseButton);
+            favoritesContainer.getChildren().add(emptyBox);
         } else {
             for (Produit product : favoriteProducts) {
                 favoritesContainer.getChildren().add(createProductCard(product));
@@ -53,57 +88,89 @@ public class FavoritesViewController {
     }
 
     private VBox createProductCard(Produit product) {
-        // Create a styled card container
+        // Create a styled card container with black border
         VBox card = new VBox(10);
-        card.setPrefWidth(200);
-        card.setPrefHeight(350);
+        card.setPrefWidth(240);
+        card.setPrefHeight(400);
         card.setStyle("-fx-background-color: white; " +
-                "-fx-border-color: #f0f0f0; " +
-                "-fx-border-radius: 8; " +
-                "-fx-background-radius: 8; " +
-                "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 3, 0, 0, 1);");
+                "-fx-border-color: #000000; " +
+                "-fx-border-width: 2; " +
+                "-fx-border-radius: 10; " +
+                "-fx-background-radius: 10;");
+
+        // Apply drop shadow effect
+        DropShadow shadow = new DropShadow();
+        shadow.setColor(Color.color(0, 0, 0, 0.3));
+        shadow.setRadius(10);
+        shadow.setOffsetX(0);
+        shadow.setOffsetY(2);
+        card.setEffect(shadow);
 
         // Product Image
         ImageView imageView = new ImageView();
-        imageView.setFitWidth(180);
-        imageView.setFitHeight(180);
+        imageView.setFitWidth(200);
+        imageView.setFitHeight(200);
         imageView.setPreserveRatio(true);
-        imageView.setStyle("-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);");
         loadProductImage(product, imageView);
 
-        // Image container
+        // Image border
+        imageView.setStyle("-fx-border-color: #000000; -fx-border-width: 1;");
+
+        // Image container with padding
         HBox imageContainer = new HBox(imageView);
-        imageContainer.setStyle("-fx-alignment: center; -fx-padding: 10 0 5 0;");
+        imageContainer.setStyle("-fx-alignment: center; -fx-padding: 15 0 10 0;");
 
-        // Product Details
+        // Product Details Section - in a VBox with border
+        VBox detailsContainer = new VBox(8);
+        detailsContainer.setStyle("-fx-background-color: #f8f9fa; " +
+                "-fx-border-color: #000000; " +
+                "-fx-border-width: 1 0; " +
+                "-fx-padding: 10;");
+
+        // Product name
         Label nameLabel = new Label(product.getName());
-        nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #333333; -fx-padding: 0 10 0 10;");
+        nameLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #212529;");
         nameLabel.setWrapText(true);
+        nameLabel.setMaxWidth(200);
 
-        Label priceLabel = new Label(String.format("$%.2f", product.getPrice()));
-        priceLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #33ccff; -fx-padding: 0 10 5 10;");
+        // Price with currency symbol
+        Label priceLabel = new Label("" + String.format("%.2f", product.getPrice()));
+        priceLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #28a745; -fx-font-weight: bold;");
 
+        // Description with scrollable area if too long
         Label descLabel = new Label(product.getDescription());
-        descLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #7f8c8d; -fx-padding: 0 10 0 10;");
+        descLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #6c757d;");
         descLabel.setWrapText(true);
-        descLabel.setMaxHeight(40);
+        descLabel.setMaxWidth(200);
+        descLabel.setMaxHeight(60);
 
-        // Remove button
-        Button removeButton = new Button("Remove from Favorites");
-        removeButton.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 20;");
+        // Add details to container
+        detailsContainer.getChildren().addAll(nameLabel, priceLabel, descLabel);
+
+        // Buttons container
+        HBox buttonBox = new HBox(10);
+        buttonBox.setStyle("-fx-alignment: center; -fx-padding: 12;");
+
+
+        // Remove button with enhanced styling
+        Button removeButton = new Button("♥ Remove");
+        removeButton.setStyle("-fx-background-color: #dc3545; " +
+                "-fx-text-fill: white; " +
+                "-fx-border-color: #000000; " +
+                "-fx-border-width: 1; " +
+                "-fx-border-radius: 20; " +
+                "-fx-background-radius: 20;");
         removeButton.setOnAction(e -> {
             favoriteProducts.removeIf(p -> p.getId() == product.getId());
             displayFavorites();
             updateCounter();
         });
 
-        // Button container
-        HBox buttonBox = new HBox(10);
-        buttonBox.setStyle("-fx-alignment: center; -fx-padding: 5 10 10 10;");
-        buttonBox.getChildren().add(removeButton);
+        // Add buttons to container
+        buttonBox.getChildren().addAll(removeButton);
 
-        // Add components to card
-        card.getChildren().addAll(imageContainer, nameLabel, priceLabel, descLabel, buttonBox);
+        // Add all components to card
+        card.getChildren().addAll(imageContainer, detailsContainer, buttonBox);
 
         return card;
     }
@@ -135,7 +202,8 @@ public class FavoritesViewController {
     }
 
     private void updateCounter() {
-        totalItemsLabel.setText(favoriteProducts.size() + " items");
+        totalItemsLabel.setText(favoriteProducts.size() + " favorite items");
+        totalItemsLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #0056b3;");
     }
 
     @FXML

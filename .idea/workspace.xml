@@ -4,14 +4,37 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="67f812a0-6c1d-4f08-bb79-468f0bf5180a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data_history.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data_history.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Services/FavoriServices.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Services/FavoriServices.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/ProductFrontController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/ProductFrontController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/StripePaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/StripePaymentController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/entities/user.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/entities/user.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/controllers/StripePaymentController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/controllers/StripePaymentController.class" afterDir="false" />
+    <list default="true" id="c51d57a7-d4d0-4374-b3a0-5a6ef6dac40e" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controllers/AdminDashboardController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/AdminDashboardController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controllers/FrontOfficeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/FrontOfficeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controllers/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/LoginController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controllers/nour/CartViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/nour/CartViewController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controllers/nour/ConfirmationPurchaseController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/nour/ConfirmationPurchaseController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controllers/nour/EditProductController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/nour/EditProductController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controllers/nour/FavoritesStatisticsController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controllers/nour/FavoritesViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/nour/FavoritesViewController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controllers/nour/ListeProduitController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/nour/ListeProduitController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controllers/nour/ProductFrontController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/nour/ProductFrontController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controllers/nour/QRCodeViewController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/nour/QRCodeViewController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/controllers/nour/StripePaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/controllers/nour/StripePaymentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/models/CommandeLigne.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/models/CommandeLigne.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/models/Produit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/models/Produit.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/services/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/services/AuthService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/services/FavoriServices.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/services/MedicalChatbotAPI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/services/MedicalChatbotAPI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/services/ProduitServices.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/services/ProduitServices.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/services/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/services/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/utils/AuthManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/utils/AuthManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/utils/DataSource.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/utils/DataSource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/views/AdminDashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/views/AdminDashboard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/views/frontoffice.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/views/frontoffice.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/views/nour/admin_dashboard.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/views/nour/admin_dashboard.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/views/nour/cart_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/views/nour/cart_view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/views/nour/confirmation_purchase.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/views/nour/confirmation_purchase.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/views/nour/favorites_statistics_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/views/nour/favorites_statistics_view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/views/nour/stripe_payment_view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/views/nour/stripe_payment_view.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/styles/styleFrontOffice/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/styles/styleFrontOffice/styles.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,7 +44,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Kotlin Class" />
+        <option value="Interface" />
+        <option value="Enum" />
         <option value="Class" />
         <option value="FxmlFile" />
       </list>
@@ -30,24 +54,17 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/pom.xml" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/models/User.java" root0="SKIP_HIGHLIGHTING" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="MavenImportPreferences">
-    <option name="generalSettings">
-      <MavenGeneralSettings>
-        <option name="mavenHome" value="Use Maven wrapper" />
-      </MavenGeneralSettings>
-    </option>
-  </component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
   <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 0
+  &quot;associatedIndex&quot;: 2
 }</component>
-  <component name="ProjectId" id="2ulIsNH2OM5RHWFJyGb7Vs0OvFN" />
+  <component name="ProjectId" id="2v17aoQFVyKwEfpc3e155RpO38g" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
@@ -58,48 +75,45 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;Application.Main.executor&quot;: &quot;Run&quot;,
-    &quot;Application.produit.executor&quot;: &quot;Run&quot;,
-    &quot;Maven.produit [clean].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.produit [compile].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.produit [install].executor&quot;: &quot;Run&quot;,
-    &quot;Maven.produit [org.openjfx:javafx-maven-plugin:0.0.8:run].executor&quot;: &quot;Run&quot;,
-    &quot;Notification.DisplayName-DoNotAsk-Vcs Important Messages&quot;: &quot;VCS important messages&quot;,
-    &quot;Notification.DoNotAsk-Vcs Important Messages&quot;: &quot;true&quot;,
+    &quot;Application.MainFX.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.projetJavaFx [test].executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;gestion__produit&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;gestion__user&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/nourm/OneDrive/Bureau/krayett zahy/gestion_produit&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/nourm/OneDrive/Bureau/krayett zahy/version ndhifa - Copy&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
-    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.JavaFX&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settings.project.maven.repository.indices&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
   <component name="RecentsManager">
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="controllers" />
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\moham\Bureau\projets_JavaFx\projetJavaFx\src\main\resources\images" />
+      <recent name="C:\Users\moham\Bureau\projets_JavaFx\projetJavaFx\src\main\java\com\controllers\nour" />
+      <recent name="C:\Users\moham\Bureau\projets_JavaFx\projetJavaFx\src\main\resources\com\views\nour" />
+      <recent name="C:\Users\moham\Bureau\projets_JavaFx\projetJavaFx\src\main\java\com\services" />
+      <recent name="C:\Users\moham\Bureau\projets_JavaFx\projetJavaFx\src\main\java\com\models" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\nourm\OneDrive\Bureau\krayett zahy\gestion_produit\src\main\resources\images" />
-      <recent name="C:\Users\nourm\OneDrive\Bureau\krayett zahy\gestion_produit\src\main\resources" />
-      <recent name="C:\Users\nourm\OneDrive\Bureau\krayett zahy\Product-Management\src\main\resources" />
-      <recent name="C:\Users\nourm\OneDrive\Bureau\krayett zahy\Product-Management\src\main\resources\images" />
-      <recent name="C:\Users\nourm\OneDrive\Bureau\krayett zahy\Product-Management\src\main\resources\image" />
+      <recent name="C:\Users\moham\Bureau\projets_JavaFx\projetJavaFx\src\main\java\com\services" />
+      <recent name="C:\Users\moham\Bureau\projets_JavaFx\projetJavaFx\src\main\resources\styles\styleAjouterPatient" />
+      <recent name="C:\Users\moham\Bureau\projets_JavaFx\projetJavaFx\src\main\resources\com\views" />
+      <recent name="C:\Users\moham\Bureau\projets_JavaFx\projetJavaFx\src\main\resources" />
     </key>
   </component>
   <component name="RunManager">
-    <configuration name="produit" type="Application" factoryName="Application">
-      <option name="MAIN_CLASS_NAME" value="Main" />
-      <module name="produit" />
-      <option name="VM_PARAMETERS" value=" --module-path &quot;C:\Users\nourm\OneDrive\Bureau\krayett zahy\javafx-sdk-17.0.14\lib&quot; --add-modules javafx.controls,javafx.fxml  --add-modules javafx.controls,javafx.fxml,javafx.web --add-exports javafx.graphics/com.sun.javafx.sg.prism=ALL-UNNAMED  --add-opens javafx.fxml/javafx.fxml=ALL-UNNAMED" />
+    <configuration name="Main" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.tests.MainFX" />
+      <module name="projetJavaFx" />
+      <option name="VM_PARAMETERS" value=" --module-path &quot;C:\Users\nourm\OneDrive\Bureau\krayett zahy\javafx-sdk-17.0.14\lib&quot; --add-modules javafx.controls,javafx.fxml  --add-modules javafx.controls,javafx.fxml,javafx.web --add-exports javafx.graphics/com.sun.javafx.sg.prism=ALL-UNNAMED" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -108,130 +122,73 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="67f812a0-6c1d-4f08-bb79-468f0bf5180a" name="Changes" comment="" />
-      <created>1742816941809</created>
+      <changelist id="c51d57a7-d4d0-4374-b3a0-5a6ef6dac40e" name="Changes" comment="" />
+      <created>1743300794344</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1742816941809</updated>
-      <workItem from="1742816942869" duration="3253000" />
-      <workItem from="1742820217685" duration="1430000" />
-      <workItem from="1742905546481" duration="5295000" />
-      <workItem from="1743019977605" duration="592000" />
-      <workItem from="1743022859109" duration="291000" />
-      <workItem from="1743023163816" duration="28000" />
-      <workItem from="1743180603403" duration="1766000" />
-      <workItem from="1743196339015" duration="7007000" />
-      <workItem from="1743204447195" duration="2989000" />
-      <workItem from="1743276514844" duration="12901000" />
-      <workItem from="1743338728662" duration="644000" />
-      <workItem from="1743339422639" duration="2889000" />
-      <workItem from="1743342335205" duration="11042000" />
-      <workItem from="1743435423884" duration="781000" />
-      <workItem from="1743444935730" duration="1396000" />
-      <workItem from="1743520746366" duration="1085000" />
-      <workItem from="1743533558551" duration="6249000" />
-      <workItem from="1743604297299" duration="2449000" />
-      <workItem from="1743619600520" duration="2049000" />
-      <workItem from="1743635873273" duration="2098000" />
-      <workItem from="1743698757220" duration="1355000" />
-      <workItem from="1743706799378" duration="1128000" />
-      <workItem from="1743798143695" duration="4461000" />
-      <workItem from="1743876841254" duration="2286000" />
-      <workItem from="1744021223517" duration="9000" />
-      <workItem from="1744052633691" duration="429000" />
-      <workItem from="1744059133432" duration="103000" />
-      <workItem from="1744101240620" duration="178000" />
-      <workItem from="1744107592450" duration="179000" />
-      <workItem from="1744107786193" duration="848000" />
-      <workItem from="1744144422161" duration="5107000" />
-      <workItem from="1744279568581" duration="1421000" />
-      <workItem from="1744366913791" duration="1130000" />
-      <workItem from="1744368084610" duration="1289000" />
-      <workItem from="1744393099960" duration="666000" />
-      <workItem from="1744395197438" duration="1699000" />
-      <workItem from="1744396942742" duration="16000" />
-      <workItem from="1744398237823" duration="3238000" />
-      <workItem from="1744458677176" duration="26000" />
-      <workItem from="1744458728320" duration="57000" />
-      <workItem from="1744458843396" duration="11000" />
-      <workItem from="1744459706691" duration="816000" />
-      <workItem from="1744461346252" duration="544000" />
-      <workItem from="1744464910961" duration="29000" />
-      <workItem from="1744465598595" duration="1111000" />
-      <workItem from="1744481337190" duration="1669000" />
-      <workItem from="1744483880415" duration="933000" />
-      <workItem from="1744488319782" duration="387000" />
-      <workItem from="1744540172619" duration="2735000" />
-      <workItem from="1744547237823" duration="3357000" />
-      <workItem from="1744553809131" duration="1802000" />
-      <workItem from="1744556523612" duration="3923000" />
-      <workItem from="1744620162653" duration="1367000" />
-      <workItem from="1744625380099" duration="539000" />
-      <workItem from="1744632485857" duration="1849000" />
-      <workItem from="1744639458190" duration="1368000" />
-      <workItem from="1744641414596" duration="898000" />
-      <workItem from="1744645870047" duration="3718000" />
-      <workItem from="1744654464152" duration="10565000" />
-      <workItem from="1744666136822" duration="347000" />
-      <workItem from="1744666647983" duration="3540000" />
-      <workItem from="1744701330224" duration="2845000" />
-      <workItem from="1744706692925" duration="5766000" />
-      <workItem from="1744724202065" duration="2491000" />
-      <workItem from="1744879149587" duration="76000" />
-      <workItem from="1744892773711" duration="601000" />
-      <workItem from="1744902715865" duration="199000" />
-      <workItem from="1744914270057" duration="1445000" />
-      <workItem from="1745003533094" duration="2400000" />
-      <workItem from="1745093328037" duration="1280000" />
-      <workItem from="1745098993961" duration="102000" />
-      <workItem from="1745264980438" duration="2516000" />
-      <workItem from="1745308508426" duration="6129000" />
-      <workItem from="1745327309412" duration="930000" />
-      <workItem from="1745345810060" duration="4097000" />
-      <workItem from="1745435890382" duration="1302000" />
-      <workItem from="1745520552847" duration="342000" />
-      <workItem from="1745571344616" duration="1957000" />
-      <workItem from="1745608554138" duration="6166000" />
-      <workItem from="1745656932784" duration="581000" />
-      <workItem from="1745661329460" duration="12681000" />
-      <workItem from="1745676287947" duration="59000" />
-      <workItem from="1745676415899" duration="24000" />
-      <workItem from="1745677053249" duration="1551000" />
-      <workItem from="1745689105884" duration="3194000" />
-      <workItem from="1745693619857" duration="888000" />
-      <workItem from="1745747489934" duration="2493000" />
-      <workItem from="1745750273248" duration="2177000" />
-      <workItem from="1745752514618" duration="27000" />
-      <workItem from="1745755694777" duration="2848000" />
-      <workItem from="1745763537561" duration="6342000" />
-      <workItem from="1745773450028" duration="413000" />
-      <workItem from="1745773875617" duration="751000" />
-      <workItem from="1745776644012" duration="3814000" />
-      <workItem from="1745780760397" duration="5000" />
-      <workItem from="1745827899470" duration="1504000" />
-      <workItem from="1745833555037" duration="3386000" />
-      <workItem from="1745841121245" duration="7000" />
-      <workItem from="1745842044399" duration="1751000" />
-      <workItem from="1745861373215" duration="2590000" />
+      <updated>1743300794344</updated>
+      <workItem from="1743300795393" duration="7314000" />
+      <workItem from="1743363832092" duration="48813000" />
+      <workItem from="1743658836165" duration="17000" />
+      <workItem from="1743933882194" duration="10906000" />
+      <workItem from="1744033078371" duration="5541000" />
+      <workItem from="1744107688229" duration="1156000" />
+      <workItem from="1744465707022" duration="3258000" />
+      <workItem from="1744469155332" duration="30000" />
+      <workItem from="1744469209486" duration="4225000" />
+      <workItem from="1744556487770" duration="6000" />
+      <workItem from="1744556648435" duration="86192000" />
+      <workItem from="1744983605138" duration="48166000" />
+      <workItem from="1745258161788" duration="49186000" />
+      <workItem from="1745451863951" duration="3105000" />
+      <workItem from="1745512089390" duration="29326000" />
+      <workItem from="1745601577295" duration="14911000" />
+      <workItem from="1745665522524" duration="9390000" />
+      <workItem from="1745675061729" duration="45000" />
+      <workItem from="1745676292562" duration="43671000" />
+      <workItem from="1745855764410" duration="38019000" />
+      <workItem from="1745955146600" duration="2670000" />
+      <workItem from="1746032443581" duration="6183000" />
+      <workItem from="1746093206969" duration="4894000" />
+      <workItem from="1746111314351" duration="352000" />
+      <workItem from="1746111704999" duration="569000" />
+      <workItem from="1746120704838" duration="927000" />
+      <workItem from="1746121645200" duration="155000" />
+      <workItem from="1746121871774" duration="9000" />
+      <workItem from="1746208472183" duration="1241000" />
+      <workItem from="1746209750779" duration="670000" />
+      <workItem from="1746210439735" duration="13000" />
+      <workItem from="1746212924834" duration="97000" />
+      <workItem from="1746213219828" duration="6100000" />
+      <workItem from="1746222170131" duration="1874000" />
+      <workItem from="1746224088038" duration="8000" />
+      <workItem from="1746369676317" duration="22945000" />
+      <workItem from="1746438806405" duration="3794000" />
+      <workItem from="1746445374095" duration="2046000" />
+      <workItem from="1746461453639" duration="329000" />
+      <workItem from="1746462187911" duration="12051000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/controllers/ForgotPasswordController.java</url>
+          <line>29</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
     <select />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/projetJavaFx$Main.ic" NAME="Main Coverage Results" MODIFIED="1744637675556" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
 </project>
