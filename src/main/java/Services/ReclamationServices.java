@@ -5,6 +5,7 @@ import entity.TypeReclamation;
 import entity.Reclamation;
 import utils.connBD;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -320,5 +321,48 @@ public class ReclamationServices {
              java.sql.Statement stmt = conn.createStatement()) {
             stmt.executeUpdate(sql);
         }
+    }
+
+    public Reclamation getReclamationById(int id) throws SQLException {
+        Reclamation reclamation = null;
+        String query = "SELECT r.*, tr.nom as type_nom, m.nom as medecin_nom " +
+                "FROM reclamation r " +
+                "LEFT JOIN type_reclamation tr ON r.type_reclamation_id = tr.id " +
+                "LEFT JOIN medecin m ON r.medecin_id = m.id " +
+                "WHERE r.id = ?";
+
+        try (Connection connection = connBD.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    reclamation = new Reclamation();
+                    reclamation.setId(resultSet.getInt("id"));
+                    reclamation.setDescription(resultSet.getString("description"));
+
+                    // Vérifier si la colonne photo_path existe
+                    try {
+                        reclamation.setPhotoPath(resultSet.getString("photo_path"));
+                    } catch (SQLException e) {
+                        // La colonne n'existe pas, définir à null
+                        reclamation.setPhotoPath(null);
+                    }
+
+                    reclamation.setTypeReclamationId(resultSet.getInt("type_reclamation_id"));
+                    reclamation.setTypeReclamationName(resultSet.getString("type_nom"));
+                    reclamation.setMedecinId(resultSet.getInt("medecin_id"));
+                    reclamation.setMedecinName(resultSet.getString("medecin_nom"));
+
+                    // Convertir la date de réclamation
+                    java.sql.Date sqlDate = resultSet.getDate("date_reclamation");
+                    if (sqlDate != null) {
+                        reclamation.setDateReclamation(sqlDate.toLocalDate());
+                    } else {
+                        reclamation.setDateReclamation(LocalDate.now());
+                    }
+                }
+            }
+        }
+        return reclamation;
     }
 }

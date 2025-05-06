@@ -5,17 +5,19 @@ import entity.Reponse;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import services.ReclamationServices;
 import services.ReponseService;
 import services.NotificationService;
@@ -28,6 +30,7 @@ import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -47,6 +50,8 @@ public class ReclamationViewController {
     private TextField searchField;
     @FXML
     private Button exportPdfBtn; // Bouton pour l'export PDF
+    @FXML
+    private Button statsButton; // Bouton pour les statistiques
 
     private final ReclamationServices reclamationService = new ReclamationServices();
     private final ReponseService reponseService = new ReponseService();
@@ -64,6 +69,7 @@ public class ReclamationViewController {
         System.out.println("Initialisation de ReclamationViewController");
         setupFilters();
         loadData();
+
         if (searchField != null) {
             searchField.textProperty().addListener((observable, oldValue, newValue) -> applyFilters());
         } else {
@@ -76,10 +82,131 @@ public class ReclamationViewController {
         } else {
             System.err.println("ERREUR: exportPdfBtn est null dans ReclamationViewController");
         }
+
+        // Configuration du bouton de statistiques
+        if (statsButton != null) {
+            statsButton.setOnAction(e -> showStatistics());
+            System.out.println("Bouton de statistiques configuré avec succès");
+        } else {
+            System.err.println("ERREUR: statsButton est null dans ReclamationViewController");
+        }
+    }
+
+    // Remplacez la méthode showStatistics() dans ReclamationViewController.java par celle-ci:
+
+    @FXML
+    private void showStatistics() {
+        try {
+            System.out.println("Ouverture de la fenêtre des statistiques...");
+
+            // Essayer différentes approches pour charger le fichier FXML
+            FXMLLoader loader = null;
+
+            // Approche 1: Chemin direct dans le package de la classe courante
+            URL url = getClass().getResource("statistics_view.fxml");
+            if (url != null) {
+                System.out.println("FXML trouvé dans le package courant: " + url);
+                loader = new FXMLLoader(url);
+            }
+
+            // Approche 2: Chemin à partir de la racine
+            if (loader == null) {
+                url = getClass().getResource("/statistics_view.fxml");
+                if (url != null) {
+                    System.out.println("FXML trouvé à la racine: " + url);
+                    loader = new FXMLLoader(url);
+                }
+            }
+
+            // Approche 3: Chercher dans différents répertoires
+            if (loader == null) {
+                String[] possiblePaths = {
+                        "/view/statistics_view.fxml",
+                        "/views/statistics_view.fxml",
+                        "/fxml/statistics_view.fxml",
+                        "/resources/views/statistics_view.fxml",
+                        "/resources/fxml/statistics_view.fxml",
+                        "/resources/statistics_view.fxml"
+                };
+
+                for (String path : possiblePaths) {
+                    url = getClass().getResource(path);
+                    if (url != null) {
+                        System.out.println("FXML trouvé au chemin: " + path);
+                        loader = new FXMLLoader(url);
+                        break;
+                    }
+                }
+            }
+
+            // Approche 4: Utiliser le ClassLoader
+            if (loader == null) {
+                url = getClass().getClassLoader().getResource("statistics_view.fxml");
+                if (url != null) {
+                    System.out.println("FXML trouvé avec ClassLoader: " + url);
+                    loader = new FXMLLoader(url);
+                }
+            }
+
+            // Si aucun chargeur n'a été créé, impossible de trouver le fichier
+            if (loader == null) {
+                throw new IOException("Le fichier FXML n'a pas été trouvé. Vérifiez que le fichier statistics_view.fxml " +
+                        "existe dans un des répertoires de ressources et qu'il est bien inclus dans le build.");
+            }
+
+            // Charger la vue des statistiques
+            Parent root = loader.load();
+
+            // Créer une nouvelle fenêtre
+            Stage statisticsStage = new Stage();
+            statisticsStage.setTitle("Statistiques des Réclamations");
+
+            // Configurer la scène
+            Scene scene = new Scene(root, 900, 700);
+
+            // Essayer de charger la feuille de style
+            try {
+                URL cssUrl = getClass().getResource("/styles/statistics-styles.css");
+                if (cssUrl != null) {
+                    scene.getStylesheets().add(cssUrl.toExternalForm());
+                    System.out.println("Feuille de style chargée avec succès depuis: " + cssUrl);
+                } else {
+                    // Essayer d'autres chemins
+                    String[] possibleCssPaths = {
+                            "/style/statistics-styles.css",
+                            "/css/statistics-styles.css",
+                            "/statistics-styles.css",
+                            "/resources/styles/statistics-styles.css"
+                    };
+
+                    for (String path : possibleCssPaths) {
+                        cssUrl = getClass().getResource(path);
+                        if (cssUrl != null) {
+                            scene.getStylesheets().add(cssUrl.toExternalForm());
+                            System.out.println("Feuille de style chargée depuis: " + path);
+                            break;
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                System.err.println("AVERTISSEMENT: Impossible de charger la feuille de style: " + e.getMessage());
+                e.printStackTrace();
+                // Continuer sans la feuille de style
+            }
+
+            statisticsStage.setScene(scene);
+            statisticsStage.show();
+
+            System.out.println("Fenêtre des statistiques affichée");
+
+        } catch (IOException e) {
+            System.err.println("Erreur lors de l'ouverture de la vue des statistiques: " + e.getMessage());
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible d'afficher les statistiques: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 
     // Méthode pour exporter les réclamations en PDF
-    // Méthode pour exporter les réclamations en PDF - version téléchargement direct
     @FXML
     private void exportToPdf() {
         try {
@@ -505,17 +632,14 @@ public class ReclamationViewController {
         ButtonType saveButtonType = new ButtonType("Enregistrer", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
 
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
+        VBox grid = new VBox(10);
         grid.setPadding(new Insets(20));
 
         TextArea responseArea = new TextArea();
         responseArea.setPromptText("Entrez votre réponse ici...");
         responseArea.setPrefRowCount(5);
 
-        grid.add(new Label("Réponse:"), 0, 0);
-        grid.add(responseArea, 0, 1);
+        grid.getChildren().addAll(new Label("Réponse:"), responseArea);
 
         List<Reponse> responses = reponseService.getResponsesForReclamation(reclamation.getId());
         if (responses != null && !responses.isEmpty()) {
@@ -528,7 +652,7 @@ public class ReclamationViewController {
                 responsesBox.getChildren().add(responseLabel);
             }
 
-            grid.add(responsesBox, 0, 2);
+            grid.getChildren().add(responsesBox);
         }
 
         dialog.getDialogPane().setContent(grid);
@@ -550,7 +674,7 @@ public class ReclamationViewController {
                 System.out.println("Enregistrement de la réponse et envoi de notification...");
 
                 // Ajouter la réponse dans la base de données
-                reponseService.addResponse(reponse);
+                reponseService.addReponse(reponse);
 
                 // Préparer le message de notification
                 String notificationMessage = "Nouvelle réponse à la réclamation :" +reclamation.getDescription() +" reponse: "+ reponse.getContenu();

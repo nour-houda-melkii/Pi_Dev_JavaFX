@@ -24,6 +24,7 @@ public class main extends Application {
             Scene scene = new Scene(root);
             primaryStage.setTitle("SAHATECK - Gestion des Réclamations");
             primaryStage.setScene(scene);
+            primaryStage.setFullScreen(true);
             primaryStage.show();
         } catch (Exception e) {
             System.err.println("ERREUR lors du démarrage de l'application: " + e.getMessage());

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.StatisticsController"
+      spacing="15" style="-fx-padding: 20; -fx-background-color: #f5f7fa;">
+
+    <Label text="Statistiques des Réclamations"
+           style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+    <Label fx:id="totalReclamationsLabel"
+           style="-fx-font-size: 16px; -fx-text-fill: #3498db;"/>
+
+    <!-- Contrôles de filtrage -->
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <VBox.margin>
+            <Insets bottom="10"/>
+        </VBox.margin>
+
+        <HBox spacing="5" alignment="CENTER_LEFT">
+            <Label text="Du:" style="-fx-font-weight: bold;"/>
+            <DatePicker fx:id="startDatePicker"/>
+        </HBox>
+
+        <HBox spacing="5" alignment="CENTER_LEFT">
+            <Label text="Au:" style="-fx-font-weight: bold;"/>
+            <DatePicker fx:id="endDatePicker"/>
+        </HBox>
+
+        <HBox spacing="5" alignment="CENTER_LEFT">
+            <Label text="Année:" style="-fx-font-weight: bold;"/>
+            <ComboBox fx:id="yearComboBox" prefWidth="100"/>
+        </HBox>
+
+        <Button fx:id="applyFilterButton" text="Appliquer"
+                style="-fx-background-color: #3498db; -fx-text-fill: white;"/>
+
+        <Button fx:id="exportPdfButton" text="Exporter PDF"
+                style="-fx-background-color: #27ae60; -fx-text-fill: white;"/>
+    </HBox>
+
+    <!-- TabPane pour organiser les différents graphiques -->
+    <TabPane fx:id="statisticsTabs" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+        <Tab text="Répartition par type">
+            <VBox spacing="10" style="-fx-padding: 10;">
+                <PieChart fx:id="typePieChart" VBox.vgrow="ALWAYS" legendVisible="true"
+                          style="-fx-font-size: 12;" animated="true"/>
+            </VBox>
+        </Tab>
+
+        <Tab text="Évolution mensuelle">
+            <VBox spacing="10" style="-fx-padding: 10;">
+                <BarChart fx:id="monthlyBarChart" VBox.vgrow="ALWAYS" legendVisible="true" animated="true">
+                    <xAxis>
+                        <CategoryAxis label="Mois" style="-fx-font-size: 12;"/>
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis label="Nombre de réclamations" style="-fx-font-size: 12;"/>
+                    </yAxis>
+                </BarChart>
+            </VBox>
+        </Tab>
+
+        <!-- Ajout d'un nouvel onglet avec statistiques avancées -->
+        <Tab text="Statistiques avancées">
+            <VBox spacing="15" style="-fx-padding: 15;">
+                <HBox spacing="20" alignment="CENTER">
+                    <VBox.margin>
+                        <Insets top="20"/>
+                    </VBox.margin>
+
+                    <VBox spacing="10" alignment="CENTER" HBox.hgrow="ALWAYS"
+                          style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 10);">
+                        <Label text="Type le plus fréquent" style="-fx-font-weight: bold; -fx-text-fill: #2980b9;"/>
+                        <Label fx:id="mostFrequentTypeLabel" style="-fx-font-size: 18px;"/>
+                    </VBox>
+
+                    <VBox spacing="10" alignment="CENTER" HBox.hgrow="ALWAYS"
+                          style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 10);">
+                        <Label text="Mois le plus actif" style="-fx-font-weight: bold; -fx-text-fill: #2980b9;"/>
+                        <Label fx:id="mostActiveMonthLabel" style="-fx-font-size: 18px;"/>
+                    </VBox>
+
+                    <VBox spacing="10" alignment="CENTER" HBox.hgrow="ALWAYS"
+                          style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 10);">
+                        <Label text="Croissance mensuelle" style="-fx-font-weight: bold; -fx-text-fill: #2980b9;"/>
+                        <Label fx:id="monthlyGrowthLabel" style="-fx-font-size: 18px;"/>
+                    </VBox>
+                </HBox>
+
+                <Separator>
+                    <VBox.margin>
+                        <Insets top="20" bottom="20"/>
+                    </VBox.margin>
+                </Separator>
+
+                <Label text="Tableau détaillé par type de réclamation"
+                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+
+                <TableView fx:id="statsTableView" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="typeColumn" text="Type" prefWidth="150"/>
+                        <TableColumn fx:id="countColumn" text="Nombre" prefWidth="100"/>
+                        <TableColumn fx:id="percentColumn" text="Pourcentage" prefWidth="120"/>
+                        <TableColumn fx:id="trendColumn" text="Tendance" prefWidth="120"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </Tab>
+    </TabPane>
+</VBox>

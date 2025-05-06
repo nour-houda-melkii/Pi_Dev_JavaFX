@@ -5,13 +5,15 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.shape.SVGPath?>
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BackendController"
             prefWidth="1000" prefHeight="700">
 
     <!-- Top Header -->
     <top>
         <VBox>
-
             <!-- Navigation Bar -->
             <HBox style="-fx-background-color: white; -fx-padding: 10; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;">
                 <Label text="Tableau de Bord" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
@@ -20,13 +22,32 @@
                     <Label text="Accueil / " style="-fx-text-fill: #7a7a7a;"/>
                     <Label text="Tableau de Bord" style="-fx-text-fill: #7a7a7a;"/>
                 </HBox>
-                <HBox alignment="CENTER_RIGHT" style="-fx-padding: 0 0 0 15;">
-                    <!-- Remplacé Circle par un Rectangle pour l'indicateur de statut -->
+
+                <!-- Notification Bell placed inside the HBox -->
+                <StackPane alignment="CENTER_RIGHT" style="-fx-padding: 0 10 0 15;">
+                    <Button fx:id="notificationBellButton" onAction="#handleBackendNotificationBell" style="-fx-background-color: transparent;">
+                        <graphic>
+                            <SVGPath content="M12,22A2,2 0 0,0 14,20H10A2,2 0 0,0 12,22M18,16V11C18,7.93 16.36,5.36 13.5,4.68V4A1.5,1.5 0 0,0 12,2.5A1.5,1.5 0 0,0 10.5,4V4.68C7.63,5.36 6,7.92 6,11V16L4,18V19H20V18L18,16Z"
+                                     fill="#3498db" /> <!-- Changed to blue color -->
+                        </graphic>
+                    </Button>
+                    <Label fx:id="notificationCountLabel"
+                           style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 10; -fx-padding: 2 6; -fx-font-weight: bold;"
+                           StackPane.alignment="TOP_RIGHT"
+                           visible="false"
+                           text="0" />
+                </StackPane>
+
+                <HBox alignment="CENTER_RIGHT" style="-fx-padding: 0 0 0 5;">
+                    <!-- Indicator status -->
                     <Pane style="-fx-background-color: #4cd964; -fx-background-radius: 5;" prefWidth="10" prefHeight="10"/>
                 </HBox>
             </HBox>
         </VBox>
     </top>
+
+    <!-- Remove the standalone StackPane that was outside the layout hierarchy -->
+
 
     <!-- Left Sidebar -->
     <left>

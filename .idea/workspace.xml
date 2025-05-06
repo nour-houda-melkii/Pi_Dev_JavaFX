@@ -22,10 +22,13 @@
       <change afterPath="$PROJECT_DIR$/src/main/java/controller/EditTypeController.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/controller/MainController.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/controller/MedecinController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/NotificationViewController.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/controller/ReclamationViewController.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/controller/ReponseViewController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/controller/StatisticsController.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/controller/TypeReclamationController.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/entity/Medecin.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/entity/Reaction.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/entity/Reclamation.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/entity/Reponse.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/entity/TypeReclamation.java" afterDir="false" />
@@ -33,13 +36,18 @@
       <change afterPath="$PROJECT_DIR$/src/main/java/services/EmailService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/services/MedecinService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/services/NotificationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/services/ReactionNotificationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/services/ReactionService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/services/ReclamationServices.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/services/ReponseService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/services/TypeReclamationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/utils/CreateDirectories.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/utils/NotificationManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/utils/StatisticsExporter.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/java/utils/connBD.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/client_reclamation.fxml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/styles/main.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/styles/statistics-syles.css" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/view/add-reclamation.fxml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/view/backend-view.fxml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/view/edit-reclamation.fxml" afterDir="false" />
@@ -47,6 +55,7 @@
       <change afterPath="$PROJECT_DIR$/src/main/resources/view/main-view.fxml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/view/reclamation-view.fxml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/view/reponse-view.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/view/statistics_view.fxml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/src/main/resources/view/type-reclamation.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -58,8 +67,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JavaFXApplication" />
-        <option value="CSS File" />
         <option value="FxmlFile" />
+        <option value="CSS File" />
         <option value="Class" />
       </list>
     </option>
@@ -210,7 +219,17 @@
       <workItem from="1745915045103" duration="7269000" />
       <workItem from="1746034042423" duration="607000" />
       <workItem from="1746037841161" duration="1752000" />
-      <workItem from="1746107321354" duration="8090000" />
+      <workItem from="1746107321354" duration="17843000" />
+      <workItem from="1746132878544" duration="15317000" />
+      <workItem from="1746191999688" duration="4860000" />
+      <workItem from="1746215491118" duration="5115000" />
+      <workItem from="1746313863529" duration="1506000" />
+      <workItem from="1746315582635" duration="3084000" />
+      <workItem from="1746359257678" duration="36381000" />
+      <workItem from="1746439333204" duration="4081000" />
+      <workItem from="1746448138757" duration="3849000" />
+      <workItem from="1746456150572" duration="4305000" />
+      <workItem from="1746462242107" duration="16676000" />
     </task>
     <servers />
   </component>

@@ -9,6 +9,7 @@ public class Reponse {
     private LocalDate dateReponse;
     private int reclamationId;
     private String status;
+    private String utilisateur;
 
 
     public static final String STATUS_EN_ATTENTE = "En attente";
@@ -27,6 +28,7 @@ public class Reponse {
         this.dateReponse =  dateReponse != null ? dateReponse : LocalDate.now();
         this.reclamationId = reclamationId;
         this.status = status != null ? status : STATUS_EN_ATTENTE;
+        this.utilisateur = utilisateur;
     }
 
     // Getters et Setters
@@ -72,5 +74,13 @@ public class Reponse {
 
     public String getFormattedDate() {
         return dateReponse.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    }
+
+    public String getUtilisateur() {
+        return utilisateur;
+    }
+
+    public void setUtilisateur(String utilisateur) {
+        this.utilisateur = utilisateur;
     }
 }

@@ -12,29 +12,37 @@ public class ReponseService {
     private Connection connection;
 
 
-    public void addResponse(Reponse reponse) {
-        String sql = "INSERT INTO reponse (contenu, date_reponse, reclamation_id) VALUES (?, ?, ?)";
+    /**
+     * Ajoute une nouvelle réponse à une réclamation
+     * @param reponse La réponse à ajouter
+     * @return true si l'ajout a réussi, false sinon
+     * @throws SQLException En cas d'erreur de base de données
+     */
+    public boolean addReponse(Reponse reponse) throws SQLException {
+        String query = "INSERT INTO reponse (contenu, date_reponse, reclamation_id, status, utilisateur) VALUES (?, ?, ?, ?, ?)";
 
-        try (Connection conn = connBD.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = connBD.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
-            stmt.setString(1, reponse.getContenu());
-            stmt.setDate(2, Date.valueOf(reponse.getDateReponse()));
-            stmt.setInt(3, reponse.getReclamationId());
+            statement.setString(1, reponse.getContenu());
+            statement.setDate(2, Date.valueOf(reponse.getDateReponse()));
+            statement.setInt(3, reponse.getReclamationId());
+            statement.setString(4, reponse.getStatus());
+            statement.setString(5, reponse.getUtilisateur());
 
-            int affectedRows = stmt.executeUpdate();
+            int rowsInserted = statement.executeUpdate();
 
-            if (affectedRows > 0) {
-                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+            if (rowsInserted > 0) {
+                // Récupérer l'ID généré
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
                         reponse.setId(generatedKeys.getInt(1));
                     }
                 }
+                return true;
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Erreur lors de l'ajout de la réponse", e);
         }
+        return false;
     }
 
     public Reponse getReponseById(int id) throws SQLException {

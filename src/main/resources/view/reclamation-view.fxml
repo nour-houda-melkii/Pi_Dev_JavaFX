@@ -23,6 +23,14 @@
                     <Insets left="10" />
                 </HBox.margin>
             </Button>
+
+            <!-- Bouton pour les statistiques -->
+            <Button fx:id="statsButton" text="Statistiques"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white;" onAction="#showStatistics">
+                <HBox.margin>
+                    <Insets left="10" />
+                </HBox.margin>
+            </Button>
         </HBox>
 
         <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">

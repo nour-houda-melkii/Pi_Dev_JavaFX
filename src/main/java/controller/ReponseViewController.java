@@ -124,7 +124,7 @@ public class ReponseViewController {
 
         try {
             Reponse nouvelleReponse = new Reponse(contenu, LocalDate.now(), getSelectedReclamationId());
-            reponseService.addResponse(nouvelleReponse);
+            reponseService.addReponse(nouvelleReponse);
 
             resetForm();
             loadData();
