@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controller.ReclamationViewController"
+            prefHeight="600.0" prefWidth="900.0">
+    <VBox spacing="10" AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10"
+          AnchorPane.rightAnchor="10" AnchorPane.bottomAnchor="10">
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <ComboBox fx:id="typeFilter" promptText="Filtrer par type" />
+            <ComboBox fx:id="statusFilter" promptText="Filtrer par statut" />
+            <TextField fx:id="searchField" promptText="Rechercher..." HBox.hgrow="ALWAYS" />
+            <Button onAction="#refreshReclamations" text="Actualiser" />
+
+            <!-- Bouton pour télécharger en PDF -->
+            <Button fx:id="exportPdfBtn" text="Télécharger PDF"
+                    style="-fx-background-color: #28a745; -fx-text-fill: white;">
+                <HBox.margin>
+                    <Insets left="10" />
+                </HBox.margin>
+            </Button>
+
+            <!-- Bouton pour les statistiques -->
+            <Button fx:id="statsButton" text="Statistiques"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white;" onAction="#showStatistics">
+                <HBox.margin>
+                    <Insets left="10" />
+                </HBox.margin>
+            </Button>
+        </HBox>
+
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+            <FlowPane fx:id="cardsContainer" hgap="15" vgap="15">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10" />
+                </padding>
+            </FlowPane>
+        </ScrollPane>
+    </VBox>
+</AnchorPane>

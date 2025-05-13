@@ -9,8 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -18,38 +16,54 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class ConfirmationPurchaseController {
 
     private static final Logger LOGGER = Logger.getLogger(ConfirmationPurchaseController.class.getName());
 
-    @FXML private TextField emailField;
-    @FXML private PasswordField passwordField;
-    @FXML private TextField fullNameField;
-    @FXML private TextField addressField;
-    @FXML private TextField phoneField;
+    // Hardcoded customer information
+    private static final String CUSTOMER_EMAIL = "nourmelki05@gmail.com";
+    private static final String CUSTOMER_NAME = "Nour Melki";
+    private static final String CUSTOMER_ADDRESS = "Ben Arous";
+    private static final String CUSTOMER_PHONE = "27052401";
+
     @FXML private Label orderReferenceLabel;
     @FXML private Label totalAmountLabel;
     @FXML private Label itemCountLabel;
     @FXML private Button confirmButton;
-    @FXML private Button paymentButton; // New button for proceeding to payment
+    @FXML private Button paymentButton;
 
     private List<Produit> cartProducts;
     private Map<Integer, Integer> productQuantities = new HashMap<>();
     private String orderReference;
     private String totalAmount;
     private final NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(Locale.US);
-    private boolean orderProcessed = false; // Flag to track if order has been processed
+    private boolean orderProcessed = false;
 
     // Email configuration
     private static final String EMAIL_HOST = "smtp.gmail.com";
     private static final String EMAIL_PORT = "587";
-    private static final String SENDER_EMAIL = "nourmelki05@gmail.com"; // Change to your store email
-    private static final String SENDER_PASSWORD = "inom yuqm ciop jorf"; // Use app password for Gmail
+    private static final String SENDER_EMAIL = "nourmelki05@gmail.com";
+    private static final String SENDER_PASSWORD = "inom yuqm ciop jorf";
+    private int currentUserId;
+
+    // Payment service
+    private PaymentService paymentService;
+
+    public ConfirmationPurchaseController() {
+        this.paymentService = new PaymentService();
+    }
+
+    public void setCurrentUserId(int userId) {
+        this.currentUserId = userId;
+    }
 
     @FXML
     public void initialize() {
@@ -95,55 +109,75 @@ public class ConfirmationPurchaseController {
 
     @FXML
     private void handleConfirmPurchase() {
-        if (!validateFields()) {
-            return;
-        }
-
-        // Process order - send email confirmation and generate QR code
         processOrder();
     }
 
     private void processOrder() {
-        // Send confirmation email
-        boolean emailSent = sendConfirmationEmail(
-                emailField.getText(),
-                passwordField.getText(),
-                fullNameField.getText(),
-                addressField.getText(),
-                phoneField.getText(),
-                orderReference,
-                totalAmount,
-                cartProducts,
-                productQuantities
-        );
+        try {
+            createOrderInDatabase();
 
-        if (emailSent) {
-            LOGGER.info("Confirmation email sent successfully to: " + emailField.getText());
-        } else {
-            LOGGER.warning("Failed to send confirmation email to: " + emailField.getText());
-            showAlert("Email Notification", "We couldn't send a confirmation email. Please check your email address.");
+            boolean emailSent = sendConfirmationEmail(
+                    orderReference,
+                    totalAmount,
+                    cartProducts,
+                    productQuantities
+            );
+
+            if (emailSent) {
+                LOGGER.info("Confirmation email sent successfully to: " + CUSTOMER_EMAIL);
+            } else {
+                LOGGER.warning("Failed to send confirmation email to: " + CUSTOMER_EMAIL);
+                showAlert("Email Notification", "Failed to send confirmation email.");
+            }
+
+            showQRCode();
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Order Confirmed");
+            alert.setHeaderText("Thank you for your purchase!");
+            alert.setContentText("Your order has been confirmed.\n\n" +
+                    "Order Reference: " + orderReference + "\n" +
+                    "Total amount: " + totalAmount + "\n\n" +
+                    (emailSent ? "A confirmation email has been sent." :
+                            "Failed to send confirmation email. Please contact support.") + "\n\n" +
+                    "You will now be redirected to the payment page.");
+            alert.showAndWait();
+
+            orderProcessed = true;
+
+            if (paymentButton != null) {
+                paymentButton.setVisible(true);
+                paymentButton.setManaged(true);
+            }
+
+            proceedToStripePayment();
+        } catch (SQLException e) {
+            LOGGER.log(Level.SEVERE, "Failed to create order", e);
+            showAlert("Order Error", "Failed to create order: " + e.getMessage());
+        }
+    }
+
+    private void createOrderInDatabase() throws SQLException {
+        double total = 0;
+        for (Produit product : cartProducts) {
+            int quantity = productQuantities.getOrDefault(product.getId(), 1);
+            total += product.getPrice() * quantity;
         }
 
-        // Generate and show QR code
-        showQRCode();
+        Commande commande = new Commande();
+        commande.setUserId(currentUserId);
+        commande.setDateCommande(LocalDate.now());
+        commande.setStatut("Pending Payment");
+        commande.setTotal(total);
 
-        // Show confirmation message
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Order Confirmed");
-        alert.setHeaderText("Thank you for your purchase!");
-        alert.setContentText("Your order has been confirmed.\n\n" +
-                "Order Reference: " + orderReference + "\n" +
-                "Total amount: " + totalAmount + "\n\n" +
-                (emailSent ? "A confirmation email has been sent to your email address." :
-                        "We couldn't send a confirmation email. Please contact support.") + "\n\n" +
-                "You will now be redirected to the payment page.");
-        alert.showAndWait();
-
-        // Update order processed status
-        orderProcessed = true;
-
-        // Proceed directly to the payment page after confirmation
-        proceedToStripePayment();
+        List<CommandeLigne> lignes = cartProducts.stream()
+                .map(product -> {
+                    CommandeLigne ligne = new CommandeLigne();
+                    ligne.setProduitId(product.getId());
+                    ligne.setQuantity(productQuantities.getOrDefault(product.getId(), 1));
+                    return ligne;
+                })
+                .collect(Collectors.toList());
     }
 
     @FXML
@@ -153,20 +187,19 @@ public class ConfirmationPurchaseController {
             Parent root = loader.load();
 
             StripePaymentController controller = loader.getController();
-            // Pass all relevant customer and order info to stripe controller
             controller.setPaymentInfo(
                     cartProducts,
                     productQuantities,
                     orderReference,
                     totalAmount,
-                    emailField.getText(),
-                    fullNameField.getText(),
-                    addressField.getText(),
-                    phoneField.getText(),
-                    passwordField.getText()
+                    CUSTOMER_EMAIL,
+                    CUSTOMER_NAME,
+                    CUSTOMER_ADDRESS,
+                    CUSTOMER_PHONE,
+                    "" // No password needed
             );
 
-            Stage stage = (Stage) emailField.getScene().getWindow();
+            Stage stage = (Stage) orderReferenceLabel.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Stripe Payment");
         } catch (IOException e) {
@@ -175,82 +208,27 @@ public class ConfirmationPurchaseController {
         }
     }
 
-    private boolean validateFields() {
-        if (fullNameField.getText().isEmpty()) {
-            showAlert("Missing Information", "Please enter your full name.");
-            return false;
-        }
-
-        if (addressField.getText().isEmpty()) {
-            showAlert("Missing Information", "Please enter your shipping address.");
-            return false;
-        }
-
-        if (phoneField.getText().isEmpty()) {
-            showAlert("Missing Information", "Please enter your phone number.");
-            return false;
-        }
-
-        if (emailField.getText().isEmpty() || !isValidEmail(emailField.getText())) {
-            showAlert("Invalid Email", "Please enter a valid email address.");
-            return false;
-        }
-
-        if (passwordField.getText().isEmpty()) {
-            showAlert("Missing Password", "Please enter your password.");
-            return false;
-        }
-
-        return true;
-    }
-
-    private boolean isValidEmail(String email) {
-        String emailRegex = "^[A-Za-z0-9+_.-]+@(.+)$";
-        return email.matches(emailRegex);
-    }
-
-    /**
-     * Public method to send confirmation email
-     *
-     * @param toEmail Recipient email address
-     * @param password Customer password
-     * @param name Customer full name
-     * @param address Customer shipping address
-     * @param phone Customer phone number
-     * @param orderRef Order reference number
-     * @param amount Total order amount
-     * @param products Products in order
-     * @param quantities Product quantities
-     * @return boolean indicating if email was sent successfully
-     */
-    public boolean sendConfirmationEmail(String toEmail, String password, String name, String address,
-                                         String phone, String orderRef, String amount,
-                                         List<Produit> products, Map<Integer, Integer> quantities) {
+    private boolean sendConfirmationEmail(String orderRef, String amount,
+                                          List<Produit> products, Map<Integer, Integer> quantities) {
         try {
-            // Set up mail server properties
             Properties properties = new Properties();
             properties.put("mail.smtp.host", EMAIL_HOST);
             properties.put("mail.smtp.port", EMAIL_PORT);
             properties.put("mail.smtp.auth", "true");
             properties.put("mail.smtp.starttls.enable", "true");
 
-            // Create authenticator with credentials
             Authenticator auth = new Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
                     return new PasswordAuthentication(SENDER_EMAIL, SENDER_PASSWORD);
                 }
             };
 
-            // Create mail session
             Session session = Session.getInstance(properties, auth);
 
-            // Create the email message
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(SENDER_EMAIL));
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
-            message.setSubject("SahaTech - Order Confirmation - " + orderRef);
+            message.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(CUSTOMER_EMAIL));            message.setSubject("SahaTech - Order Confirmation - " + orderRef);
 
-            // Build email content with enhanced design and logo
             StringBuilder emailContent = new StringBuilder();
             emailContent.append("<!DOCTYPE html>");
             emailContent.append("<html><head>");
@@ -260,7 +238,6 @@ public class ConfirmationPurchaseController {
             emailContent.append(".header { background-color: #33ccff; padding: 20px; text-align: center; color: white; border-radius: 5px 5px 0 0; }");
             emailContent.append(".content { background-color: #f9f9f9; padding: 20px; border-left: 1px solid #ddd; border-right: 1px solid #ddd; }");
             emailContent.append(".footer { background-color: #33ccff; color: white; text-align: center; padding: 15px; border-radius: 0 0 5px 5px; font-size: 12px; }");
-            emailContent.append(".logo { width: 150px; height: auto; }");
             emailContent.append("table.order-details { width: 100%; border-collapse: collapse; margin: 20px 0; }");
             emailContent.append("table.order-details th { background-color: #33ccff; color: white; text-align: left; padding: 10px; }");
             emailContent.append("table.order-details td { padding: 10px; border-bottom: 1px solid #ddd; }");
@@ -271,35 +248,25 @@ public class ConfirmationPurchaseController {
             emailContent.append("</style>");
             emailContent.append("</head><body>");
             emailContent.append("<div class='container'>");
-
-            // Header with logo
             emailContent.append("<div class='header'>");
             emailContent.append("<h1>SAHATECH Order Confirmation</h1>");
             emailContent.append("</div>");
-
-            // Main content
             emailContent.append("<div class='content'>");
             emailContent.append("<h2>Thank you for your purchase!</h2>");
-            emailContent.append("<p>Dear ").append(name).append(",</p>");
+            emailContent.append("<p>Dear ").append(CUSTOMER_NAME).append(",</p>");
             emailContent.append("<p>Your order has been confirmed and is being processed. Below are your order details:</p>");
-
-            // Payment information - Modified to show payment is pending
             emailContent.append("<div class='payment-info'>");
             emailContent.append("<p><strong>Payment Status:</strong> Pending</p>");
-            emailContent.append("<p><strong>Payment Method:</strong> Not yet selected</p>");
+            emailContent.append("<p><strong>Payment Method:</strong> Stripe (Online Payment)</p>");
             emailContent.append("</div>");
-
-            // Order information box
             emailContent.append("<div class='order-info'>");
             emailContent.append("<p><strong>Order Reference:</strong> ").append(orderRef).append("</p>");
-            emailContent.append("<p><strong>Order Date:</strong> ").append(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date())).append("</p>");
-            emailContent.append("<p><strong>Customer:</strong> ").append(name).append("</p>");
-            emailContent.append("<p><strong>Email:</strong> ").append(toEmail).append("</p>");
-            emailContent.append("<p><strong>Shipping Address:</strong> ").append(address).append("</p>");
-            emailContent.append("<p><strong>Phone:</strong> ").append(phone).append("</p>");
+            emailContent.append("<p><strong>Order Date:</strong> ").append(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date())).append("</p>");
+            emailContent.append("<p><strong>Customer:</strong> ").append(CUSTOMER_NAME).append("</p>");
+            emailContent.append("<p><strong>Email:</strong> ").append(CUSTOMER_EMAIL).append("</p>");
+            emailContent.append("<p><strong>Shipping Address:</strong> ").append(CUSTOMER_ADDRESS).append("</p>");
+            emailContent.append("<p><strong>Phone:</strong> ").append(CUSTOMER_PHONE).append("</p>");
             emailContent.append("</div>");
-
-            // Order details table
             emailContent.append("<h3>Order Summary</h3>");
             emailContent.append("<table class='order-details'>");
             emailContent.append("<tr><th>Product</th><th>Quantity</th><th>Price</th><th>Total</th></tr>");
@@ -318,40 +285,26 @@ public class ConfirmationPurchaseController {
                 emailContent.append("</tr>");
             }
 
-            // Total row
             emailContent.append("<tr class='total-row'>");
             emailContent.append("<td colspan='3' align='right'><strong>Grand Total:</strong></td>");
             emailContent.append("<td align='right'><strong>").append(amount).append("</strong></td>");
             emailContent.append("</tr>");
             emailContent.append("</table>");
-
-            // Payment reminder
-            emailContent.append("<p><strong>Please note:</strong> You still need to complete your payment to finalize your order. You can pay online or contact our customer service team.</p>");
-
-            // Call to action button
+            emailContent.append("<p><strong>Payment Instructions:</strong> You'll be redirected to our secure payment page to complete your purchase.</p>");
             emailContent.append("<div style='text-align: center;'>");
-            emailContent.append("<a href='https://sahatech.com/track-order?ref=").append(orderRef).append("' class='btn'>Track Your Order</a>");
+            emailContent.append("<a href='https://sahatech.com/payment?ref=").append(orderRef).append("' class='btn'>Complete Payment</a>");
             emailContent.append("</div>");
-
-            emailContent.append("<p>If you have any questions or need assistance, please don't hesitate to contact our customer service at <a href='mailto:support@sahatech.com'>support@sahatech.com</a>.</p>");
+            emailContent.append("<p>If you have any questions, please contact our customer service.</p>");
             emailContent.append("</div>");
-
-            // Footer
             emailContent.append("<div class='footer'>");
             emailContent.append("<p>© ").append(java.time.Year.now().toString()).append(" SahaTech. All rights reserved.</p>");
-            emailContent.append("<p>123 Tech Street, Innovation City, Country</p>");
             emailContent.append("</div>");
-
             emailContent.append("</div>");
             emailContent.append("</body></html>");
 
-            // Set email content
             message.setContent(emailContent.toString(), "text/html");
-
-            // Send the email
             Transport.send(message);
 
-            LOGGER.info("Confirmation email sent successfully to: " + toEmail);
             return true;
         } catch (MessagingException e) {
             LOGGER.log(Level.SEVERE, "Failed to send email", e);
@@ -359,28 +312,11 @@ public class ConfirmationPurchaseController {
         }
     }
 
-    /**
-     * Simplified method that uses the class fields when called from this controller
-     */
-    private boolean sendConfirmationEmail(String toEmail, String password) {
-        return sendConfirmationEmail(
-                toEmail,
-                password,
-                fullNameField.getText(),
-                addressField.getText(),
-                phoneField.getText(),
-                orderReference,
-                totalAmount,
-                cartProducts,
-                productQuantities
-        );
-    }
-
     private void showQRCode() {
         try {
             StringBuilder qrContent = new StringBuilder();
             qrContent.append("Order: ").append(orderReference).append("\n");
-            qrContent.append("Customer: ").append(fullNameField.getText()).append("\n");
+            qrContent.append("Customer: ").append(CUSTOMER_NAME).append("\n");
             qrContent.append("Total: ").append(totalAmount).append("\n");
             qrContent.append("Products:\n");
 
@@ -420,44 +356,12 @@ public class ConfirmationPurchaseController {
             CartViewController controller = loader.getController();
             controller.setCartProducts(cartProducts);
 
-            Stage stage = (Stage) emailField.getScene().getWindow();
+            Stage stage = (Stage) orderReferenceLabel.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.setTitle("Shopping Cart");
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, "Failed to navigate back to cart view", e);
             showAlert("Error", "Failed to navigate back to cart view: " + e.getMessage());
-        }
-    }
-
-    public void navigateToProductView(boolean clearCart) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/nour/product_client.fxml"));
-            Parent root = loader.load();
-
-            ProductFrontController controller = loader.getController();
-
-            // Only pass cart products if we're not clearing the cart
-            if (!clearCart) {
-                controller.setCartProducts(cartProducts);
-            }
-
-            Stage stage = (Stage) emailField.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setTitle("SahaTech Products");
-        } catch (IOException e) {
-            LOGGER.log(Level.SEVERE, "Failed to navigate to products view", e);
-            showAlert("Error", "Failed to navigate to products view: " + e.getMessage());
-        }
-    }
-
-    @FXML
-    private void handleContinueShopping() {
-        // If order has been processed, continue shopping
-        if (orderProcessed) {
-            navigateToProductView(false); // Don't clear the cart
-        } else {
-            // Otherwise, process the order first
-            handleConfirmPurchase();
         }
     }
 
@@ -467,5 +371,8 @@ public class ConfirmationPurchaseController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    public void setCommandeId(int activeCommandeId) {
     }
 }

@@ -186,14 +186,10 @@
 
                                             <!-- Action buttons -->
                                             <HBox spacing="15" alignment="CENTER_LEFT">
-                                                <Button text="Browse..." styleClass="browse-button"
-                                                        onAction="#handleBrowseMedicalFile"/>
-                                                <Button text="Upload" styleClass="action-button"
-                                                        onAction="#handleSaveMedicalFile"/>
-                                                <Button text="View" styleClass="action-button"
-                                                        onAction="#handleViewMedicalFile" disable=""/>
-                                                <Button text="Download" styleClass="action-button"
-                                                        onAction="#handleDownloadMedicalFile" disable=""/>
+                                                <Button text="Browse..." styleClass="browse-button" onAction="#handleBrowseMedicalFile" />
+                                                <Button text="Upload" styleClass="action-button" onAction="#handleSaveMedicalFile" />
+                                                <Button text="View" styleClass="action-button" onAction="#handleViewMedicalFile" />
+                                                <Button text="Download" styleClass="action-button" onAction="#handleDownloadMedicalFile" />
                                             </HBox>
                                         </VBox>
 

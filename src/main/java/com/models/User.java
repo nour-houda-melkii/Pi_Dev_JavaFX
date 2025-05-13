@@ -34,6 +34,9 @@ public class User {
     public static final String ROLE_USER = "ROLE_USER";    // Patient
     public static final String ROLE_MEDECIN = "ROLE_MEDECIN"; // Médecin
     public static final String ROLE_ADMIN = "ROLE_ADMIN";   // Admin
+    private Timestamp lastLoginDate;
+    private boolean isBannedForInactivity;
+    private Timestamp banUntil;
 
     // Constructeurs
     public User() {
@@ -226,6 +229,32 @@ public class User {
         return new Gson().toJson(this.roles);
     }
 
+    // Pour lastLoginDate
+    public Timestamp getLastLoginDate() {
+        return lastLoginDate;
+    }
+
+    public void setLastLoginDate(Timestamp lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
+    }
+
+    // Pour isBannedForInactivity
+    public boolean isBannedForInactivity() {
+        return isBannedForInactivity;
+    }
+
+    public void setBannedForInactivity(boolean bannedForInactivity) {
+        isBannedForInactivity = bannedForInactivity;
+    }
+
+    public Timestamp getBanUntil() {
+        return banUntil;
+    }
+
+    public void setBanUntil(Timestamp banUntil) {
+        this.banUntil = banUntil;
+    }
+
     // Et le setter correspondant
     public void setRolesFromJson(String jsonRoles) {
         if (jsonRoles == null || jsonRoles.isEmpty()) {
@@ -251,9 +280,9 @@ public class User {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", roles=" + roles +
-                ", loginAttempts=" + loginAttempts +
-                ", accountLocked=" + accountLocked +
-                ", lockUntil=" + lockUntil +
+                ", failedloginAttempts=" + loginAttempts +
+                ", isBlocked=" + accountLocked +
+                ", blockedUntil=" + lockUntil +
                 ", verificationCode=" + (verificationCode != null ? "***" : "null") +
                 ", verificationCodeExpiration=" + verificationCodeExpiration +
                 '}';

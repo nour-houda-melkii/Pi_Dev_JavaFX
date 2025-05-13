@@ -327,7 +327,7 @@ private void loadData(int medecinId) {
         if (!rdv.isStatut() && !rdv.isAnnule()) {
             // Dans le gestionnaire d'événements du bouton d'acceptation
             Button btnAccept = new Button("Accepter");
-            btnAccept.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+            btnAccept.setStyle("-fx-background-color:#87CEEB; -fx-text-fill: white;");
             btnAccept.setOnAction(e -> {
                 rdv.setStatut(true);
 
@@ -355,21 +355,30 @@ private void loadData(int medecinId) {
             });
 
             Button btnRefuse = new Button("Refuser");
-            btnRefuse.setStyle("-fx-background-color: #F44336; -fx-text-fill: white;");
+            btnRefuse.setStyle("-fx-background-color: #A9A9A9; -fx-text-fill: white;");
             btnRefuse.setOnAction(e -> {
-                rdv.setStatut(false);
-                rdv.setCause("Refusé");
-                serviceRendezVous.traiterRendezVous(rdv, false);
+                // Récupérer le médecin pour le message de notification
+                Medecin medecin = serviceMedecin.getMedecinById(rdv.getMedecinId());
+                String nomMedecin = (medecin != null) ?
+                        "Dr. " + medecin.getLastName() + " " + medecin.getFirstName() : "Inconnu";
 
-                // Envoyer une notification au patient
-                serviceNotification.notifierRendezVousAnnule(rdv);
+                // Créer la notification avant de supprimer le rendez-vous
+                String message = "Votre demande de rendez-vous chez " + nomMedecin + " a été refusée.";
+                Notification notification = new Notification(
+                        rdv.getPatientId(),
+                        null,
+                        message);
+                serviceNotification.ajouter(notification);
+
+                // Supprimer le rendez-vous
+                serviceRendezVous.supprimer(rdv.getId());
 
                 loadData(medecinId);
             });
             buttonBox.getChildren().addAll(btnAccept, btnRefuse);
         } else if (rdv.isStatut() && !rdv.isAnnule()) {
             Button btnAnnuler = new Button("Annuler");
-            btnAnnuler.setStyle("-fx-background-color: #FF9800; -fx-text-fill: white;");
+            btnAnnuler.setStyle("-fx-background-color:#87CEEB; -fx-text-fill: white;");
             btnAnnuler.setOnAction(e -> {
                 TextInputDialog dialog = new TextInputDialog();
                 dialog.setTitle("Annulation du rendez-vous");
@@ -394,7 +403,7 @@ private void loadData(int medecinId) {
                 }
             });
             Button btnModifier = new Button("Modifier");
-            btnModifier.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white;");
+            btnModifier.setStyle("-fx-background-color: #A9A9A9; -fx-text-fill: white;");
             btnModifier.setOnAction(e -> {
                 Dialog<RendezVous> dialog = new Dialog<>();
                 dialog.setTitle("Modifier le rendez-vous");

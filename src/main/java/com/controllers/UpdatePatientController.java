@@ -3,6 +3,7 @@ package com.controllers;
 import com.models.User;
 import com.services.UserService;
 import com.demo.enums.Gender;
+import com.utils.AlertUtils;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,6 +31,7 @@ public class UpdatePatientController {
     @FXML private Label addressError;
     @FXML private Label ageError;
     @FXML private Label genderError;
+    private Runnable onPatientUpdatedCallback;
 
     private UserService userService = new UserService();
     private User patientToUpdate;
@@ -58,22 +60,34 @@ public class UpdatePatientController {
     private void handleUpdate() {
         if (validateForm()) {
             try {
-                // Mise à jour des champs
-                updatePatientFields();
+                updatePatientFields(); // Met à jour l'objet patient
 
-                // Appel du service
                 boolean success = userService.modifierPatient(patientToUpdate);
 
-                if (success) {
-                    showAlertAndReturnToList("Success", "Patient successfully updated.");
-                } else {
-                    showAlert("Error", "The update could not be applied.");
+                if (!success) {
+                    throw new RuntimeException("Update operation failed");
                 }
+
+                AlertUtils.showSuccessAlert("Success", "Patient updated successfully");
+
+                // Fermer la fenêtre
+                Stage stage = (Stage) firstNameField.getScene().getWindow();
+                stage.close();
+
+                // Notifier le callback
+                if (onPatientUpdatedCallback != null) {
+                    onPatientUpdatedCallback.run();
+                }
+
             } catch (Exception e) {
-                showAlert("Critical error",
-                        "Error while updating: " + e.getMessage());
+                AlertUtils.showErrorAlert("Error", "Failed to update patient: " + e.getMessage());
+                e.printStackTrace();
             }
         }
+    }
+
+    public void setOnPatientUpdatedCallback(Runnable callback) {
+        this.onPatientUpdatedCallback = callback;
     }
 
     private void updatePatientFields() {

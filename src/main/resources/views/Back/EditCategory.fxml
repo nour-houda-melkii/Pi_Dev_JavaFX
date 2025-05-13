@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<?import java.net.URL?>
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.controllers.back.EditCategoryController"
+      spacing="0" alignment="TOP_CENTER"
+      styleClass="form-outer-container">
+
+    <stylesheets>
+        <URL value="@/styles/Back/edit.css" />
+    </stylesheets>
+
+    <!-- Vertical spacer -->
+    <Region prefHeight="50" VBox.vgrow="ALWAYS"/>
+
+    <!-- Main form container - now grows with window -->
+    <VBox styleClass="form-container" alignment="TOP_CENTER" spacing="20">
+        <!-- Header -->
+        <Label text="Edit Category" styleClass="form-title">
+            <font>
+                <Font size="24"/>
+            </font>
+        </Label>
+
+        <!-- Form Content - now responsive -->
+        <VBox spacing="15" alignment="CENTER_LEFT" styleClass="form-content">
+            <!-- Category Name -->
+            <VBox spacing="5">
+                <Label text="Category Name:" styleClass="form-label"/>
+                <TextField fx:id="nameField" promptText="Enter category name"
+                           styleClass="form-input"/>
+            </VBox>
+
+            <!-- Description - fixed inner border issue -->
+            <VBox spacing="5">
+                <Label text="Description:" styleClass="form-label"/>
+                <TextArea fx:id="descriptionField" promptText="Enter description"
+                          styleClass="form-textarea" wrapText="true"
+                          prefRowCount="5"/>
+            </VBox>
+        </VBox>
+
+        <!-- Buttons -->
+        <HBox spacing="20" alignment="CENTER">
+            <Button text="Save" onAction="#handleSave" styleClass="primary-btn"/>
+            <Button text="Cancel" onAction="#handleCancel" styleClass="secondary-btn"/>
+        </HBox>
+
+        <!-- Status Message -->
+        <Label fx:id="errorLabel" styleClass="message-label"/>
+    </VBox>
+
+    <!-- Bottom spacer -->
+    <Region prefHeight="50" VBox.vgrow="ALWAYS"/>
+</VBox>

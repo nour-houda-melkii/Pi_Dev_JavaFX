@@ -1,0 +1,70 @@
+/* Custom styling for alerts */
+.success-alert {
+    -fx-background-color: #f0f8ff;
+}
+
+.success-alert .dialog-pane {
+    -fx-border-color: #4caf50;
+    -fx-border-width: 2px;
+}
+
+.success-alert .header-panel {
+    -fx-background-color: #4caf50;
+}
+
+.success-alert .content {
+    -fx-font-size: 14px;
+    -fx-padding: 10px;
+}
+
+.success-alert .button-bar .button {
+    -fx-background-color: #4caf50;
+    -fx-text-fill: white;
+}
+
+.success-alert .button-bar .button:hover {
+    -fx-background-color: #45a049;
+}
+
+.error-alert {
+    -fx-background-color: #fff0f0;
+}
+
+.error-alert .dialog-pane {
+    -fx-border-color: #f44336;
+    -fx-border-width: 2px;
+}
+
+.error-alert .header-panel {
+    -fx-background-color: #f44336;
+}
+
+.error-alert .content {
+    -fx-font-size: 14px;
+    -fx-padding: 10px;
+}
+
+.error-alert .button-bar .button {
+    -fx-background-color: #f44336;
+    -fx-text-fill: white;
+}
+
+.error-alert .button-bar .button:hover {
+    -fx-background-color: #e53935;
+}
+
+/* Styling for the message button states */
+.message-button {
+    -fx-background-color: #2196f3;
+    -fx-text-fill: white;
+}
+
+.message-button:hover {
+    -fx-background-color: #0b7dda;
+}
+
+.message-sent-button {
+    -fx-background-color: #888888;
+    -fx-text-fill: white;
+    -fx-opacity: 0.7;
+}

@@ -127,6 +127,12 @@ public class CalendarController {
     }
 
     private void afficherCalendrierPourMois(YearMonth yearMonth) {
+        // Vérifier si la grille est null
+        if (calendrierGrid == null) {
+            System.err.println("calendrierGrid est null");
+            return;
+        }
+
         // Nettoyer la grille existante
         calendrierGrid.getChildren().clear();
 

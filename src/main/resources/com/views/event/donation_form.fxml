@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.paint.Color?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.event.controllers.DonationFormController"
+      styleClass="donation-form-background"
+      prefWidth="500.0" prefHeight="480.0">
+      
+    <StackPane AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" 
+               AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <VBox spacing="20" alignment="CENTER" styleClass="donation-form-container" maxWidth="420">
+            <effect>
+                <DropShadow radius="10" spread="0.1">
+                    <color>
+                        <Color opacity="0.3" />
+                    </color>
+                </DropShadow>
+            </effect>
+            
+            <padding>
+                <Insets top="30" right="30" bottom="30" left="30" />
+            </padding>
+            
+            <!-- En-tête -->
+            <VBox alignment="CENTER" spacing="5">
+                <Label text="Faire un don" styleClass="donation-form-title" />
+                <Text text="Votre soutien est important pour notre organisation" 
+                      styleClass="donation-form-subtitle" wrappingWidth="360" textAlignment="CENTER" />
+            </VBox>
+            
+            <!-- Formulaire -->
+            <GridPane vgap="15" hgap="10">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="100" />
+                </columnConstraints>
+                
+                <!-- Nom -->
+                <Label text="Nom" GridPane.rowIndex="0" styleClass="form-label" />
+                <TextField fx:id="lastNameField" promptText="Votre nom" 
+                          GridPane.rowIndex="1" styleClass="form-field" />
+                
+                <!-- Prénom -->
+                <Label text="Prénom" GridPane.rowIndex="2" styleClass="form-label" />
+                <TextField fx:id="firstNameField" promptText="Votre prénom" 
+                          GridPane.rowIndex="3" styleClass="form-field" />
+                
+                <!-- Montant -->
+                <Label text="Montant du don (€)" GridPane.rowIndex="4" styleClass="form-label" />
+                <HBox spacing="10" GridPane.rowIndex="5">
+                    <TextField fx:id="amountField" promptText="Montant" 
+                               styleClass="form-field" HBox.hgrow="ALWAYS" />
+                    <ComboBox fx:id="currencyComboBox" styleClass="currency-combo" 
+                             prefWidth="80" />
+                </HBox>
+                
+                <!-- Option Anonyme -->
+                <HBox spacing="10" alignment="CENTER_LEFT" GridPane.rowIndex="6">
+                    <CheckBox fx:id="anonymousCheckbox" text="Faire un don anonyme" 
+                             styleClass="anonymous-checkbox" />
+                </HBox>
+                
+                <!-- Message de don (optionnel) -->
+                <Label text="Message (facultatif)" GridPane.rowIndex="7" styleClass="form-label" />
+                <TextArea fx:id="messageArea" promptText="Votre message" 
+                         GridPane.rowIndex="8" styleClass="form-field" prefHeight="80" />
+            </GridPane>
+            
+            <!-- Boutons d'action -->
+            <HBox spacing="15" alignment="CENTER">
+                <Button fx:id="cancelButton" text="Annuler" styleClass="button-cancel" 
+                       onAction="#handleCancel" prefWidth="140" />
+                <Button fx:id="donateButton" text="Procéder au paiement" styleClass="button-primary" 
+                       onAction="#handleDonate" prefWidth="200" />
+            </HBox>
+        </VBox>
+    </StackPane>
+</AnchorPane> 

@@ -7,6 +7,7 @@ BorderPane > .left,
 BorderPane > .center {
     -fx-pref-width: 50%;
     -fx-min-width: 50%;
+    -fx-max-width: 50%;
 }
 
 /* Partie gauche bleue */
@@ -54,12 +55,6 @@ BorderPane > .center {
     -fx-effect: dropshadow(three-pass-box, rgba(0,180,216,0.2), 0, 0, 0, 3);
 }
 
-/* Case à cocher */
-.remember-me {
-    -fx-text-fill: #6c757d;
-    -fx-font-size: 14px;
-}
-
 /* Bouton de connexion */
 .login-button {
     -fx-background-color: #00B4D8;
@@ -95,42 +90,42 @@ BorderPane > .center {
     -fx-fill: #6c757d;
 }
 
-/* Boutons sociaux */
-.social-button {
-    -fx-background-radius: 50%;
-    -fx-pref-width: 40px;
+/* Style pour le conteneur reCAPTCHA */
+#recaptchaContainer {
+    -fx-background-color: transparent;
+    -fx-border-color: #ced4da;
+    -fx-border-radius: 4px;
+    -fx-border-width: 1px;
+}
+
+/* Style pour le WebView interne */
+#recaptchaContainer .web-view {
+    -fx-background-color: transparent;
+}
+
+.form-control {
     -fx-pref-height: 40px;
-    -fx-background-color: white;
-    -fx-border-color: #dee2e6;
-    -fx-border-radius: 50%;
+    -fx-padding: 0 10px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: #ced4da;
     -fx-border-width: 1px;
-    -fx-padding: 0;
 }
 
-.social-button:hover {
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 0, 0, 0, 3);
+.login-button {
+    -fx-background-color: #0077b6;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-pref-height: 45px;
+    -fx-background-radius: 5px;
 }
 
-.google:hover {
-    -fx-background-color: #f8d7da;
+.login-button:hover {
+    -fx-background-color: #023e8a;
 }
 
-.facebook:hover {
-    -fx-background-color: #e7f5ff;
-}
-
-
-/* Ajoutez ces règles à votre fichier CSS existant */
-
-/* Style pour le séparateur */
-.separator {
-    -fx-border-color: #dee2e6;
-    -fx-border-width: 1px;
-    -fx-padding: 10 0;
-}
-
-/* Style pour le texte d'information */
-.info-text {
-    -fx-fill: #6c757d;
+.error-message {
+    -fx-text-fill: #dc3545;
     -fx-font-size: 12px;
+    -fx-padding: 5px 0;
 }

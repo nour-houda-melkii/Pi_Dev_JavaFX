@@ -3,28 +3,31 @@ package com.models;
 public class Produit {
     private int id;
     private String name;
-    private String description;
+    private String desciption;
     private double price;
+    private double originalPrice;
     private String imagePath;
     private int quantity;
     private int categoryId;
+    private int favoritesCount;
+    private String discountStatus;
 
     // Constructors
     public Produit() {}
 
-    public Produit(String name, String description, double price, String imagePath, int quantity, int categoryId) {
+    public Produit(String name, String desciption, double price, String imagePath, int quantity, int categoryId) {
         this.name = name;
-        this.description = description;
+        this.desciption = desciption;
         this.price = price;
         this.imagePath = imagePath;
         this.quantity = quantity;
         this.categoryId = categoryId;
     }
 
-    public Produit(int id, String name, String description, double price, String imagePath, int quantity, int categoryId) {
+    public Produit(int id, String name, String desciption, double price, String imagePath, int quantity, int categoryId) {
         this.id = id;
         this.name = name;
-        this.description = description;
+        this.desciption = desciption;
         this.price = price;
         this.imagePath = imagePath;
         this.quantity = quantity;
@@ -48,12 +51,12 @@ public class Produit {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDesciption() {
+        return desciption;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDesciption(String desciption) {
+        this.desciption = desciption;
     }
 
     public double getPrice() {
@@ -62,6 +65,14 @@ public class Produit {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public double getOriginalPrice() {
+        return originalPrice;
+    }
+
+    public void setOriginalPrice(double originalPrice) {
+        this.originalPrice = originalPrice;
     }
 
     public String getImagePath() {
@@ -88,16 +99,35 @@ public class Produit {
         this.categoryId = categoryId;
     }
 
+    public int getFavoritesCount() {
+        return favoritesCount;
+    }
+
+    public void setFavoritesCount(int favoritesCount) {
+        this.favoritesCount = favoritesCount;
+    }
+
+    public String getDiscountStatus() {
+        return discountStatus;
+    }
+
+    public void setDiscountStatus(String discountStatus) {
+        this.discountStatus = discountStatus;
+    }
+
     @Override
     public String toString() {
         return "Produit{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
+                ", desciption='" + desciption + '\'' +
                 ", price=" + price +
+                ", originalPrice=" + originalPrice +
                 ", imagePath='" + imagePath + '\'' +
                 ", quantity=" + quantity +
                 ", categoryId=" + categoryId +
+                ", favoritesCount=" + favoritesCount +
+                ", discountStatus='" + discountStatus + '\'' +
                 '}';
     }
 }

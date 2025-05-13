@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.net.URL?>
+<?import javafx.scene.image.ImageView?>
+<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.controllers.front.EditPostController"
+      styleClass="form-container" spacing="20" alignment="TOP_CENTER"
+      prefWidth="600">
+
+    <stylesheets>
+        <URL value="@/styles/Front/newpost.css" />
+    </stylesheets>
+
+    <Label text="Edit Post" styleClass="form-title">
+        <font>
+            <Font size="20"/>
+        </font>
+    </Label>
+
+    <GridPane hgap="15" vgap="15" alignment="CENTER">
+        <columnConstraints>
+            <ColumnConstraints halignment="RIGHT" hgrow="NEVER" prefWidth="100"/>
+            <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" prefWidth="200"/>
+        </columnConstraints>
+        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+
+        <!-- Title -->
+        <Label text="Title*:" styleClass="form-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="titleField" promptText="Enter post title" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <!-- Description -->
+        <Label text="Description*:" styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <TextArea fx:id="descriptionField" promptText="Enter post description"
+                  wrapText="true" prefRowCount="4" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+        <!-- Type -->
+        <Label text="Type*:" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="typeComboBox" promptText="Select type" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+        <!-- Category -->
+        <Label text="Category*:" styleClass="form-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="categoryComboBox" promptText="Select category" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+        <!-- Image -->
+        <Label text="Image:" styleClass="form-label" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+        <HBox spacing="10" alignment="CENTER_LEFT" GridPane.rowIndex="4" GridPane.columnIndex="1">
+            <Button fx:id="browseButton" text="Browse..." onAction="#handleImageBrowse"/>
+            <Label fx:id="imageNameLabel" text="No image selected" styleClass="image-label"/>
+            <ImageView fx:id="imagePreview" fitWidth="100" fitHeight="100" preserveRatio="true" visible="false"/>
+        </HBox>
+    </GridPane>
+
+    <HBox spacing="20" alignment="CENTER">
+        <Button fx:id="saveButton" text="Save Changes" onAction="#handleSave" styleClass="submit-btn"/>
+        <Button text="Cancel" onAction="#handleCancel" styleClass="cancel-btn"/>
+    </HBox>
+</VBox>

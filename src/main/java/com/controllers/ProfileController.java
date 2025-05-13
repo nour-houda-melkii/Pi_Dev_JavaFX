@@ -517,5 +517,17 @@ public class ProfileController {
         }
     }
 
+    public void setUser(User user) {
+        this.currentUser = user;
+        if (this.authService == null) this.authService = new AuthService();
+        if (this.profileService == null) this.profileService = new ProfileService();
+        // Récupérer le token JWT depuis AuthManager
+        this.token = com.utils.AuthManager.getStoredToken();
+        if (user != null) {
+            loadUserData();
+            setupUI();
+        }
+    }
+
 }
 

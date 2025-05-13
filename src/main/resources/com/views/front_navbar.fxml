@@ -1,0 +1,6 @@
+<Button fx:id="homeButton" text="Accueil" styleClass="nav-link" onAction="#handleHome" />
+<Button fx:id="eventsButton" text="Événements" styleClass="nav-link, active-nav-link" onAction="#handleEvents" />
+<Button text="À propos" styleClass="nav-link" onAction="#handleAbout" />
+<Button text="Contact" styleClass="nav-link" onAction="#handleContact" />
+<Button fx:id="rendezVousButton" text="RendezVous" styleClass="nav-link" onAction="#handleRendezVous" />
+<Button fx:id="reclamationsButton" text="Reclamations" styleClass="nav-link" /> 

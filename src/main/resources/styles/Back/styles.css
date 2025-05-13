@@ -1,0 +1,591 @@
+.root {
+    -fx-font-family: 'Arial';
+    -fx-base: #ffffff;
+}
+
+/** login start **/
+.login-container {
+    -fx-background-color: #f5f5f5;
+    -fx-padding: 40;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
+}
+
+.login-title {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+/** login end **/
+
+
+/** patient interface start (with admin log out button) start **/
+
+/* Main Styles */
+.main-container {
+    -fx-background-color: #f5f5f7;
+    -fx-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Navbar Styles */
+.navbar {
+    -fx-background-color: white;
+    -fx-padding: 10px 20px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+.nav-item {
+    -fx-padding: 8px 15px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.nav-item:hover {
+    -fx-background-color: #f0f2f5;
+}
+
+.nav-menu-button {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 8px 15px;
+}
+
+.nav-menu-button > .label {
+    -fx-text-fill: #3498db;
+    -fx-font-weight: bold;
+}
+
+.nav-menu-button .menu-item {
+    -fx-padding: 8px 15px;
+}
+
+.nav-menu-button .menu-item:hover {
+    -fx-background-color: #f0f2f5;
+}
+
+/* User Profile Styles */
+.user-profile {
+    -fx-padding: 0 10px;
+}
+
+.user-avatar {
+    -fx-background-radius: 50%;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 3, 0, 0, 1);
+}
+
+.username-label {
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.user-role {
+    -fx-text-fill: #95a5a6;
+    -fx-font-size: 12px;
+}
+
+/* Notification Badge */
+.notification-badge {
+    -fx-background-color: #e74c3c;
+    -fx-background-radius: 100;
+    -fx-min-width: 18px;
+    -fx-min-height: 18px;
+    -fx-max-width: 18px;
+    -fx-max-height: 18px;
+    -fx-alignment: center;
+}
+
+/* Dashboard Cards */
+.dashboard-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 3);
+    -fx-padding: 20px;
+}
+
+.dashboard-card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 15, 0, 0, 5);
+    -fx-translate-y: -2px;
+    -fx-transition: all 0.3s ease;
+}
+
+/* Action Buttons */
+.action-button {
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+    -fx-padding: 8px 15px;
+    -fx-font-weight: bold;
+}
+
+.action-button:hover {
+    -fx-opacity: 0.9;
+}
+
+/* Logout Button */
+.logout-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #e74c3c;
+    -fx-cursor: hand;
+    -fx-background-radius: 4px;
+    -fx-padding: 8px;
+}
+
+.logout-btn:hover {
+    -fx-background-color: #ffeeee;
+}
+
+/* Content Pane */
+.content-pane {
+    -fx-padding: 20px;
+}
+
+/* Welcome Screen */
+.welcome-label {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+/** patient interface end (with admin log out button) end **/
+
+/** admin interface start **/
+
+.admin-navbar {
+    -fx-background-color: #2c3e50;  /* Lighter blue */
+    -fx-padding: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);
+}
+
+.navbar-title {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.admin-name {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+.admin-sidebar {
+    -fx-background-color: #436f91;  /* Even lighter blue */
+    -fx-padding: 20 10;
+    -fx-border-color: transparent #E0E0E0 transparent transparent;
+    -fx-border-width: 0 1 0 0;
+}
+
+.sidebar-header {
+    -fx-text-fill: #f8f9fa;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 10 0;
+}
+
+.menu-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 15;
+    -fx-border-radius: 0;
+}
+
+.menu-btn:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-cursor: hand;
+}
+
+.submenu {
+    -fx-padding: 5 0 5 25;
+    -fx-border-color: transparent transparent transparent rgba(255, 255, 255, 0.3);
+    -fx-border-width: 1;
+}
+
+.submenu-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #f1f3f5;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 8 15;
+    -fx-border-radius: 0;
+}
+
+.submenu-btn:hover {
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dashboard-content {
+    -fx-background-color: white;  /* Clean white background */
+}
+
+.dashboard-welcome {
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+/** admin interface end **/
+
+/** Add Category Form **/
+/* Main Container */
+/* Outer container for vertical centering */
+/* Outer container */
+.form-outer-container {
+    -fx-background-color: #f8f9fa;
+    -fx-padding: 20;
+    -fx-alignment: center;
+}
+
+/* Main Form Container - Now responsive */
+.form-container {
+    -fx-padding: 40;
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-spacing: 25;
+    -fx-alignment: top-center;
+    -fx-min-width: 450;
+    -fx-pref-width: 550;
+    -fx-max-width: 650;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 10, 0, 0, 0);
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+}
+
+/* Title */
+.form-title {
+    -fx-text-fill: #3498db;
+    -fx-padding: 0 0 15 0;
+}
+
+/* Form Content - Now expands */
+.form-content {
+    -fx-padding: 0 30 0 30;
+    -fx-min-width: 400;
+    -fx-pref-width: 500;
+    -fx-max-width: 600;
+}
+
+/* Labels */
+.form-label {
+    -fx-font-size: 15;
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: bold;
+}
+
+/* Input Fields - Fixed textarea border */
+.form-input {
+    -fx-min-width: 350;
+    -fx-pref-width: 450;
+    -fx-max-width: 550;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-color: #e0e0e0;
+    -fx-padding: 10;
+    -fx-font-size: 14;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+}
+
+.form-input:focused {
+    -fx-border-color: #3498db;
+    -fx-border-width: 1.5;
+}
+
+.form-textarea {
+    -fx-min-width: 350;
+    -fx-pref-width: 450;
+    -fx-max-width: 550;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-color: #e0e0e0;
+    -fx-padding: 10;
+    -fx-font-size: 14;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.form-textarea .content {
+    -fx-background-color: white;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-border-color: transparent;
+}
+
+.form-textarea:focused {
+    -fx-border-color: #3498db;
+    -fx-border-width: 1.5;
+}
+
+/* Buttons */
+.primary-btn {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 10 30;
+    -fx-background-radius: 6;
+    -fx-min-width: 140;
+    -fx-font-size: 14;
+    -fx-cursor: hand;
+}
+
+.primary-btn:hover {
+    -fx-background-color: #2980b9;
+}
+
+.secondary-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #7f8c8d;
+    -fx-font-weight: bold;
+    -fx-padding: 10 30;
+    -fx-background-radius: 6;
+    -fx-border-color: #bdc3c7;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-min-width: 140;
+    -fx-font-size: 14;
+    -fx-cursor: hand;
+}
+
+.secondary-btn:hover {
+    -fx-background-color: #f5f5f5;
+}
+
+/* Message */
+.message-label {
+    -fx-font-size: 14;
+    -fx-padding: 15 0 0 0;
+    -fx-alignment: center;
+    -fx-max-width: Infinity;
+    -fx-text-alignment: center;
+}
+
+.message-label.error {
+    -fx-text-fill: #e74c3c;
+}
+
+.message-label.success {
+    -fx-text-fill: #27ae60;
+}
+/** view categories start **/
+/* Add these styles to your CSS file */
+.count-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 10 0;
+}
+
+.category-header {
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 10;
+}
+
+.post-count {
+    -fx-font-size: 13px;
+    -fx-text-fill: white;
+    -fx-padding: 2 8;
+    -fx-background-color: #3498db;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+
+/* Keep all your existing styles */
+.transparent-scroll {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.categories-container {
+    -fx-padding: 20;
+    -fx-spacing: 20;
+    -fx-background-color: white;
+}
+
+.section-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 0 0 10 0;
+}
+
+.categories-list {
+    -fx-padding: 10;
+}
+
+.category-card {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1;
+    -fx-padding: 15;
+    -fx-spacing: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);
+}
+
+.category-name {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a237e;
+}
+
+.category-description {
+    -fx-font-size: 14px;
+    -fx-text-fill: #424242;
+    -fx-padding: 0 0 0 5;
+}
+
+.category-bottom-row {
+    -fx-alignment: center-left;
+}
+
+.category-date {
+    -fx-font-size: 12px;
+    -fx-text-fill: #757575;
+}
+
+.empty-message {
+    -fx-font-size: 16px;
+    -fx-text-fill: #757575;
+    -fx-font-style: italic;
+    -fx-padding: 20;
+    -fx-alignment: center;
+}
+
+.error-message {
+    -fx-font-size: 16px;
+    -fx-text-fill: #c62828;
+    -fx-padding: 20;
+    -fx-alignment: center;
+}
+
+.action-buttons {
+    -fx-spacing: 15;
+    -fx-padding: 10 0 0 0;
+    -fx-alignment: center-right;
+}
+
+/* Button Styles */
+.edit-btn {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 5 15;
+    -fx-background-radius: 4;
+    -fx-min-width: 70;
+}
+
+.edit-btn:hover {
+    -fx-background-color: #2980b9;
+}
+
+.delete-btn {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 5 15;
+    -fx-background-radius: 4;
+    -fx-min-width: 70;
+}
+
+.delete-btn:hover {
+    -fx-background-color: #c0392b;
+}
+
+.action-btn {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20;
+    -fx-background-radius: 5;
+}
+
+.action-btn:hover {
+    -fx-background-color: #2980b9;
+}
+
+.cancel-btn {
+    -fx-background-color: #95a5a6;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20;
+    -fx-background-radius: 5;
+}
+
+.cancel-btn:hover {
+    -fx-background-color: #7f8c8d;
+}
+
+/* Search and Filter Styles */
+.search-field {
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: #bdc3c7;
+    -fx-border-width: 1;
+    -fx-padding: 7 15;
+    -fx-font-size: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 3, 0.2, 0, 1);
+}
+
+.search-field:focused {
+    -fx-border-color: #3498db;
+    -fx-border-width: 1.5;
+}
+
+.filter-combo {
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: #bdc3c7;
+    -fx-border-width: 1;
+    -fx-padding: 5 10;
+    -fx-font-size: 14px;
+    -fx-pref-width: 180;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 3, 0.2, 0, 1);
+}
+
+.filter-combo .list-cell {
+    -fx-padding: 5 10;
+}
+
+.filter-combo .arrow-button {
+    -fx-background-radius: 0 20 20 0;
+}
+
+/* Add these styles to your viewposts.css file */
+
+.reactions-row {
+    -fx-padding: 5 0 5 0;
+    -fx-alignment: center-left;
+}
+
+.reaction-box {
+    -fx-background-color: #f0f2f5;
+    -fx-background-radius: 12;
+    -fx-padding: 3 8 3 8;
+    -fx-alignment: center;
+}
+
+.reaction-like {
+    -fx-background-color: #e7f3ff;
+}
+
+.reaction-love {
+    -fx-background-color: #ffebee;
+}
+
+.reaction-sad {
+    -fx-background-color: #e8eaf6;
+}
+
+.reaction-icon {
+    -fx-font-size: 12;
+}
+
+.reaction-count {
+    -fx-font-size: 12;
+    -fx-font-weight: bold;
+}

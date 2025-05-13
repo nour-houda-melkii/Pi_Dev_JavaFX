@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+
+<StackPane xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.event.controllers.FrontNavbarController"
+      styleClass="front-navbar-container">
+      
+    <effect>
+        <DropShadow offsetY="2" radius="5" spread="0.05">
+            <color>
+                <Color opacity="0.2" />
+            </color>
+        </DropShadow>
+    </effect>
+    
+    <!-- Background pattern -->
+    <StackPane styleClass="navbar-background-pattern" />
+    
+    <HBox styleClass="front-navbar"
+      alignment="CENTER_LEFT"
+          spacing="24"
+          prefHeight="80.0">
+    
+    <padding>
+            <Insets top="10" right="30" bottom="10" left="30" />
+    </padding>
+    
+        <!-- Logo and Title Container -->
+        <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-background-color: transparent;">
+            <!-- Logo with glow effect -->
+            <StackPane styleClass="logo-container" minWidth="50" minHeight="50">
+                <ImageView fitHeight="40" fitWidth="40" preserveRatio="true">
+        <Image url="/images/logo.png" />
+                    <effect>
+                        <DropShadow color="#4d8cfb" radius="10" spread="0.1" />
+                    </effect>
+    </ImageView>
+            </StackPane>
+    
+    <!-- Titre -->
+            <Label text="SAHATECH" styleClass="front-nav-title" />
+        </HBox>
+    
+        <Pane HBox.hgrow="ALWAYS" style="-fx-background-color: transparent;" /> <!-- Spacer -->
+    
+        <!-- Navigation Links Container -->
+        <HBox spacing="8" alignment="CENTER" style="-fx-background-color: transparent;">
+            <!-- Boutons de navigation avec effet hover -->
+            <Button fx:id="homeButton" text="Accueil" styleClass="nav-link" onAction="#handleHome" />
+            <Button fx:id="eventsButton" text="Événements" styleClass="nav-link, active-nav-link" onAction="#handleEvents" />
+            <Button fx:id="productsButton" text="Produits" styleClass="nav-link" onAction="#handleProducts" />
+            <Button fx:id="rendezVousButton" text="RendezVous" styleClass="nav-link" onAction="#handleRendezVous" />
+            <Button fx:id="reclamationsButton" text="Reclamations" styleClass="nav-link" onAction="#handleReclamations" />
+            <MenuButton fx:id="postsMenuButton" text="Posts" styleClass="nav-link">
+            <items>
+                <MenuItem text="Create Post" onAction="#handleCreatePost" />
+                <MenuItem text="View Posts" onAction="#handleViewPosts" />
+            </items>
+            </MenuButton>
+        </HBox>
+        
+        <!-- Spacer -->
+        <Pane HBox.hgrow="ALWAYS" style="-fx-background-color: transparent;" minWidth="10" />
+        
+        <!-- Bouton Donate -->
+        <Button text="Donate" styleClass="donate-button" onAction="#handleDonate" />
+        <!-- Bouton Messages -->
+        <Button text="Messages" fx:id="messagesBtn" onAction="#handleMessages" styleClass="logout-btn" />
+        
+        <!-- Notification Button -->
+        <StackPane fx:id="notificationContainer" styleClass="notification-container" style="-fx-background-color: transparent;">
+            <MenuButton fx:id="notificationMenuButton" styleClass="notification-button" 
+                       popupSide="BOTTOM" onMouseClicked="#handleNotificationClick">
+                <graphic>
+                    <Text text="🔔" styleClass="notification-icon" />
+                </graphic>
+                <style>
+                    -fx-background-color: transparent;
+                    -fx-padding: 8;
+                    -fx-cursor: hand;
+                </style>
+        </MenuButton>
+            
+            <StackPane fx:id="notificationBadge" visible="false" StackPane.alignment="TOP_RIGHT" 
+                      translateX="6" translateY="-6" mouseTransparent="true">
+                <Circle radius="8" styleClass="notification-badge-circle" />
+                <Label fx:id="notificationCount" text="0" styleClass="notification-badge-text" />
+            </StackPane>
+        </StackPane>
+        
+        <!-- User Profile Button -->
+        <Button fx:id="profileButton" styleClass="profile-button" onAction="#handleProfileMenu">
+            <graphic>
+                <StackPane>
+                    <Circle radius="18" styleClass="profile-circle" />
+                    <Text text="SH" styleClass="profile-initials" />
+                </StackPane>
+            </graphic>
+        </Button>
+</HBox> 
+</StackPane> 

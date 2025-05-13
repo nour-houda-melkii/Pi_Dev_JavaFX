@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.controllers.nour.FavoritesStatisticsController"
+            fx:controller="com.controllers.nour.TopFavoritesStatisticsController"
             style="-fx-background-color: #f0f0f0;">
 
     <top>
@@ -23,7 +23,7 @@
     </top>
 
     <center>
-        <VBox spacing="20" style="-fx-padding: 0 20 20 20;">
+        <VBox fx:id="chartContainer" spacing="20" style="-fx-padding: 0 20 20 20;">
             <!-- Products Favorites Chart -->
             <VBox spacing="5">
                 <Label text="Most Favorited Products" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
@@ -41,6 +41,14 @@
             <VBox spacing="5">
                 <Label text="Favorites by Category" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
                 <PieChart fx:id="categoriesChart" animated="true" labelLineLength="20" labelsVisible="true"/>
+            </VBox>
+
+            <!-- Résumé des statistiques -->
+            <VBox spacing="5" style="-fx-background-color: #f8f9fa; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 10;">
+                <Label text="Résumé" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                <Label fx:id="mostPopularLabel" style="-fx-font-size: 14px;" text="Most Popular Product: N/A"/>
+                <Label fx:id="avgFavoritesLabel" style="-fx-font-size: 14px;" text="Average Favorites for Top 3: N/A"/>
+                <Label fx:id="comparisonLabel" style="-fx-font-size: 14px;" text="Popularity Comparison: N/A"/>
             </VBox>
         </VBox>
     </center>

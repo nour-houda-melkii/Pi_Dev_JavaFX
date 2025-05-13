@@ -4,14 +4,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<?import javafx.scene.image.*?>
+<?import de.jensd.fx.glyphs.fontawesome.*?>
 
 <VBox xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.controllers.UnverifiedDoctorsController"
       spacing="20"
       style="-fx-background-color: #f8fafc; -fx-padding: 20;"
-      prefWidth="1024">
+      prefWidth="1024"
+      fx:id="mainContainer">
 
     <!-- Container principal avec ombre et bord arrondi -->
     <VBox style="-fx-background-color: white; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
@@ -34,14 +35,7 @@
         <!-- Bouton de retour -->
         <HBox style="-fx-padding: 0 20 20 20; -fx-alignment: center-left;">
             <Button text="Back to List" onAction="#handleBackToList"
-                    style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16; -fx-font-family: 'Poppins';">
-                <graphic>
-                    <ImageView fitWidth="16" fitHeight="16">
-                        <image>
-                        </image>
-                    </ImageView>
-                </graphic>
-            </Button>
+                    style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-background-radius: 8; -fx-padding: 8 16; -fx-font-family: 'Poppins';"/>
         </HBox>
     </VBox>
 </VBox>

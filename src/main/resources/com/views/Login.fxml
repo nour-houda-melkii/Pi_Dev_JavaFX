@@ -6,23 +6,21 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.controllers.LoginController"
-            stylesheets="@/styles/styleLogin/login.css"
-            prefWidth="1000" prefHeight="600">
+<HBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.controllers.LoginController"
+      stylesheets="@/styles/styleLogin/login.css"
+      spacing="0">
 
     <!-- Partie gauche - Image -->
-    <left>
-        <StackPane style="-fx-background-color: #CAF0F8;" BorderPane.alignment="CENTER">
-            <ImageView fitWidth="400" preserveRatio="true">
-                <Image url="@/assets/img/undraw_access-account_aydp.png" />
-            </ImageView>
-        </StackPane>
-    </left>
+    <StackPane style="-fx-background-color: #CAF0F8;" alignment="CENTER" HBox.hgrow="ALWAYS">
+        <ImageView fitWidth="350" fitHeight="350" preserveRatio="true">
+            <Image url="@/assets/img/undraw_access-account_aydp.png"/>
+        </ImageView>
+    </StackPane>
 
     <!-- Partie droite - Formulaire -->
-    <center>
+    <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: transparent; -fx-background: transparent;" HBox.hgrow="ALWAYS">
         <VBox spacing="20" alignment="CENTER" style="-fx-padding: 40; -fx-background-color: #f8f9fa;">
             <!-- Logo -->
             <ImageView fitWidth="100" fitHeight="80">
@@ -49,8 +47,13 @@
                     <PasswordField fx:id="passwordField" styleClass="form-control" promptText="Enter your password" />
                 </VBox>
 
-                <!-- Se souvenir de moi -->
-                <CheckBox fx:id="rememberMeCheckbox" text="Keep me logged in" styleClass="remember-me" />
+                <!-- Zone CAPTCHA -->
+                <VBox spacing="5" alignment="CENTER" prefWidth="300">
+                    <padding><Insets /></padding>
+                    <StackPane fx:id="captchaContainer"
+                               minHeight="40" prefHeight="170"
+                               maxWidth="70" prefWidth="300" />
+                </VBox>
 
                 <!-- Bouton de connexion -->
                 <Button text="Login" styleClass="login-button" onAction="#handleLogin" maxWidth="Infinity" prefWidth="300"/>
@@ -82,7 +85,7 @@
                     </ImageView>
                 </HBox>
             </VBox>
-
         </VBox>
-    </center>
-</BorderPane>
+    </ScrollPane>
+</HBox>
+

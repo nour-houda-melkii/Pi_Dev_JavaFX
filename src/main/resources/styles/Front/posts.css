@@ -1,0 +1,500 @@
+/* Main containers */
+.main-container {
+    -fx-padding: 20px 30px;
+    -fx-spacing: 25;
+    -fx-background-color: #f8f9fa;
+}
+
+.posts-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+
+.posts-scroll-pane > .viewport {
+    -fx-background-color: transparent;
+
+}
+
+/* Header styles */
+.section-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 0 0 5 0;
+}
+
+.count-badge {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 3 10;
+    -fx-background-radius: 12px;
+    -fx-font-weight: bold;
+}
+
+/* Filter controls */
+.filter-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #7f8c8d;
+    -fx-font-weight: bold;
+}
+
+.filter-combo {
+    -fx-background-color: white;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-min-width: 180px;
+    -fx-padding: 5px;
+}
+
+.filter-combo .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.filter-combo .arrow {
+    -fx-background-color: #3498db;
+}
+
+/* Posts container */
+.posts-container {
+    -fx-padding: 20px 0 0 0;
+}
+
+/* Post card */
+.post-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);
+    -fx-border-radius: 8px;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+    -fx-transition: -fx-effect 0.3s;
+}
+
+.post-card-hover {
+    -fx-effect: dropshadow(gaussian, rgba(52,152,219,0.25), 15, 0, 0, 4);
+    -fx-border-color: #3498db;
+}
+
+/* Avatar */
+.user-avatar {
+    -fx-background-color: #3498db;
+    -fx-background-radius: 50%;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-max-width: 40px;
+    -fx-max-height: 40px;
+    -fx-alignment: center;
+}
+
+.avatar-text {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+/* Post header elements */
+.author-name {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.post-date {
+    -fx-font-size: 12px;
+    -fx-text-fill: #95a5a6;
+}
+
+.post-type-badge {
+    -fx-padding: 3 12;
+    -fx-background-radius: 15px;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.offre-badge {
+    -fx-background-color: #27ae60;
+}
+
+.demande-badge {
+    -fx-background-color: #e74c3c;
+}
+
+/* Post content */
+.post-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495e;
+}
+
+.category-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #3498db;
+    -fx-font-weight: bold;
+}
+
+.post-description {
+    -fx-font-size: 14px;
+    -fx-text-fill: #34495e;
+    -fx-wrap-text: true;
+}
+
+/* Image container */
+.image-container {
+    -fx-background-color: #f4f6f8;
+    -fx-background-radius: 6px;
+    -fx-alignment: center;
+}
+
+.image-error {
+    -fx-text-fill: #95a5a6;
+    -fx-font-style: italic;
+}
+
+/* Status indicators */
+.status-indicator {
+    -fx-stroke: transparent;
+}
+
+.status-active {
+    -fx-fill: #2ecc71;
+}
+
+.status-pending {
+    -fx-fill: #f39c12;
+}
+
+.status-closed {
+    -fx-fill: #e74c3c;
+}
+
+.status-text {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #7f8c8d;
+}
+
+/* Reactions */
+.reaction-summary {
+    -fx-padding: 5 0;
+}
+
+.reaction-bubble {
+    -fx-background-color: #f0f2f5;
+    -fx-background-radius: 50%;
+    -fx-min-width: 28px;
+    -fx-min-height: 28px;
+    -fx-max-width: 28px;
+    -fx-max-height: 28px;
+    -fx-alignment: center;
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+    -fx-border-radius: 50%;
+}
+
+.reaction-like {
+    -fx-background-color: #deeafb;
+}
+
+.reaction-love {
+    -fx-background-color: #ffebee;
+}
+
+.reaction-sad {
+    -fx-background-color: #fff8e1;
+}
+
+.bubble-emoji {
+    -fx-font-size: 12px;
+}
+
+.reaction-count {
+    -fx-text-fill: #95a5a6;
+    -fx-font-size: 13px;
+    -fx-padding: 0 0 0 5;
+}
+
+/* Reaction popup */
+.reaction-popup-panel {
+    -fx-background-color: white;
+    -fx-background-radius: 30px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);
+    -fx-padding: 8 15;
+    -fx-border-radius: 30px;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1px;
+    -fx-opacity: 1.0; /* Ensure full opacity */
+}
+
+.reaction-option-container {
+    -fx-background-color: transparent;
+    -fx-background-radius: 50%;
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-max-width: 40px;
+    -fx-max-height: 40px;
+    -fx-cursor: hand;
+    -fx-padding: 5;
+    -fx-alignment: center;
+    -fx-opacity: 1.0; /* Ensure full opacity */
+}
+
+.reaction-option-emoji {
+    -fx-font-size: 18px;
+    -fx-opacity: 1.0; /* Ensure emoji is fully visible */
+}
+
+.active-reaction {
+    -fx-background-color: #e6f0fa; /* Lighter, more visible background */
+    -fx-border-color: #3498db; /* Add border for better visibility */
+    -fx-border-width: 1px;
+    -fx-border-radius: 50%;
+    -fx-opacity: 1.0; /* Ensure full opacity */
+}
+
+/* Reaction button */
+.reaction-main-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+    -fx-padding: 5 12;
+}
+
+.reaction-main-button:hover {
+    -fx-background-color: #f0f2f5;
+}
+
+.reaction-button-emoji {
+    -fx-font-size: 20px;
+}
+
+.reaction-button-text {
+    -fx-font-size: 13px;
+    -fx-text-fill: #7f8c8d;
+}
+
+/* Reaction states */
+.reacted-like {
+    -fx-border-color: #3b5998;
+}
+
+.reacted-love {
+    -fx-border-color: #e74c3c;
+}
+
+.reacted-sad {
+    -fx-border-color: #f39c12;
+}
+
+.reacted-text-like {
+    -fx-text-fill: #3b5998;
+    -fx-font-weight: bold;
+}
+
+.reacted-text-love {
+    -fx-text-fill: #e74c3c;
+    -fx-font-weight: bold;
+}
+
+.reacted-text-sad {
+    -fx-text-fill: #f39c12;
+    -fx-font-weight: bold;
+}
+
+/* Action buttons */
+.edit-button, .delete-button {
+    -fx-background-radius: 5px;
+    -fx-font-size: 13px;
+    -fx-cursor: hand;
+    -fx-padding: 7 15;
+}
+
+.edit-button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+}
+
+.edit-button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.delete-button {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+}
+
+.delete-button:hover {
+    -fx-background-color: #c0392b;
+}
+
+/* Dialog styling */
+.dialog-pane {
+    -fx-background-color: white;
+}
+
+.dialog-pane .button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-background-radius: 5px;
+}
+
+.dialog-pane .button:hover {
+    -fx-background-color: #2980b9;
+}
+
+/* Error and notification messages */
+.error-message {
+    -fx-text-fill: #e74c3c;
+    -fx-font-size: 14px;
+    -fx-padding: 15;
+    -fx-alignment: center;
+}
+
+.no-posts-label {
+    -fx-text-fill: #95a5a6;
+    -fx-font-size: 16px;
+    -fx-font-style: italic;
+    -fx-padding: 50;
+    -fx-alignment: center;
+}
+
+
+/* Reaction System Styling */
+.reaction-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #dddfe2;
+    -fx-border-radius: 4px;
+    -fx-padding: 5px 10px;
+    -fx-cursor: hand;
+}
+
+.reaction-button:hover {
+    -fx-background-color: #f2f3f5;
+}
+
+.reaction-popup {
+    -fx-background-color: white;
+    -fx-background-radius: 20px;
+    -fx-border-color: #dddfe2;
+    -fx-border-radius: 20px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);
+}
+
+.reaction-option {
+    -fx-cursor: hand;
+    -fx-padding: 5px;
+}
+
+.reaction-option:hover {
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+}
+
+.reaction-bubble {
+    -fx-background-color: pink;
+    -fx-background-radius: 50%;
+    -fx-border-color: #e4e6eb;
+    -fx-border-radius: 50%;
+    -fx-border-width: 1px;
+    -fx-padding: 2px;
+}
+
+.reaction-summary {
+    -fx-background-color: #f2f3f5;
+    -fx-background-radius: 10px;
+    -fx-padding: 3px 6px;
+    -fx-border-color: #dddfe2;
+    -fx-border-radius: 10px;
+}
+
+.reaction-count {
+    -fx-text-fill: #65676b;
+    -fx-font-size: 11px;
+}
+
+/* Styles for active reactions */
+.reacted-like {
+    -fx-border-color: #2078f4;
+}
+
+.reacted-text-like {
+    -fx-text-fill: #2078f4;
+}
+
+.reacted-love {
+    -fx-border-color: #f33e58;
+}
+
+.reacted-text-love {
+    -fx-text-fill: #f33e58;
+}
+
+.reacted-sad {
+    -fx-border-color: #f7b125;
+}
+
+.reacted-text-sad {
+    -fx-text-fill: #f7b125;
+}
+
+/* Remove post card hover effect */
+.post-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-color: #e4e6eb;
+    -fx-border-radius: 8px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+    -fx-transition: none; /* Remove transitions */
+}
+
+/* No more hover effect */
+.post-card-hover {
+    -fx-effect: none;
+    -fx-background-color: white;
+}
+
+/* Add these CSS styles to your posts.css file */
+
+.options-button {
+    -fx-background-color: transparent;
+    -fx-padding: 5px;
+    -fx-font-size: 25px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #555;
+    -fx-cursor: hand;
+}
+
+.options-button:hover {
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 50%;
+}
+
+.options-menu {
+    -fx-background-color: white;
+    -fx-background-radius: 4px;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 4px;
+    -fx-padding: 5px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 3);
+}
+
+.menu-option {
+    -fx-background-color: transparent;
+    -fx-padding: 8px 15px 8px 10px;
+    -fx-cursor: hand;
+}
+
+.menu-option:hover {
+    -fx-background-color: #f0f0f0;
+    -fx-background-radius: 4px;
+}
+
+.menu-option-text {
+    -fx-font-size: 13px;
+    -fx-text-fill: #333;
+}

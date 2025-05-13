@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+<?import java.net.URL?>
+<ScrollPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.controllers.back.ViewCategoriesController"
+            styleClass="transparent-scroll" fitToWidth="true">
+
+    <stylesheets>
+        <URL value="@/styles/Back/styles.css" />
+    </stylesheets>
+
+    <VBox styleClass="categories-container">
+        <!-- Header section with search and filter -->
+        <VBox spacing="15">
+            <!-- Title and count -->
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="All Categories" styleClass="section-title"/>
+                <Label fx:id="categoryCountLabel" styleClass="count-badge"/>
+            </HBox>
+
+            <!-- Search and filter controls -->
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <!-- Search field -->
+                <TextField fx:id="searchField" promptText="Search categories..."
+                           styleClass="search-field" HBox.hgrow="ALWAYS">
+                    <HBox.margin>
+                        <Insets right="10"/>
+                    </HBox.margin>
+                </TextField>
+
+                <!-- Filter combo box -->
+                <ComboBox fx:id="filterComboBox" promptText="Filter by..."
+                          styleClass="filter-combo" VBox.vgrow="ALWAYS" maxWidth="Infinity" >
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="All Categories"/>
+                            <String fx:value="Most Posts"/>
+                            <String fx:value="Fewest Posts"/>
+                            <String fx:value="Newest First"/>
+                            <String fx:value="Oldest First"/>
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+            </HBox>
+        </VBox>
+
+
+        <!-- Categories list -->
+        <VBox fx:id="categoriesList" styleClass="categories-list" spacing="15"/>
+
+        <!-- Action buttons -->
+        <HBox styleClass="action-buttons">
+            <Button text="Refresh" onAction="#handleRefresh" styleClass="action-btn"/>
+        </HBox>
+    </VBox>
+</ScrollPane>

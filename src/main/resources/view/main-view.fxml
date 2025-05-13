@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.effect.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.MainController"
+            stylesheets="@../styles/main.css">
+
+    <!-- Top: Header -->
+    <top>
+        <HBox style="-fx-background-color: #3498db; -fx-padding: 15;" alignment="CENTER_LEFT">
+            
+            <Region HBox.hgrow="ALWAYS" />
+            
+            <Button fx:id="backendButton" onAction="#handleBackend"
+                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-background-radius: 5; -fx-padding: 8 15;"
+                    text="Backend" />
+            <Label fx:id="notificationLabel"
+                   text=""
+                   style="-fx-background-color: #2ecc71; -fx-text-fill: white; -fx-padding: 10; -fx-font-weight: bold;"
+                   visible="false"
+                   managed="false"/>
+        </HBox>
+    </top>
+
+    <!-- Center: Content -->
+    <center>
+        <VBox spacing="15" style="-fx-padding: 20; -fx-background-color: #f5f7fa;">
+            <!-- Header avec bouton d'ajout -->
+            <HBox alignment="CENTER_LEFT" spacing="20">
+                <TextField fx:id="searchField" promptText="Rechercher par description, date ou médecin..."
+                           style="-fx-background-radius: 5; -fx-padding: 8 15; -fx-pref-width: 300;"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="addBtn" text="+ Ajouter" onAction="#handleAdd"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold;
+                               -fx-background-radius: 5; -fx-padding: 8 15;"/>
+            </HBox>
+
+            <!-- Cards Container -->
+            <ScrollPane fx:id="scrollPane" fitToWidth="true" hbarPolicy="NEVER"
+                        style="-fx-background: transparent; -fx-background-color: transparent;">
+                <FlowPane fx:id="cardsContainer" hgap="15" vgap="15" style="-fx-padding: 10;">
+                    <!-- Template de carte - sera généré dynamiquement -->
+                    <VBox style="-fx-background-color: white; -fx-background-radius: 10;
+                                -fx-border-radius: 10; -fx-border-color: #e0e0e0;
+                                -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 1);
+                                -fx-padding: 15; -fx-spacing: 12; -fx-min-width: 300;">
+                        <!-- En-tête -->
+                        <HBox alignment="CENTER_LEFT">
+                            <Label fx:id="typeLabel" style="-fx-font-weight: bold; -fx-font-size: 16; -fx-text-fill: #00B4D8;"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Label fx:id="dateLabel" style="-fx-text-fill: #7f8c8d; -fx-font-size: 13;"/>
+                        </HBox>
+
+                        <!-- Description -->
+                        <Label fx:id="descLabel" style="-fx-text-fill: #34495e; -fx-wrap-text: true; -fx-padding: 0 0 5 0;"/>
+
+                        <!-- Boutons d'action -->
+                        <HBox alignment="CENTER_RIGHT" spacing="10">
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button fx:id="editBtn" text="Edit" onAction="#handleEdit"
+                                    style="-fx-background-color: #3498db; -fx-text-fill: white;
+                                           -fx-background-radius: 5; -fx-padding: 5 10;"/>
+                            <Button fx:id="deleteBtn" text="Delete" onAction="#handleDelete"
+                                    style="-fx-background-color: #e74c3c; -fx-text-fill: white;
+                                           -fx-background-radius: 5; -fx-padding: 5 10;"/>
+                        </HBox>
+                    </VBox>
+                </FlowPane>
+            </ScrollPane>
+        </VBox>
+    </center>
+</BorderPane>

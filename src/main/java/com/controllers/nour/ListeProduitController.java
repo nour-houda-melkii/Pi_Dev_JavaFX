@@ -15,6 +15,8 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.List;
@@ -174,7 +176,7 @@ public class ListeProduitController {
 
     private void populateProductFromFields(Produit produit) {
         produit.setName(nameField.getText());
-        produit.setDescription(descriptionField.getText());
+        produit.setDesciption(descriptionField.getText());
         produit.setPrice(Double.parseDouble(priceField.getText()));
         produit.setQuantity(Integer.parseInt(quantityField.getText()));
         produit.setImagePath(imageField.getText());
@@ -202,18 +204,29 @@ public class ListeProduitController {
         File selectedFile = fileChooser.showOpenDialog(null);
         if (selectedFile != null) {
             try {
-                // Create the target directory if it doesn't exist
-                File targetDir = new File("src/main/resources/images");
-                if (!targetDir.exists()) {
-                    targetDir.mkdirs();
+                // Get just the filename
+                String fileName = selectedFile.getName();
+
+                // 1. Copy to Java resources directory
+                File javaTargetDir = new File("src/main/resources/images");
+                if (!javaTargetDir.exists()) {
+                    javaTargetDir.mkdirs();
                 }
+                File javaDestFile = new File(javaTargetDir, fileName);
+                Files.copy(selectedFile.toPath(), javaDestFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-                // Copy the file to the target directory
-                File destFile = new File(targetDir, selectedFile.getName());
-                Files.copy(selectedFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                // 2. Copy to Symfony uploads directory
+                Path symfonyTargetDir = Paths.get("..", "projectPI", "public", "uploads", "images");
+                if (!Files.exists(symfonyTargetDir)) {
+                    Files.createDirectories(symfonyTargetDir);
+                }
+                Path symfonyDestFile = symfonyTargetDir.resolve(fileName);
+                Files.copy(selectedFile.toPath(), symfonyDestFile, StandardCopyOption.REPLACE_EXISTING);
 
-                // Set the relative path in the image field
-                imageField.setText("src/main/resources/images/" + selectedFile.getName());
+                // 3. Store only the filename in the database
+                imageField.setText(fileName);
+
+                showSuccessAlert("Success", "Image uploaded to both Java and Symfony directories");
             } catch (IOException e) {
                 showAlert(Alert.AlertType.ERROR, "Error", "Failed to copy image: " + e.getMessage());
                 e.printStackTrace();
@@ -230,7 +243,7 @@ public class ListeProduitController {
 
     private void populateFields(Produit produit) {
         nameField.setText(produit.getName());
-        descriptionField.setText(produit.getDescription());
+        descriptionField.setText(produit.getDesciption());
         priceField.setText(String.valueOf(produit.getPrice()));
         quantityField.setText(String.valueOf(produit.getQuantity()));
         imageField.setText(produit.getImagePath());

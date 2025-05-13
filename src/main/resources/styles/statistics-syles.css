@@ -1,0 +1,258 @@
+/* Styles spécifiques pour les graphiques statistiques */
+
+/* Style global */
+.root {
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-base: #ecf0f1;
+    -fx-background: #f5f7fa;
+}
+
+/* Entêtes et labels */
+.label {
+    -fx-text-fill: #2c3e50;
+}
+
+.tab-pane {
+    -fx-tab-min-width: 100px;
+}
+
+.tab {
+    -fx-background-insets: 0 1 0 1, 0, 0;
+    -fx-background-radius: 5 5 0 0, 5 5 0 0, 5 5 0 0;
+    -fx-padding: 8 15 8 15;
+}
+
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: #dee4e7;
+}
+
+.tab-pane .tab {
+    -fx-background-color: #d5dbdb;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: #f5f7fa;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.tab .tab-label {
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: bold;
+}
+
+/* Graphiques */
+.chart {
+    -fx-padding: 10px;
+}
+
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.chart-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+/* PieChart spécifique */
+.chart-pie {
+    -fx-border-color: derive(-fx-pie-color, -40%);
+    -fx-border-width: 0px;
+}
+
+.chart-pie-label {
+    -fx-fill: #2c3e50;
+    -fx-font-size: 12px;
+}
+
+.chart-pie-label-line {
+    -fx-stroke: #8395a7;
+    -fx-fill: #8395a7;
+}
+
+/* BarChart spécifique */
+.chart-bar {
+    -fx-background-radius: 5;
+    -fx-background-position: center;
+}
+
+.bar-chart:horizontal .chart-bar {
+    -fx-background-color: #3498db;
+}
+
+.bar-chart:vertical .chart-bar {
+    -fx-background-color: #3498db;
+}
+
+/* Couleurs des séries */
+.default-color0.chart-pie { -fx-pie-color: #3498db; }
+.default-color1.chart-pie { -fx-pie-color: #2ecc71; }
+.default-color2.chart-pie { -fx-pie-color: #e74c3c; }
+.default-color3.chart-pie { -fx-pie-color: #f39c12; }
+.default-color4.chart-pie { -fx-pie-color: #9b59b6; }
+.default-color5.chart-pie { -fx-pie-color: #1abc9c; }
+.default-color6.chart-pie { -fx-pie-color: #e67e22; }
+.default-color7.chart-pie { -fx-pie-color: #34495e; }
+
+.default-color0.chart-bar { -fx-bar-fill: #2ecc71; }
+.default-color1.chart-bar { -fx-bar-fill: #3498db; }
+.default-color2.chart-bar { -fx-bar-fill: #e74c3c; }
+.default-color3.chart-bar { -fx-bar-fill: #f39c12; }
+.default-color4.chart-bar { -fx-bar-fill: #9b59b6; }
+.default-color5.chart-bar { -fx-bar-fill: #1abc9c; }
+.default-color6.chart-bar { -fx-bar-fill: #e67e22; }
+.default-color7.chart-bar { -fx-bar-fill: #34495e; }
+
+/* Contrôles de filtre */
+.date-picker {
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5;
+}
+
+.date-picker .arrow-button {
+    -fx-background-color: #3498db;
+    -fx-background-radius: 0 5 5 0;
+}
+
+.date-picker .arrow-button .arrow {
+    -fx-background-color: white;
+}
+
+.combo-box {
+    -fx-background-color: white;
+    -fx-background-radius: 5;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: #3498db;
+    -fx-background-radius: 0 5 5 0;
+}
+
+.combo-box .arrow-button .arrow {
+    -fx-background-color: white;
+}
+
+/* Boutons */
+.button {
+    -fx-background-radius: 5;
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #2980b9;
+}
+
+.button:pressed {
+    -fx-background-color: #1f6aa5;
+}
+
+/* Animation pour les graphiques */
+.animated-chart {
+    -fx-transition: all 0.5s ease-out;
+}
+
+.animated-chart:hover {
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+/* Légende */
+.chart-legend {
+    -fx-background-color: transparent;
+    -fx-padding: 10px;
+}
+
+.chart-legend-item {
+    -fx-text-fill: #2c3e50;
+}
+
+/* Tooltip personnalisé */
+.tooltip {
+    -fx-background-color: rgba(44, 62, 80, 0.9);
+    -fx-text-fill: white;
+    -fx-background-radius: 6;
+    -fx-font-size: 12px;
+    -fx-padding: 10;
+}
+
+/* Style pour les statistiques avancées */
+.stats-card {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 10);
+}
+
+.stats-title {
+    -fx-font-weight: bold;
+    -fx-text-fill: #2980b9;
+    -fx-font-size: 14px;
+}
+
+.stats-value {
+    -fx-font-size: 18px;
+}
+
+.trend-up {
+    -fx-text-fill: #2ecc71;
+}
+
+.trend-down {
+    -fx-text-fill: #e74c3c;
+}
+
+.trend-stable {
+    -fx-text-fill: #f39c12;
+}
+
+/* Style pour le tableau */
+.table-view {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #3498db;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+    -fx-size: 45px;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #dddddd;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.table-row-cell {
+    -fx-background-color: white;
+    -fx-border-color: #eeeeee;
+    -fx-table-cell-border-color: #eeeeee;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #f9f9f9;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #f0f7fb;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #d4e6f1;
+    -fx-text-fill: #2c3e50;
+}
+

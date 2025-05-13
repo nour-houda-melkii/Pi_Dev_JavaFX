@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" 
+          fx:controller="controllers.LoginController"
+          stylesheets="@/styles/style.css">
+          
+    <center>
+        <VBox spacing="20" alignment="CENTER" styleClass="form-container" maxWidth="400">
+            <padding>
+                <Insets top="30" right="40" bottom="30" left="40"/>
+            </padding>
+            
+            <!-- Logo ou image en haut -->
+            <ImageView fitWidth="100" fitHeight="100" preserveRatio="true">
+                <Image url="@/images/logo.png"/>
+            </ImageView>
+            
+            <!-- Titre -->
+            <Label text="Connexion" styleClass="form-title"/>
+            
+            <!-- Message d'erreur -->
+            <Label fx:id="errorMessage" styleClass="error-message" visible="false"/>
+            
+            <!-- Formulaire -->
+            <VBox spacing="15">
+                <!-- Email -->
+                <VBox spacing="5">
+                    <Label text="Email" styleClass="field-label"/>
+                    <TextField fx:id="emailField" promptText="Entrez votre email" styleClass="form-field"/>
+                </VBox>
+                
+                <!-- Mot de passe -->
+                <VBox spacing="5">
+                    <Label text="Mot de passe" styleClass="field-label"/>
+                    <PasswordField fx:id="passwordField" promptText="Entrez votre mot de passe" styleClass="form-field"/>
+                </VBox>
+                
+                <!-- Bouton de connexion -->
+                <Button text="Se connecter" onAction="#handleLogin" styleClass="primary-button" maxWidth="Infinity">
+                    <VBox.margin>
+                        <Insets top="10"/>
+                    </VBox.margin>
+                </Button>
+            </VBox>
+        </VBox>
+    </center>
+    
+    <!-- Footer -->
+    <bottom>
+        <HBox alignment="CENTER" styleClass="footer">
+            <padding>
+                <Insets top="10" right="0" bottom="10" left="0"/>
+            </padding>
+            <Label text="© 2023 Gestion d'Événements" styleClass="footer-text"/>
+        </HBox>
+    </bottom>
+</BorderPane> 

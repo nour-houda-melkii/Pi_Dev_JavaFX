@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.List;
 
 public class AjouterPatient  {
 
@@ -34,6 +35,7 @@ public class AjouterPatient  {
     @FXML private Label ageError;
     @FXML private Label genderError;
     @FXML private Button backButton;
+    private Runnable onPatientAddedCallback;
 
     private UserService userService;
 
@@ -51,29 +53,33 @@ public class AjouterPatient  {
     private void handleSave() {
         if (validateForm()) {
             try {
-                // Créer un objet Patient à partir des données du formulaire
                 User patient = createPatientFromForm();
-
-                // Ajouter le patient via le service
                 userService.ajouterPatient(patient);
 
-                // Afficher un message de succès
-                AlertUtils.showSuccessAlert("Patient successfully added",
-                        "A welcome email has been sent to the patient.");
+                AlertUtils.showSuccessAlert("Success", "Patient added successfully");
 
-                // Rediriger vers la liste des patients
-                redirectToPatientList();
+                // Fermer la fenêtre
+                Stage stage = (Stage) firstNameField.getScene().getWindow();
+                stage.close();
+
+                // Notifier le callback
+                if (onPatientAddedCallback != null) {
+                    onPatientAddedCallback.run();
+                }
 
             } catch (NumberFormatException e) {
-                // Gérer les erreurs de format (par exemple, âge invalide)
-                AlertUtils.showErrorAlert("Format error", "Age must be a valid number.");
+                AlertUtils.showErrorAlert("Format Error", "Please enter valid numeric values");
             } catch (Exception e) {
-                // Gérer les autres erreurs
-                AlertUtils.showErrorAlert("Error", "Error while adding the patient: " + e.getMessage());
+                AlertUtils.showErrorAlert("Error", "Failed to add patient: " + e.getMessage());
                 e.printStackTrace();
             }
         }
     }
+
+    public void setOnPatientAddedCallback(Runnable callback) {
+        this.onPatientAddedCallback = callback;
+    }
+
 
     // Méthode pour rediriger vers la liste des patients
     private void redirectToPatientList() {

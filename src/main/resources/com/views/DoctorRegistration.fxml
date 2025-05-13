@@ -21,14 +21,16 @@
 
     <HBox AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
         <!-- Left Side - Image -->
-        <VBox alignment="CENTER" prefWidth="600" style="-fx-background-color: #CAF0F8;">
+        <VBox alignment="CENTER" prefWidth="600" style="-fx-background-color: #CAF0F8;" HBox.hgrow="ALWAYS">
             <ImageView fitWidth="350" fitHeight="350">
-                <Image url="@/assets/img/undraw_hello_ccwj.png" />
+                <image>
+                    <Image url="@/assets/img/undraw_hello_ccwj.png" />
+                </image>
             </ImageView>
         </VBox>
 
         <!-- Right Side - Form -->
-        <VBox alignment="CENTER" spacing="20" style="-fx-background-color: #F5F5F5;" prefWidth="600">
+        <VBox alignment="CENTER" spacing="20" style="-fx-background-color: #F5F5F5;" prefWidth="600" HBox.hgrow="ALWAYS">
             <padding>
                 <Insets top="40" right="40" bottom="40" left="40"/>
             </padding>

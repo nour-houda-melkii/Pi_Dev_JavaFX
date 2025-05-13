@@ -1,0 +1,42 @@
+package com.controllers.nour;
+
+import com.models.Commande;
+import com.models.Produit;
+import com.models.User;
+import com.services.CommandeService;
+import com.services.CommandeService.CartItem;
+import com.services.FavoriServices;
+import com.services.UserService;
+import com.services.AuthService;
+import com.utils.AuthManager;
+import com.exceptions.AuthException;
+
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.application.Platform;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.NumberFormat;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;

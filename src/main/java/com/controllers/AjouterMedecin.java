@@ -37,6 +37,7 @@ public class AjouterMedecin {
     @FXML private Label specialiteError;
     @FXML private Label licenceError;
     @FXML private Label addressError;
+    private Runnable onMedecinAddedCallback;
 
     private final UserService userService = new UserService();
 
@@ -51,6 +52,9 @@ public class AjouterMedecin {
         licenceField.setPromptText("e.g. ABC12345");
     }
 
+    public void setOnMedecinAddedCallback(Runnable callback) {
+        this.onMedecinAddedCallback = callback;
+    }
     @FXML
     private void handleSave() {
         if (validateForm()) {
@@ -60,7 +64,15 @@ public class AjouterMedecin {
 
                 AlertUtils.showSuccessAlert("Doctor successfully added",
                         "A welcome email has been sent to the doctor.");
-                redirectToMedecinList();
+
+                // Fermer la fenêtre actuelle au lieu de rediriger
+                Stage stage = (Stage) firstNameField.getScene().getWindow(); // Utilisez n'importe quel node de votre formulaire
+                stage.close();
+
+                if (onMedecinAddedCallback != null) {
+                    onMedecinAddedCallback.run();
+                }
+
             } catch (Exception e) {
                 AlertUtils.showErrorAlert("Error", "Failed to add doctor: " + e.getMessage());
                 e.printStackTrace();

@@ -4,6 +4,7 @@ import com.models.User;
 import com.demo.enums.Gender;
 import com.demo.enums.Specialite;
 import com.services.UserService;
+import com.utils.AlertUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,6 +24,7 @@ public class UpdateMedecinController {
     @FXML private ComboBox<Specialite> specialiteComboBox;
     @FXML private TextField licenceField;
     @FXML private TextField addressField;
+    private Runnable onMedecinUpdatedCallback;
 
     private User medecin;
     private final UserService userService = new UserService();
@@ -50,6 +52,10 @@ public class UpdateMedecinController {
         addressField.setText(medecin.getAddress());
     }
 
+    public void setOnMedecinUpdatedCallback(Runnable callback) {
+        this.onMedecinUpdatedCallback = callback;
+    }
+
     @FXML
     private void handleUpdate() {
         try {
@@ -67,15 +73,16 @@ public class UpdateMedecinController {
             // Appeler le service pour modifier le médecin en base de données
             userService.modifierMedecin(medecin);
 
-            // Afficher un message de succès
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Success");
-            alert.setHeaderText(null);
-            alert.setContentText("Doctor information updated successfully.");
-            alert.showAndWait();
+            AlertUtils.showSuccessAlert("Success", "Doctor updated successfully");
 
-            // Rediriger vers la liste des médecins
-            returnToList();
+            // Fermer la fenêtre
+            Stage stage = (Stage) firstNameField.getScene().getWindow();
+            stage.close();
+
+            // Notifier le rafraîchissement
+            if (onMedecinUpdatedCallback != null) {
+                onMedecinUpdatedCallback.run();
+            }
 
         } catch (Exception e) {
             // Gérer les erreurs

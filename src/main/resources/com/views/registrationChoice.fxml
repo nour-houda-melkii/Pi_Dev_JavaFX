@@ -21,7 +21,7 @@
     <HBox AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
 
         <!-- Left Side - Image Section -->
-        <VBox alignment="CENTER" prefWidth="500" style="-fx-background-color: #CAF0F8;">
+        <VBox alignment="CENTER" prefWidth="500" style="-fx-background-color: #CAF0F8;" HBox.hgrow="ALWAYS">
             <ImageView fitWidth="350" fitHeight="350">
                 <image>
                     <Image url="@/assets/img/undraw_choice_dzxz.png" />
@@ -30,7 +30,7 @@
         </VBox>
 
         <!-- Right Side - Form Section -->
-        <VBox alignment="CENTER" prefWidth="500" spacing="30" style="-fx-background-color: #F5F5F5;">
+        <VBox alignment="CENTER" prefWidth="500" spacing="30" style="-fx-background-color: #F5F5F5;" HBox.hgrow="ALWAYS">
 
             <!-- Logo and Title -->
             <VBox alignment="CENTER" spacing="20">

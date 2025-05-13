@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" 
+          fx:controller="com.event.controllers.FrontEventListController"
+          stylesheets="/com/styles/event/style.css">
+    
+    <!-- En-tête -->
+    <top>
+        <VBox spacing="20">
+            <padding>
+                <Insets top="20" right="40" bottom="20" left="40"/>
+            </padding>
+            
+            <HBox spacing="20" alignment="CENTER">
+                <Label text="Nos Événements" styleClass="main-title"/>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <!-- Contenu principal -->
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="transparent-scroll-pane">
+            <VBox spacing="30">
+                <padding>
+                    <Insets top="0" right="40" bottom="30" left="40"/>
+                </padding>
+                
+                <!-- Carte des événements -->
+                <VBox spacing="10">
+                    <Label text="Carte des événements" styleClass="section-title"/>
+                    <AnchorPane fx:id="mapContainer" minHeight="400" style="-fx-border-color: #ddd; -fx-border-radius: 8px;" styleClass="map-container">
+                        <WebView fx:id="mapView" prefHeight="400" 
+                                AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" 
+                                AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                    </AnchorPane>
+                    <HBox spacing="15" alignment="CENTER">
+                        <HBox spacing="5" alignment="CENTER_LEFT">
+                            <StackPane maxWidth="20" maxHeight="20" minWidth="20" minHeight="20" style="-fx-background-color: #4CAF50; -fx-background-radius: 10;"/>
+                            <Label text="Événements actifs" styleClass="legend-text"/>
+                        </HBox>
+                        <HBox spacing="5" alignment="CENTER_LEFT">
+                            <StackPane maxWidth="20" maxHeight="20" minWidth="20" minHeight="20" style="-fx-background-color: #F44336; -fx-background-radius: 10;"/>
+                            <Label text="Événements expirés" styleClass="legend-text"/>
+                        </HBox>
+                    </HBox>
+                </VBox>
+                
+                <!-- Section Événements Actifs -->
+                <VBox spacing="20">
+                    <Label text="Événements en cours" styleClass="section-title, text-success"/>
+                    <FlowPane fx:id="activeEventsContainer" hgap="20" vgap="20"/>
+                </VBox>
+                
+                <!-- Section Événements Expirés -->
+                <VBox spacing="20">
+                    <Label text="Événements expirés" styleClass="section-title, text-danger"/>
+                    <FlowPane fx:id="expiredEventsContainer" hgap="20" vgap="20"/>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+    
+    <!-- Template pour une carte d'événement (sera cloné en Java) -->
+    <fx:define>
+        <VBox fx:id="eventCardTemplate" styleClass="event-card" maxWidth="350">
+            <!-- Conteneur de l'image et du badge -->
+            <StackPane>
+                <!-- Image de l'événement -->
+                <ImageView fx:id="eventImage" fitWidth="350" fitHeight="200" 
+                         preserveRatio="true"/>
+                
+                <!-- Badge de statut -->
+                <Label fx:id="statusBadge" styleClass="status-badge"/>
+                
+                <!-- Catégorie -->
+                <Label fx:id="categoryLabel" styleClass="category-badge"/>
+            </StackPane>
+
+            <!-- Contenu de la carte -->
+            <VBox spacing="10" styleClass="card-content">
+                <Label fx:id="titleLabel" styleClass="card-title"/>
+                
+                <!-- Détails de l'événement -->
+                <VBox spacing="5" styleClass="event-details">
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <ImageView styleClass="icon" />
+                        <Label fx:id="locationLabel"/>
+                    </HBox>
+                    
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <ImageView styleClass="icon" />
+                        <Label fx:id="dateLabel"/>
+                    </HBox>
+                    
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <ImageView styleClass="icon" />
+                        <Label fx:id="placesLabel"/>
+                    </HBox>
+                </VBox>
+                
+                <Label fx:id="descriptionLabel" styleClass="description-text" 
+                       wrapText="true"/>
+                
+                <Button fx:id="detailsButton" text="Voir détails" 
+                        styleClass="details-button"/>
+            </VBox>
+        </VBox>
+    </fx:define>
+</BorderPane> 

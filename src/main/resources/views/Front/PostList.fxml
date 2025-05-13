@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+<?import java.net.URL?>
+<?import java.lang.String?>
+<ScrollPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.controllers.front.PostListController"
+            styleClass="posts-scroll-pane"
+            fitToWidth="true">
+    <stylesheets>
+        <URL value="@/styles/Front/posts.css" />
+    </stylesheets>
+
+    <VBox styleClass="main-container">
+        <!-- Filter Section -->
+        <VBox spacing="15">
+            <!-- Title and count -->
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="All Posts" styleClass="section-title"/>
+                <Label fx:id="postsCountLabel" styleClass="count-badge"/>
+            </HBox>
+
+            <!-- filter controls -->
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <!-- Type filter -->
+                <VBox spacing="5">
+                    <Label text="Filter by type:" styleClass="filter-label"/>
+                    <ComboBox fx:id="typeFilterComboBox" styleClass="filter-combo">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="All Types"/>
+                                <String fx:value="Offre"/>
+                                <String fx:value="Demande"/>
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+                </VBox>
+
+                <!-- Category filter -->
+                <VBox spacing="5">
+                    <Label text="Filter by category:" styleClass="filter-label"/>
+                    <ComboBox fx:id="categoryFilterComboBox" promptText="Select category..."
+                              styleClass="filter-combo"/>
+                </VBox>
+
+                <!-- Date sort -->
+                <VBox spacing="5">
+                    <Label text="Sort by date:" styleClass="filter-label"/>
+                    <ComboBox fx:id="dateSortComboBox" styleClass="filter-combo">
+                        <items>
+                            <FXCollections fx:factory="observableArrayList">
+                                <String fx:value="Newest First"/>
+                                <String fx:value="Oldest First"/>
+                            </FXCollections>
+                        </items>
+                    </ComboBox>
+                </VBox>
+            </HBox>
+        </VBox>
+
+        <!-- Posts Container -->
+        <VBox fx:id="postsContainer" styleClass="posts-container" spacing="15" alignment="CENTER"/>
+    </VBox>
+</ScrollPane>

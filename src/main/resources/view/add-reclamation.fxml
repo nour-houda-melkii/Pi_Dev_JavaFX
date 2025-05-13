@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.ImageView?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.AddReclamationController"
+            style="-fx-background-color: #E6E9F8;"> <!-- Fond violet clair -->
+
+
+    <center>
+        <VBox spacing="20" alignment="CENTER" style="-fx-padding: 40;">
+            <!-- Form Card -->
+            <VBox spacing="15" alignment="CENTER" style="
+                -fx-background-color: white;
+                -fx-background-radius: 15;
+                -fx-padding: 30;
+                -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);
+                " prefWidth="500">
+
+                <!-- Title -->
+                <Label text="Nouvelle Réclamation" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+
+                <!-- Formulaire -->
+                <GridPane hgap="20" vgap="20" alignment="CENTER">
+                    <Label text="Type:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="typeComboBox" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="200"/>
+
+                    <Label text="Médecin:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="medecinComboBox" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="200"/>
+
+                    <Label text="Description:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                    <TextArea fx:id="descriptionField" GridPane.rowIndex="2" GridPane.columnIndex="1"
+                              prefWidth="300" prefHeight="100" promptText="Décrivez votre réclamation..."/>
+
+                    <Label text="Date:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                    <DatePicker fx:id="datePicker" GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="200"/>
+
+                    <Label text="Photo:" GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                    <HBox spacing="10" GridPane.rowIndex="4" GridPane.columnIndex="1">
+                        <ImageView fx:id="photoView" fitWidth="150" fitHeight="150"
+                                   style="-fx-border-color: #ddd; -fx-border-radius: 5;"/>
+                        <Button fx:id="browseButton" text="Parcourir"
+                                style="-fx-background-radius: 10; -fx-padding: 5 10;"/>
+                    </HBox>
+                </GridPane>
+
+                <!-- Boutons -->
+                <HBox spacing="20" alignment="CENTER">
+                    <Button text="Ajouter" onAction="#addReclamation"
+                            style="-fx-background-color: #3498db; -fx-text-fill: white;
+                                   -fx-background-radius: 20; -fx-padding: 10 20;"/>
+                    <Button text="Annuler" onAction="#navigateToDashboard"
+                            style="-fx-background-color: #3498db; -fx-text-fill: white;
+                                   -fx-background-radius: 20; -fx-padding: 10 20;"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

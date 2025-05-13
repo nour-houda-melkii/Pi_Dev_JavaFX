@@ -77,7 +77,7 @@ public class EditProductController {
 
     private void populateFields(Produit produit) {
         nameField.setText(produit.getName());
-        descriptionField.setText(produit.getDescription());
+        descriptionField.setText(produit.getDesciption());
         priceField.setText(String.valueOf(produit.getPrice()));
         quantityField.setText(String.valueOf(produit.getQuantity()));
         imageField.setText(produit.getImagePath());
@@ -221,7 +221,7 @@ public class EditProductController {
             }
 
             productToEdit.setName(nameField.getText());
-            productToEdit.setDescription(descriptionField.getText());
+            productToEdit.setDesciption(descriptionField.getText());
             productToEdit.setPrice(Double.parseDouble(priceField.getText()));
             productToEdit.setQuantity(Integer.parseInt(quantityField.getText()));
             productToEdit.setImagePath(imageField.getText());

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.shape.SVGPath?>
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.BackendController"
+            prefWidth="1000" prefHeight="700">
+
+    <!-- Top Header -->
+    <top>
+        <VBox>
+            <!-- Navigation Bar -->
+            <HBox style="-fx-background-color: white; -fx-padding: 10; -fx-border-color: #e0e0e0; -fx-border-width: 0 0 1 0;">
+                <Label text="Tableau de Bord" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                <Region HBox.hgrow="ALWAYS" />
+                <HBox spacing="5" alignment="CENTER_RIGHT">
+                    <Label text="Accueil / " style="-fx-text-fill: #7a7a7a;"/>
+                    <Label text="Tableau de Bord" style="-fx-text-fill: #7a7a7a;"/>
+                </HBox>
+
+                <!-- Notification Bell placed inside the HBox -->
+                <StackPane alignment="CENTER_RIGHT" style="-fx-padding: 0 10 0 15;">
+                    <Button fx:id="notificationBellButton" onAction="#handleBackendNotificationBell" style="-fx-background-color: transparent;">
+                        <graphic>
+                            <SVGPath content="M12,22A2,2 0 0,0 14,20H10A2,2 0 0,0 12,22M18,16V11C18,7.93 16.36,5.36 13.5,4.68V4A1.5,1.5 0 0,0 12,2.5A1.5,1.5 0 0,0 10.5,4V4.68C7.63,5.36 6,7.92 6,11V16L4,18V19H20V18L18,16Z"
+                                     fill="#3498db" /> <!-- Changed to blue color -->
+                        </graphic>
+                    </Button>
+                    <Label fx:id="notificationCountLabel"
+                           style="-fx-background-color: rgb(135,206,235); -fx-text-fill: white; -fx-background-radius: 10; -fx-padding: 2 6; -fx-font-weight: bold;"
+                           StackPane.alignment="TOP_RIGHT"
+                           visible="false"
+                           text="0" />
+                </StackPane>
+
+                <HBox alignment="CENTER_RIGHT" style="-fx-padding: 0 0 0 5;">
+                    <!-- Indicator status -->
+                    <Pane style="-fx-background-color: rgb(135,206,235); -fx-background-radius: 5;" prefWidth="10" prefHeight="10"/>
+                </HBox>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Remove the standalone StackPane that was outside the layout hierarchy -->
+
+
+    <!-- Left Sidebar -->
+    <left>
+        <VBox style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 0 1 0 0;" prefWidth="200">
+            <VBox style="-fx-padding: 20 15 15 15;">
+                <Label text="SAHATECK" style="-fx-text-fill: #00b2ff; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+            </VBox>
+
+            <Label text="PAGES" style="-fx-text-fill: #a0a0a0; -fx-font-size: 12px; -fx-padding: 10 0 5 15;"/>
+
+            <!-- Modification des IDs pour correspondre à BackendController.java -->
+            <Button fx:id="tableauDeBordBtn" text="type reclamation"
+                    style="-fx-background-color: #f0f7ff; -fx-text-fill: #2c3e50; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 10 10 10 15; -fx-border-color: #00b2ff; -fx-border-width: 0 0 0 3;"/>
+
+            <Button fx:id="gestionProduitsBtn" text="reclamations"
+                    style="-fx-background-color: transparent; -fx-text-fill: #5a5a5a; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 10 10 10 15;"/>
+
+            <Button fx:id="gestionUtilisateursBtn" text="reponses "
+                    style="-fx-background-color: transparent; -fx-text-fill: #5a5a5a; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 10 10 10 15;"/>
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <Button text="Profile"
+                    style="-fx-background-color: transparent; -fx-text-fill: #5a5a5a; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 10 10 10 15;"/>
+
+            <Button text="Déconnexion"
+                    style="-fx-background-color: transparent; -fx-text-fill: #5a5a5a; -fx-font-size: 14px; -fx-alignment: CENTER_LEFT; -fx-padding: 10 10 10 15; -fx-margin: 0 0 20 0;"/>
+        </VBox>
+    </left>
+
+    <!-- Main Content Area -->
+    <center>
+        <VBox fx:id="contentArea" style="-fx-background-color: #f0f2f5; -fx-padding: 20;" spacing="20">
+            <!-- Statistics Cards -->
+            <HBox spacing="20">
+                <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);" HBox.hgrow="ALWAYS">
+                    <Label text="Total Users" style="-fx-text-fill: #7a7a7a; -fx-font-size: 14px;"/>
+                    <Label text="30" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
+                </VBox>
+
+                <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);" HBox.hgrow="ALWAYS">
+                    <Label text="Doctors" style="-fx-text-fill: #7a7a7a; -fx-font-size: 14px;"/>
+                    <Label text="11" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
+                </VBox>
+
+                <VBox style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 5; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);" HBox.hgrow="ALWAYS">
+                    <Label text="Patients" style="-fx-text-fill: #7a7a7a; -fx-font-size: 14px;"/>
+                    <Label text="19" style="-fx-font-size: 28px; -fx-font-weight: bold;"/>
+                </VBox>
+            </HBox>
+
+            <!-- Content Section with Your Original Table -->
+            <VBox style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 5; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 0);">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="PANEAU D'ADMINISTRATION" style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
+                    <Region HBox.hgrow="ALWAYS" />
+                </HBox>
+
+                <!-- Your Original TableView -->
+                <TableView fx:id="reclamationTable" style="-fx-background-color: white; -fx-border-color: #e0e0e0; -fx-border-width: 1; -fx-border-radius: 3; -fx-padding: 5; -fx-margin: 15 0 0 0;">
+                    <columns>
+                        <TableColumn fx:id="descCol" text="Description" prefWidth="200"/>
+                        <TableColumn fx:id="dateCol" text="Date reclamation" prefWidth="150"/>
+                        <TableColumn fx:id="idCol" text="Idmeldedn" prefWidth="120"/>
+                        <TableColumn fx:id="photoCol" text="Photo" prefWidth="150"/>
+                        <TableColumn fx:id="typeCol" text="Type Reclamation" prefWidth="150"/>
+                    </columns>
+                </TableView>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>

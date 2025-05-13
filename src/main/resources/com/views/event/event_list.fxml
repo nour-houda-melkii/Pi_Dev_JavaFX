@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+
+<BorderPane fx:id="contentArea" xmlns:fx="http://javafx.com/fxml" fx:controller="com.event.controllers.EventController"
+            stylesheets="/com/styles/event/style.css">
+
+    <top>
+        <HBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+            <Label text="Gestion des Événements" styleClass="label-title" />
+            <Button text="➕ Créer un nouvel événement"
+                    onAction="#handleAddEvent"
+                    styleClass="button-green" />
+        </HBox>
+    </top>
+
+    <center>
+        <TabPane styleClass="events-tabpane" tabClosingPolicy="UNAVAILABLE" side="LEFT">
+            <Tab text="Événements Actifs">
+                <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="10" bottom="10" left="10"/>
+            </padding>
+
+                    <HBox spacing="10">
+                        <TextField fx:id="searchTitle" promptText="Titre" onKeyReleased="#handleSearch" />
+                        <DatePicker fx:id="searchDate" promptText="jj/mm/aaaa" onAction="#handleSearch" />
+                        <ComboBox fx:id="searchCategory" promptText="Toutes les catégories" onAction="#handleSearch">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <!-- Les catégories seront ajoutées dynamiquement dans le contrôleur -->
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                        <Button text="Réinitialiser" onAction="#handleReset" styleClass="primary" />
+                    </HBox>
+                    
+                    <ScrollPane fx:id="eventsScrollPane" fitToWidth="true" styleClass="transparent-scroll-pane" VBox.vgrow="ALWAYS">
+                        <FlowPane fx:id="eventsContainer" hgap="25" vgap="30" styleClass="events-container" alignment="CENTER" prefWrapLength="1200">
+                            <padding>
+                                <Insets top="25" right="20" bottom="25" left="20"/>
+                            </padding>
+                        </FlowPane>
+                    </ScrollPane>
+                </VBox>
+            </Tab>
+
+            <Tab text="Événements Archivés">
+                <VBox spacing="10">
+                    <padding>
+                        <Insets top="10" right="10" bottom="10" left="10"/>
+                    </padding>
+                    
+                    <HBox spacing="10">
+                        <TextField fx:id="searchTitleArchives" promptText="Titre" onKeyReleased="#handleSearchArchives" />
+                        <DatePicker fx:id="searchDateArchives" promptText="jj/mm/aaaa" onAction="#handleSearchArchives" />
+                        <ComboBox fx:id="searchCategoryArchives" promptText="Toutes les catégories" onAction="#handleSearchArchives">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <!-- Les catégories seront ajoutées dynamiquement dans le contrôleur -->
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                        <Button text="Réinitialiser" onAction="#handleResetArchives" styleClass="primary" />
+                    </HBox>
+                    
+                    <ScrollPane fx:id="archivedEventsScrollPane" fitToWidth="true" styleClass="transparent-scroll-pane" VBox.vgrow="ALWAYS">
+                        <FlowPane fx:id="archivedEventsContainer" hgap="25" vgap="30" styleClass="events-container" alignment="CENTER" prefWrapLength="1200">
+                            <padding>
+                                <Insets top="25" right="20" bottom="25" left="20"/>
+                            </padding>
+                        </FlowPane>
+                    </ScrollPane>
+                </VBox>
+            </Tab>
+        </TabPane>
+    </center>
+</BorderPane>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Button?>
+
+<StackPane style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.event.controllers.WelcomeController">
+    
+    <VBox alignment="CENTER" spacing="20">
+        <padding>
+            <Insets bottom="50" left="50" right="50" top="50" />
+        </padding>
+      <ImageView fitHeight="138.0" fitWidth="234.0">
+         <image>
+            <Image url="@../images/logo.png" />
+         </image>
+      </ImageView>
+        
+        <Text style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-fill: #2196f3;" text="Bienvenue sur SAHATECK" />
+        
+        <Text style="-fx-font-size: 24px; -fx-fill: #666;" text="Système de Gestion des Événements" />
+        
+        <!-- Bouton pour accéder à la page front-end -->
+        <Button fx:id="frontEndButton" onAction="#handleFrontEndAccess" 
+                styleClass="button-primary" 
+                style="-fx-font-size: 16px; -fx-padding: 15 30;">
+            <graphic>
+                <HBox spacing="10" alignment="CENTER">
+                    <ImageView fitHeight="24" fitWidth="24">
+                        <Image url="@../images/icons/event.png"/>
+                    </ImageView>
+                    <Text style="-fx-fill: white;" text="Voir les Événements"/>
+                </HBox>
+            </graphic>
+        </Button>
+        
+        <VBox alignment="CENTER" spacing="10" style="-fx-padding: 30 0 0 0;">
+            <Text style="-fx-font-size: 16px; -fx-fill: #666;" text="Pour commencer, sélectionnez une option dans le menu de gauche :" />
+            
+            <VBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 20 0 0 0;">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Region style="-fx-min-width: 5; -fx-background-color: #2196f3;" />
+                    <Text style="-fx-font-size: 14px;" text="Dashboard - Vue d'ensemble de vos événements" />
+                </HBox>
+                
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Region style="-fx-min-width: 5; -fx-background-color: #2196f3;" />
+                    <Text style="-fx-font-size: 14px;" text="Gestion des Événements - Créer et gérer vos événements" />
+                </HBox>
+                
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Region style="-fx-min-width: 5; -fx-background-color: #2196f3;" />
+                    <Text style="-fx-font-size: 14px;" text="Gestion des Catégories - Organiser vos événements" />
+                </HBox>
+            </VBox>
+        </VBox>
+    </VBox>
+</StackPane>

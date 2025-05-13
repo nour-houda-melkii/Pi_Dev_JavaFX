@@ -4,6 +4,7 @@ import com.models.User;
 import com.services.UserService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -17,11 +18,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class ListPatient implements Initializable {
 
@@ -32,14 +37,31 @@ public class ListPatient implements Initializable {
     @FXML private Label titleLabel;
     @FXML private Label subtitleLabel;
     @FXML private VBox mainContainer;
+    @FXML private HBox paginationContainer;
+    @FXML private Button prevPageButton;
+    @FXML private Button nextPageButton;
+    @FXML private Label pageInfoLabel;
 
     private final UserService userService = new UserService();
     private final ObservableList<User> patientList = FXCollections.observableArrayList();
+    private FilteredList<User> filteredPatients;
+    private final Executor executor = Executors.newCachedThreadPool(runnable -> {
+        Thread t = new Thread(runnable);
+        t.setDaemon(true);
+        return t;
+    });
+
+    // Variables pour la pagination
+    private int currentPage = 0;
+    private final int itemsPerPage = 5;
+    private int totalPages = 0;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setupStyles();
         setupListView();
+        setupDynamicSearch();
+        setupPaginationControls();
         loadPatients();
     }
 
@@ -62,6 +84,60 @@ public class ListPatient implements Initializable {
         // Style des boutons
         searchButton.setStyle("-fx-background-color: #00B4D8; -fx-text-fill: white; -fx-font-family: 'Poppins';");
         addButton.setStyle("-fx-background-color: #00B4D8; -fx-text-fill: white; -fx-font-family: 'Poppins'; -fx-font-weight: bold;");
+
+        // Style des boutons de pagination
+        prevPageButton.setStyle("-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-family: 'Poppins';");
+        nextPageButton.setStyle("-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-family: 'Poppins';");
+        pageInfoLabel.setStyle("-fx-font-family: 'Poppins'; -fx-font-size: 14px;");
+    }
+
+    private void setupPaginationControls() {
+        prevPageButton.setOnAction(e -> {
+            if (currentPage > 0) {
+                currentPage--;
+                updatePatientsView();
+            }
+        });
+
+        nextPageButton.setOnAction(e -> {
+            if (currentPage < totalPages - 1) {
+                currentPage++;
+                updatePatientsView();
+            }
+        });
+    }
+
+    private void setupDynamicSearch() {
+        filteredPatients = new FilteredList<>(patientList, p -> true);
+
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredPatients.setPredicate(patient -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                if (patient.getFirstName() != null && patient.getFirstName().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                } else if (patient.getLastName() != null && patient.getLastName().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                } else if (patient.getEmail() != null && patient.getEmail().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                } else if (patient.getPhoneNumber() != null && patient.getPhoneNumber().contains(lowerCaseFilter)) {
+                    return true;
+                } else if (patient.getAddress() != null && patient.getAddress().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                }
+                return false;
+            });
+
+            // Réinitialiser à la première page après une recherche
+            currentPage = 0;
+            updatePatientsView();
+        });
+
+        patientListView.setItems(filteredPatients);
     }
 
     private void setupListView() {
@@ -77,31 +153,27 @@ public class ListPatient implements Initializable {
             private final Button deleteButton = new Button();
 
             {
-                // Configuration du GridPane
                 gridPane.setHgap(10);
                 gridPane.setVgap(5);
                 gridPane.setPadding(new Insets(10));
 
-                // Style des textes
                 nameText.setFont(Font.font("Poppins", FontWeight.BOLD, 14));
                 emailText.setFont(Font.font("Poppins", 12));
                 phoneText.setFont(Font.font("Poppins", 12));
                 addressText.setFont(Font.font("Poppins", 12));
 
-                // Configuration des boutons d'action
-                viewButton.setGraphic(new Text("\uD83D\uDC41")); // Icône œil
+                viewButton.setGraphic(new Text("\uD83D\uDC41"));
                 viewButton.setStyle("-fx-background-color: #17a2b8; -fx-text-fill: white;");
 
-                editButton.setGraphic(new Text("\u270E")); // Icône crayon
+                editButton.setGraphic(new Text("\u270E"));
                 editButton.setStyle("-fx-background-color: #ffc107; -fx-text-fill: white;");
 
-                deleteButton.setGraphic(new Text("\uD83D\uDDD1")); // Icône poubelle
+                deleteButton.setGraphic(new Text("\uD83D\uDDD1"));
                 deleteButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
 
                 actionBox.setAlignment(Pos.CENTER_RIGHT);
                 actionBox.getChildren().addAll(viewButton, editButton, deleteButton);
 
-                // Ajout des éléments au GridPane
                 gridPane.add(nameText, 0, 0, 2, 1);
                 gridPane.add(new Text("Email:"), 0, 1);
                 gridPane.add(emailText, 1, 1);
@@ -111,7 +183,6 @@ public class ListPatient implements Initializable {
                 gridPane.add(addressText, 1, 3);
                 gridPane.add(actionBox, 2, 0, 1, 4);
 
-                // Configuration des contraintes de colonne
                 ColumnConstraints col1 = new ColumnConstraints();
                 col1.setHgrow(Priority.NEVER);
                 ColumnConstraints col2 = new ColumnConstraints();
@@ -120,7 +191,6 @@ public class ListPatient implements Initializable {
                 col3.setHgrow(Priority.NEVER);
                 gridPane.getColumnConstraints().addAll(col1, col2, col3);
 
-                // Style de la cellule
                 setStyle("-fx-background-color: white; -fx-border-color: #e9ecef; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-background-radius: 5px;");
                 setPadding(new Insets(5));
             }
@@ -138,7 +208,6 @@ public class ListPatient implements Initializable {
                     phoneText.setText(patient.getPhoneNumber() != null ? patient.getPhoneNumber() : "Not specified");
                     addressText.setText(patient.getAddress() != null ? patient.getAddress() : "Not specified");
 
-                    // Gestion des événements des boutons
                     viewButton.setOnAction(event -> handleViewPatient(patient));
                     editButton.setOnAction(event -> handleEditPatient(patient));
                     deleteButton.setOnAction(event -> handleDeletePatient(patient));
@@ -150,68 +219,101 @@ public class ListPatient implements Initializable {
     }
 
     private void loadPatients() {
-        patientList.clear();
-        patientList.addAll(userService.rechercherTousPatients());
-        patientListView.setItems(patientList);
+        executor.execute(() -> {
+            try {
+                // Charger tous les patients (pour le filtrage)
+                List<User> allPatients = userService.rechercherTousPatients();
+
+                // Calculer le nombre total de pages
+                totalPages = (int) Math.ceil((double) allPatients.size() / itemsPerPage);
+
+                // Mettre à jour l'interface
+                javafx.application.Platform.runLater(() -> {
+                    patientList.setAll(allPatients);
+                    updatePatientsView();
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                javafx.application.Platform.runLater(() ->
+                        showAlert("Error", "Failed to load patients: " + e.getMessage()));
+            }
+        });
+    }
+
+    private void updatePatientsView() {
+        // Calculer l'index de début et de fin pour la page courante
+        int fromIndex = currentPage * itemsPerPage;
+        int toIndex = Math.min(fromIndex + itemsPerPage, filteredPatients.size());
+
+        // Créer une sous-liste pour la page courante
+        List<User> pagePatients = filteredPatients.subList(fromIndex, toIndex);
+
+        // Mettre à jour la ListView
+        patientListView.setItems(FXCollections.observableArrayList(pagePatients));
+
+        // Mettre à jour les informations de pagination
+        updatePaginationInfo();
+    }
+
+    private void updatePaginationInfo() {
+        pageInfoLabel.setText(String.format("Page %d of %d", currentPage + 1, totalPages));
+
+        // Désactiver les boutons si nécessaire
+        prevPageButton.setDisable(currentPage <= 0);
+        nextPageButton.setDisable(currentPage >= totalPages - 1 || totalPages == 0);
     }
 
     @FXML
     private void handleSearch() {
-        String keyword = searchField.getText().toLowerCase();
-        if (keyword.isEmpty()) {
-            patientListView.setItems(patientList);
-            return;
-        }
-
-        ObservableList<User> filteredList = FXCollections.observableArrayList();
-        for (User patient : patientList) {
-            if ((patient.getFirstName() != null && patient.getFirstName().toLowerCase().contains(keyword)) ||
-                    (patient.getLastName() != null && patient.getLastName().toLowerCase().contains(keyword)) ||
-                    (patient.getEmail() != null && patient.getEmail().toLowerCase().contains(keyword)) ||
-                    (patient.getPhoneNumber() != null && patient.getPhoneNumber().contains(keyword))) {
-                filteredList.add(patient);
-            }
-        }
-        patientListView.setItems(filteredList);
+        // Le filtrage est déjà géré par le listener
+        currentPage = 0;
+        updatePatientsView();
     }
 
     @FXML
     private void handleAddPatient() {
         try {
-            // Charger le fichier FXML de la page AjouterPatient
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/AjouterPatient.fxml"));
             Parent root = loader.load();
 
             AjouterPatient controller = loader.getController();
+            controller.setUserService(userService);
+            controller.setOnPatientAddedCallback(() -> {
+                refreshPatientList();
+            });
 
-            controller.setUserService(new UserService());
-            // Créer une nouvelle scène
-            Scene scene = new Scene(root);
-
-            // Obtenir la fenêtre actuelle
-            Stage stage = (Stage) addButton.getScene().getWindow();
-
-            // Changer la scène
-            stage.setScene(scene);
-            stage.setTitle("Add Patient");
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(addButton.getScene().getWindow());
+            stage.setScene(new Scene(root));
+            stage.setTitle("Add New Patient");
             stage.show();
+
         } catch (IOException e) {
+            showAlert("Error", "Unable to open patient form: " + e.getMessage());
             e.printStackTrace();
-            showAlert("Error", "Unable to open the patient addition page.");
         }
+    }
+
+    private void refreshPatientList() {
+        executor.execute(() -> {
+            List<User> patients = userService.rechercherTousPatients();
+            javafx.application.Platform.runLater(() -> {
+                patientList.setAll(patients);
+                totalPages = (int) Math.ceil((double) filteredPatients.size() / itemsPerPage);
+                updatePatientsView();
+            });
+        });
     }
 
     private void handleViewPatient(User patient) {
         try {
-            // Charger la vue des détails
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/DetailsPatient.fxml"));
             Parent root = loader.load();
 
-            // Passer les données au contrôleur
             DetailsPatientController controller = loader.getController();
             controller.initData(patient.getId());
 
-            // Créer une nouvelle scène
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Patient Details - " + patient.getFirstName());
@@ -225,27 +327,25 @@ public class ListPatient implements Initializable {
 
     private void handleEditPatient(User patient) {
         try {
-            // Charger le fichier FXML de la page de modification
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/UpdatePatient.fxml"));
             Parent root = loader.load();
 
-            // Obtenir le contrôleur et initialiser les données du patient
             UpdatePatientController controller = loader.getController();
             controller.initData(patient);
+            controller.setOnPatientUpdatedCallback(() -> {
+                refreshPatientList();
+            });
 
-            // Créer une nouvelle scène
-            Scene scene = new Scene(root);
-
-            // Obtenir la fenêtre actuelle
-            Stage stage = (Stage) patientListView.getScene().getWindow();
-
-            // Changer la scène
-            stage.setScene(scene);
-            stage.setTitle("Edit Patient");
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(patientListView.getScene().getWindow());
+            stage.setScene(new Scene(root));
+            stage.setTitle("Edit Patient - " + patient.getFirstName());
             stage.show();
+
         } catch (IOException e) {
+            showAlert("Error", "Could not open edit window: " + e.getMessage());
             e.printStackTrace();
-            showAlert("Error", "Unable to open the patient edit page.");
         }
     }
 
@@ -258,9 +358,20 @@ public class ListPatient implements Initializable {
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                userService.supprimerPatient(patient.getId());
-                patientList.remove(patient);
-                showAlert("Success", "Patient successfully deleted.");
+                executor.execute(() -> {
+                    try {
+                        userService.supprimerPatient(patient.getId());
+                        javafx.application.Platform.runLater(() -> {
+                            patientList.remove(patient);
+                            totalPages = (int) Math.ceil((double) filteredPatients.size() / itemsPerPage);
+                            updatePatientsView();
+                            showAlert("Success", "Patient successfully deleted.");
+                        });
+                    } catch (Exception e) {
+                        javafx.application.Platform.runLater(() ->
+                                showAlert("Error", "Failed to delete patient: " + e.getMessage()));
+                    }
+                });
             }
         });
     }
@@ -280,5 +391,6 @@ public class ListPatient implements Initializable {
     }
 
     public void setUserService(UserService userService) {
+        // Pour l'injection de dépendance si nécessaire
     }
 }

@@ -1,0 +1,9 @@
+<HBox spacing="10" alignment="CENTER_LEFT">
+    <Label text="Rechercher par titre:" />
+    <TextField fx:id="searchTitle" />
+    <Label text="Date:" />
+    <DatePicker fx:id="searchDate" />
+    <Label text="Catégorie:" />
+    <ComboBox fx:id="searchCategory" />
+    <Button text="Rechercher" onAction="#handleSearch" />
+</HBox> 

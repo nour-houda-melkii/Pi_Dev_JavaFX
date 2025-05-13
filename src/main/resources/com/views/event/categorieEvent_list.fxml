@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane fx:id="contentArea" xmlns:fx="http://javafx.com/fxml" fx:controller="com.event.controllers.CategorieEventController"
+            stylesheets="/com/styles/event/style.css">
+
+    <top>
+        <VBox spacing="10">
+            <HBox spacing="10">
+                <padding>
+                    <Insets top="10" right="10" bottom="10" left="10"/>
+                </padding>
+                <Label text="Gestion des Catégories" styleClass="label-title" />
+                <Button text="➕ Ajouter une catégorie"
+                        onAction="#handleAddCategorie"
+                        styleClass="button-green" />
+            </HBox>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <padding>
+                    <Insets left="10" right="10"/>
+                </padding>
+                <TextField fx:id="searchField" promptText="Rechercher une catégorie..." 
+                        prefWidth="300" styleClass="search-field"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="transparent-scroll-pane">
+            <FlowPane fx:id="categoriesContainer" hgap="20" vgap="20" styleClass="categories-container">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20"/>
+                </padding>
+            </FlowPane>
+        </ScrollPane>
+    </center>
+</BorderPane>

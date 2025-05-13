@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.event.controllers.FrontMainController"
+            fx:id="mainContainer"
+            prefHeight="800.0" prefWidth="1200.0"
+            styleClass="front-main-container"
+            stylesheets="/com/styles/event/style.css">
+    
+    <!-- Navbar en haut -->
+    <top>
+        <fx:include source="./front_navbar.fxml" />
+    </top>
+    
+    <!-- Contenu central (sera chargé dynamiquement) -->
+    <center>
+        <fx:include source="./welcome.fxml" />
+    </center>
+    
+    <!-- Footer en bas -->
+    <bottom>
+        <VBox styleClass="footer" alignment="CENTER" spacing="10" prefHeight="50.0">
+            <Label text="© 2023 SAHATECH - Tous droits réservés" styleClass="footer-text" />
+        </VBox>
+    </bottom>
+    
+</BorderPane> 

@@ -1,0 +1,174 @@
+
+    /* Base styling for the form */
+.form-container {
+    -fx-background-color: #f8f9fa;
+    -fx-padding: 30px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+}
+
+/* Title styling */
+.form-title {
+    -fx-text-fill: #2c3e50;
+    -fx-font-weight: bold;
+    -fx-font-size: 24px;
+    -fx-padding: 0 0 15px 0;
+    -fx-border-color: transparent transparent #e0e0e0 transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+/* Form field labels */
+.form-label {
+    -fx-text-fill: #34495e;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+/* Text fields styling */
+.text-field, .text-area {
+    -fx-background-color: white;
+    -fx-border-color: #dce4ec;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-padding: 8px;
+    -fx-font-size: 14px;
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 1);
+}
+
+.text-field:focused, .text-area:focused {
+    -fx-border-color: #3498db;
+    -fx-effect: innershadow(gaussian, rgba(52,152,219,0.15), 5, 0, 0, 1);
+}
+
+/* ComboBox styling */
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #dce4ec;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-pref-width: 200px;
+    -fx-padding: 4px;
+}
+
+.combo-box:focused {
+    -fx-border-color: #3498db;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #34495e;
+    -fx-padding: 4px 8px;
+}
+
+.combo-box .list-cell:hover {
+    -fx-background-color: #f5f5f5;
+}
+
+.combo-box .list-view {
+    -fx-background-color: white;
+    -fx-border-color: #dce4ec;
+    -fx-border-radius: 2px;
+    -fx-background-radius: 2px;
+}
+
+/* Button styling */
+.button {
+    -fx-background-color: #ecf0f1;
+    -fx-text-fill: #2c3e50;
+    -fx-border-color: #dce4ec;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #dce4ec;
+}
+
+.button:pressed {
+    -fx-background-color: #c9d6de;
+}
+
+/* Submit and Cancel button specific styling */
+.submit-btn {
+    -fx-background-color: #2ecc71;
+    -fx-text-fill: white;
+    -fx-border-color: transparent;
+    -fx-min-width: 100px;
+}
+
+.submit-btn:hover {
+    -fx-background-color: #27ae60;
+}
+
+.submit-btn:pressed {
+    -fx-background-color: #229954;
+}
+
+.submit-btn:disabled {
+    -fx-background-color: #95a5a6;
+    -fx-opacity: 0.7;
+}
+
+.cancel-btn {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-border-color: transparent;
+    -fx-min-width: 100px;
+}
+
+.cancel-btn:hover {
+    -fx-background-color: #c0392b;
+}
+
+.cancel-btn:pressed {
+    -fx-background-color: #a93226;
+}
+
+/* Browse button specific styling */
+#browseButton {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-border-color: transparent;
+}
+
+#browseButton:hover {
+    -fx-background-color: #2980b9;
+}
+
+#browseButton:pressed {
+    -fx-background-color: #1c6ea4;
+}
+
+/* Image label styling */
+.image-label {
+    -fx-text-fill: #7f8c8d;
+    -fx-font-style: italic;
+}
+
+/* Status label styling */
+.status-label {
+    -fx-text-fill: #34495e;
+    -fx-font-size: 14px;
+    -fx-padding: 5px 10px;
+    -fx-background-color: #f0f3f5;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-border-color: #dce4ec;
+}
+
+/* Progress indicator styling */
+.progress-indicator {
+    -fx-progress-color: #3498db;
+}
+
+/* Grid styling */
+GridPane {
+    -fx-background-color: white;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+    -fx-border-color: #dce4ec;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);
+}

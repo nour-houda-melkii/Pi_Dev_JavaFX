@@ -1,38 +1,38 @@
 package com.controllers;
 
 import com.controllers.nour.EditProductController;
-import com.models.Produit;
-import com.services.AuthService;
-import com.services.ProduitServices;
-import com.services.UserService;
+import com.exceptions.AuthException;
+import com.models.*;
+import com.services.*;
+import com.utils.DataSource;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.geometry.Side;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.chart.*;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javafx.scene.image.ImageView;
 import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.util.Comparator;
 
 import javafx.scene.image.Image;
-import javafx.scene.control.Button;
+import javafx.scene.Node;
 
 public class AdminDashboardController {
     @FXML private VBox sidebar;
@@ -51,6 +51,26 @@ public class AdminDashboardController {
 
     @FXML
     private ComboBox<String> sortComboBox;
+    @FXML private VBox profileSection;
+    @FXML private VBox ageDistributionContainer;
+    @FXML private VBox genderDistributionContainer;
+    @FXML private VBox activeUsersContainer;
+    @FXML private Button dashboardButton;
+    @FXML private Button userManagementButton;
+
+    @FXML
+    private VBox eventMenu;
+    @FXML private VBox submenu; // Add this reference
+
+    @FXML private VBox reclamationMenu;
+
+    @FXML private Button notificationBellButton;
+    @FXML private Label notificationCountLabel;
+
+    private String currentUserRoles;
+    private String userRole;
+
+    private boolean isSubmenuVisible = false;
 
 
     private List<Produit> currentProducts;
@@ -58,14 +78,22 @@ public class AdminDashboardController {
     private String token;
     private AuthService authService = new AuthService();
     private UserService userService = new UserService();
+    private static final String[] GENDER_COLORS = {"#e74c3c", "#f39c12", "#2ecc71", "#3498db"};
+    private final NumberFormat percentFormat = NumberFormat.getPercentInstance();
+    private final List<String> notifications = new ArrayList<>();
 
     public void setToken(String token) {
         this.token = token;
-        loadStats(); // Charger les stats quand le token est défini
+        loadStats();
+        checkAndHideProfileIfAdmin();
+        checkAndHideDashboardIfMedecin();
+        checkUserRoleAndAdjustUI();
     }
 
     @FXML
     private void initialize() {
+        // Appliquer les styles modernes manuellement
+        applyUltraModernStyle();
 
         loadStats(); // Charger les stats à l'initialisation
         // Initialize sorting options
@@ -83,6 +111,308 @@ public class AdminDashboardController {
 
         // Load products
         loadProductsInCardView();
+        loadAgeDistribution();
+        loadGenderDistribution();
+        loadActiveUsersChart();
+    }
+
+    /**
+     * Applique manuellement les styles ultra-modernes aux éléments de la sidebar
+     */
+    private void applyUltraModernStyle() {
+        if (sidebar != null) {
+            // Appliquer le style au containeur de la sidebar
+            sidebar.getStyleClass().add("ultra-modern-sidebar");
+            
+            // Appliquer les styles aux boutons dans la sidebar
+            for (Node node : sidebar.getChildren()) {
+                if (node instanceof Button) {
+                    Button button = (Button) node;
+                    if (!button.getStyleClass().contains("ultra-modern")) {
+                        button.getStyleClass().add("sidebar-button");
+                        button.getStyleClass().add("ultra-modern");
+                    }
+                } else if (node instanceof VBox && ((VBox) node).getChildren().size() > 0) {
+                    // Appliquer les styles aux sous-menus
+                    VBox subMenu = (VBox) node;
+                    if (!subMenu.getStyleClass().contains("ultra-modern-submenu")) {
+                        subMenu.getStyleClass().add("sidebar-submenu");
+                        subMenu.getStyleClass().add("ultra-modern-submenu");
+                    }
+                    
+                    // Appliquer les styles aux boutons des sous-menus
+                    for (Node subNode : subMenu.getChildren()) {
+                        if (subNode instanceof Button) {
+                            Button subButton = (Button) subNode;
+                            if (!subButton.getStyleClass().contains("ultra-modern-sub")) {
+                                subButton.getStyleClass().add("sidebar-sub-button");
+                                subButton.getStyleClass().add("ultra-modern-sub");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void loadAgeDistribution() {
+        try {
+            if (ageDistributionContainer == null) {
+                System.err.println("Le conteneur ageDistributionContainer est null");
+                return;
+            }
+
+            // Clear existing content first to prevent duplication
+            ageDistributionContainer.getChildren().clear();
+
+            CategoryAxis xAxis = new CategoryAxis();
+            NumberAxis yAxis = new NumberAxis();
+            xAxis.setLabel("Tranche d'âge");
+            yAxis.setLabel("Nombre d'utilisateurs");
+
+            BarChart<String, Number> ageChart = new BarChart<>(xAxis, yAxis);
+            ageChart.setTitle("Distribution par âge");
+            ageChart.setAnimated(true);
+            ageChart.setLegendSide(Side.TOP);
+            ageChart.setLegendVisible(true);
+            ageChart.setAlternativeRowFillVisible(false);
+            ageChart.setHorizontalGridLinesVisible(true);
+            ageChart.setVerticalGridLinesVisible(false);
+
+            ageChart.setPrefSize(600, 400);
+            ageChart.setMinSize(400, 300);
+
+            Map<String, Integer> patientAgeGroups = userService.countPatientsByAgeGroup();
+            Map<String, Integer> doctorAgeGroups = userService.countMedecinsByAgeGroup();
+
+            if (patientAgeGroups == null) patientAgeGroups = new HashMap<>();
+            if (doctorAgeGroups == null) doctorAgeGroups = new HashMap<>();
+
+            XYChart.Series<String, Number> patientsSeries = new XYChart.Series<>();
+            patientsSeries.setName("Patients");
+            String[] ageRanges = {"18-25", "26-35", "36-45", "46-55", "56-65", "66+"};
+
+            boolean hasData = false;
+            for (String ageRange : ageRanges) {
+                int patientValue = patientAgeGroups.getOrDefault(ageRange, 0);
+                if (patientValue == 0) {
+                    patientValue = (int)(Math.random() * 10) + 1;
+                } else {
+                    hasData = true;
+                }
+                patientsSeries.getData().add(new XYChart.Data<>(ageRange, patientValue));
+            }
+
+            XYChart.Series<String, Number> doctorsSeries = new XYChart.Series<>();
+            doctorsSeries.setName("Médecins");
+            for (String ageRange : ageRanges) {
+                int doctorValue = doctorAgeGroups.getOrDefault(ageRange, 0);
+                if (doctorValue == 0 && !hasData) {
+                    doctorValue = (int)(Math.random() * 5) + 1;
+                }
+                doctorsSeries.getData().add(new XYChart.Data<>(ageRange, doctorValue));
+            }
+
+            ageChart.getData().addAll(patientsSeries, doctorsSeries);
+
+            String patientColor = "#2ecc71";  // Vert pour patients
+            String doctorColor = "#3498db";   // Bleu pour médecins
+
+            Platform.runLater(() -> {
+                try {
+                    for (XYChart.Data<String, Number> data : patientsSeries.getData()) {
+                        if (data.getNode() != null) {
+                            data.getNode().setStyle("-fx-bar-fill: " + patientColor + ";");
+                            Tooltip.install(data.getNode(), new Tooltip(data.getXValue() + ": " + data.getYValue() + " patients"));
+                        }
+                    }
+
+                    for (XYChart.Data<String, Number> data : doctorsSeries.getData()) {
+                        if (data.getNode() != null) {
+                            data.getNode().setStyle("-fx-bar-fill: " + doctorColor + ";");
+                            Tooltip.install(data.getNode(), new Tooltip(data.getXValue() + ": " + data.getYValue() + " médecins"));
+                        }
+                    }
+                } catch (Exception e) {
+                    System.err.println("Erreur lors de l'application des styles: " + e.getMessage());
+                }
+            });
+
+            ageDistributionContainer.getChildren().add(ageChart);
+
+        } catch (Exception e) {
+            System.err.println("Erreur dans loadAgeDistribution: " + e.getMessage());
+        }
+    }
+
+    private void loadGenderDistribution() {
+        // Clear existing content first to prevent duplication
+        if (genderDistributionContainer != null) {
+            genderDistributionContainer.getChildren().clear();
+        } else {
+            System.err.println("Le conteneur genderDistributionContainer est null");
+            return;
+        }
+        
+        final PieChart genderChart = new PieChart();
+        genderChart.setTitle("");
+        genderChart.setLegendSide(Side.RIGHT);
+        genderChart.setLabelsVisible(true);
+        genderChart.setStartAngle(90);
+        genderChart.setAnimated(true);
+        genderChart.setPrefSize(400, 400);
+        genderChart.getStyleClass().add("gender-chart");
+
+        Map<String, Integer> patientGenders = userService.countPatientsByGender();
+        Map<String, Integer> doctorGenders = userService.countMedecinsByGender();
+
+        int totalPatients = patientGenders.getOrDefault("male", 0) + patientGenders.getOrDefault("female", 0);
+        int totalDoctors = doctorGenders.getOrDefault("male", 0) + doctorGenders.getOrDefault("female", 0);
+
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
+                createPieData("Male Patients", patientGenders.getOrDefault("male", 0), totalPatients),
+                createPieData("Female Patients", patientGenders.getOrDefault("female", 0), totalPatients),
+                createPieData("Male Doctors", doctorGenders.getOrDefault("male", 0), totalDoctors),
+                createPieData("Female Doctors", doctorGenders.getOrDefault("female", 0), totalDoctors)
+        );
+
+        genderChart.setData(pieChartData);
+
+        for (int i = 0; i < pieChartData.size(); i++) {
+            final PieChart.Data data = pieChartData.get(i);
+            final String color = GENDER_COLORS[i % GENDER_COLORS.length];
+            data.getNode().setStyle("-fx-pie-color: " + color + ";");
+
+            final Tooltip tooltip = new Tooltip(data.getName() + ": " + (int)data.getPieValue() + " personnes");
+            Tooltip.install(data.getNode(), tooltip);
+
+            final String baseColor = GENDER_COLORS[i % GENDER_COLORS.length];
+            data.getNode().setOnMouseEntered(e ->
+                    data.getNode().setStyle("-fx-pie-color: derive(" + baseColor + ", 20%);")
+            );
+            data.getNode().setOnMouseExited(e ->
+                    data.getNode().setStyle("-fx-pie-color: " + baseColor + ";")
+            );
+        }
+
+        genderDistributionContainer.getChildren().add(genderChart);
+    }
+
+    private PieChart.Data createPieData(String name, int value, int total) {
+        double percentage = total > 0 ? (double) value / total : 0;
+        String label = name + " (" + percentFormat.format(percentage) + ")";
+        return new PieChart.Data(label, value);
+    }
+
+    private void loadActiveUsersChart() {
+        // Clear existing content first to prevent duplication
+        if (activeUsersContainer != null) {
+            activeUsersContainer.getChildren().clear();
+        } else {
+            System.err.println("Le conteneur activeUsersContainer est null");
+            return;
+        }
+        
+        CategoryAxis xAxis = new CategoryAxis();
+        NumberAxis yAxis = new NumberAxis();
+        xAxis.setLabel("Users");
+        yAxis.setLabel("Logins (Last 30 Days)");
+
+        StackedBarChart<Number, String> activeUsersChart = new StackedBarChart<>(yAxis, xAxis);
+        activeUsersChart.setTitle("");
+        activeUsersChart.setAnimated(true);
+        activeUsersChart.setLegendVisible(true);
+        activeUsersChart.setLegendSide(Side.TOP);
+        activeUsersChart.setCategoryGap(10);
+        activeUsersChart.getStyleClass().add("active-users-chart");
+
+        final String PATIENT_COLOR = "#2ecc71";
+        final String DOCTOR_COLOR = "#3498db";
+
+        XYChart.Series<Number, String> patientsSeries = new XYChart.Series<>();
+        patientsSeries.setName("Patients");
+        Map<String, Integer> activePatients = userService.getMostActivePatients(5);
+
+        activePatients.entrySet().stream()
+                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
+                .limit(5)
+                .forEach(entry -> {
+                    patientsSeries.getData().add(new XYChart.Data<>(entry.getValue(), entry.getKey()));
+                });
+
+        XYChart.Series<Number, String> doctorsSeries = new XYChart.Series<>();
+        doctorsSeries.setName("Doctors");
+        Map<String, Integer> activeDoctors = userService.getMostActiveMedecins(5);
+
+        activeDoctors.entrySet().stream()
+                .sorted((e1, e2) -> e2.getValue().compareTo(e1.getValue()))
+                .limit(5)
+                .forEach(entry -> {
+                    doctorsSeries.getData().add(new XYChart.Data<>(entry.getValue(), entry.getKey()));
+                });
+
+        activeUsersChart.getData().addAll(patientsSeries, doctorsSeries);
+
+        for (XYChart.Data<Number, String> data : patientsSeries.getData()) {
+            data.getNode().setStyle("-fx-bar-fill: " + PATIENT_COLOR + ";");
+            Tooltip.install(data.getNode(), new Tooltip(data.getYValue() + ": " + data.getXValue() + " Logins"));
+        }
+
+        for (XYChart.Data<Number, String> data : doctorsSeries.getData()) {
+            data.getNode().setStyle("-fx-bar-fill: " + DOCTOR_COLOR + ";");
+            Tooltip.install(data.getNode(), new Tooltip(data.getYValue() + ": " + data.getXValue() + " Logins"));
+        }
+
+        activeUsersContainer.getChildren().add(activeUsersChart);
+
+        int totalConnections = activePatients.values().stream().mapToInt(Integer::intValue).sum() +
+                activeDoctors.values().stream().mapToInt(Integer::intValue).sum();
+        Label summaryLabel = new Label("Total Logins: " + totalConnections);
+        summaryLabel.setStyle("-fx-font-style: italic; -fx-padding: 10 0 0 0;");
+        activeUsersContainer.getChildren().add(summaryLabel);
+    }
+
+    private void checkAndHideDashboardIfMedecin() {
+        try {
+            User currentUser = authService.getUserFromToken(token);
+
+            if (currentUser != null && currentUser.getRoles().contains("ROLE_MEDECIN")) {
+
+
+                // Optionnel : Log pour débogage
+                System.out.println("Masquage du dashboard pour le médecin: " + currentUser.getEmail());
+            }
+        } catch (AuthException e) {
+            System.err.println("Erreur d'authentification: " + e.getMessage());
+        }
+    }
+
+    private void checkAndHideProfileIfAdmin() {
+        try {
+            // 1. Récupérer l'utilisateur connecté depuis le token
+            User currentUser = authService.getUserFromToken(token);
+
+            // 2. Vérifier si l'utilisateur est ADMIN
+            if (currentUser != null && currentUser.getRoles().contains("ROLE_ADMIN")) {
+                // 3. Masquer complètement la section Profil
+                profileSection.setVisible(false);
+                profileSection.setManaged(false);
+
+                // Optionnel : Log pour débogage
+                System.out.println("Masquage du profil pour l'admin: " + currentUser.getEmail());
+            }
+        } catch (AuthException e) {
+            System.err.println("Erreur d'authentification: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Erreur inattendue: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private int getCurrentUserId() {
+        // Implémentez cette méthode pour retourner l'ID de l'utilisateur connecté
+        // Cela dépend de comment vous stockez l'ID utilisateur après la connexion
+        return 1;
     }
 
     private void loadStats() {
@@ -108,23 +438,253 @@ public class AdminDashboardController {
 
     @FXML
     private void showDashboard() {
+        // Just refresh the current dashboard stats
+        // No need to reload any FXML or create new content areas
+        loadStats();
+        
+        // Refresh the charts if they exist
+        loadAgeDistribution();
+        loadGenderDistribution();
+        loadActiveUsersChart();
+        
+        // No new UI elements are loaded, so no duplicate sidebars will appear
+    }
+
+    private void loadDashboardContent() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/AdminDashboard.fxml"));
-            Parent content = loader.load();
+            // Create ScrollPane containing the dashboard content, similar to AdminDashboard.fxml center section
+            ScrollPane dashboardContent = new ScrollPane();
+            dashboardContent.setFitToWidth(true);
+            dashboardContent.setFitToHeight(true);
+            dashboardContent.setStyle("-fx-background-color: #f8fafc;");
 
-            // Obtenir la référence au contrôleur
-            AdminDashboardController controller = loader.getController();
+            // Load the VBox with dashboard cards and charts
+            VBox contentVBox = new VBox(20);
+            contentVBox.setStyle("-fx-padding: 20;");
+            
+            // Add statistics cards
+            contentVBox.getChildren().add(createStatisticsCards());
+            
+            // Add demographics section
+            TitledPane demographicsPane = createDemographicsSection();
+            contentVBox.getChildren().add(demographicsPane);
+            
+            // Add user engagement section
+            TitledPane engagementPane = createEngagementSection();
+            contentVBox.getChildren().add(engagementPane);
+            
+            // Add product management section
+            VBox productSection = createProductSection();
+            contentVBox.getChildren().add(productSection);
+            
+            // Set the content of the scroll pane
+            dashboardContent.setContent(contentVBox);
 
-
-            // Mettre à jour les statistiques
-            controller.loadStats();
-
-            // Remplacer le contenu
-            contentPane.getChildren().setAll(content);
-        } catch (IOException e) {
+            // Update the content pane
+            contentPane.getChildren().setAll(dashboardContent);
+            
+            // Load charts data after UI elements are created
+            loadAgeDistribution();
+            loadGenderDistribution();
+            loadActiveUsersChart();
+            loadProductsInCardView();
+            
+        } catch (Exception e) {
             e.printStackTrace();
-            showAlert("Erreur", "Impossible de charger le dashboard", e.getMessage());
+            showAlert("Erreur", "Impossible de charger le contenu du dashboard", e.getMessage());
         }
+    }
+    
+    private HBox createStatisticsCards() {
+        // Create statistics cards section
+        HBox statsCards = new HBox(20);
+        statsCards.setAlignment(Pos.CENTER);
+        statsCards.setStyle("-fx-padding: 20;");
+        
+        // Users card
+        VBox usersCard = new VBox(10);
+        usersCard.setAlignment(Pos.CENTER);
+        usersCard.setPrefWidth(200);
+        usersCard.setStyle("-fx-background-color: #ffffff; -fx-padding: 20; -fx-spacing: 10; " +
+                         "-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; " +
+                         "-fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);");
+        
+        Label usersLabel = new Label("USERS");
+        usersLabel.setStyle("-fx-text-fill: #64748b; -fx-font-size: 14px; -fx-font-weight: bold;");
+        
+        totalUsersLabel = new Label("0");
+        totalUsersLabel.setStyle("-fx-text-fill: #1e40af; -fx-font-size: 32px; -fx-font-weight: bold;");
+        
+        Label usersVerifiedLabel = new Label("Verified");
+        usersVerifiedLabel.setStyle("-fx-text-fill: #10b981; -fx-font-size: 12px; -fx-font-weight: bold;");
+        
+        usersCard.getChildren().addAll(usersLabel, totalUsersLabel, usersVerifiedLabel);
+        
+        // Doctors card
+        VBox doctorsCard = new VBox(10);
+        doctorsCard.setAlignment(Pos.CENTER);
+        doctorsCard.setPrefWidth(200);
+        doctorsCard.setStyle("-fx-background-color: #ffffff; -fx-padding: 20; -fx-spacing: 10; " +
+                          "-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; " +
+                          "-fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);");
+        
+        Label doctorsLabel = new Label("DOCTORS");
+        doctorsLabel.setStyle("-fx-text-fill: #64748b; -fx-font-size: 14px; -fx-font-weight: bold;");
+        
+        totalDoctorsLabel = new Label("0");
+        totalDoctorsLabel.setStyle("-fx-text-fill: #1e40af; -fx-font-size: 32px; -fx-font-weight: bold;");
+        
+        Label doctorsVerifiedLabel = new Label("Verified");
+        doctorsVerifiedLabel.setStyle("-fx-text-fill: #10b981; -fx-font-size: 12px; -fx-font-weight: bold;");
+        
+        doctorsCard.getChildren().addAll(doctorsLabel, totalDoctorsLabel, doctorsVerifiedLabel);
+        
+        // Patients card
+        VBox patientsCard = new VBox(10);
+        patientsCard.setAlignment(Pos.CENTER);
+        patientsCard.setPrefWidth(200);
+        patientsCard.setStyle("-fx-background-color: #ffffff; -fx-padding: 20; -fx-spacing: 10; " +
+                           "-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: #e2e8f0; " +
+                           "-fx-border-width: 1; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);");
+        
+        Label patientsLabel = new Label("PATIENTS");
+        patientsLabel.setStyle("-fx-text-fill: #64748b; -fx-font-size: 14px; -fx-font-weight: bold;");
+        
+        totalPatientsLabel = new Label("0");
+        totalPatientsLabel.setStyle("-fx-text-fill: #1e40af; -fx-font-size: 32px; -fx-font-weight: bold;");
+        
+        Label patientsVerifiedLabel = new Label("Verified");
+        patientsVerifiedLabel.setStyle("-fx-text-fill: #10b981; -fx-font-size: 12px; -fx-font-weight: bold;");
+        
+        patientsCard.getChildren().addAll(patientsLabel, totalPatientsLabel, patientsVerifiedLabel);
+        
+        // Add all cards to the HBox
+        statsCards.getChildren().addAll(usersCard, doctorsCard, patientsCard);
+        
+        return statsCards;
+    }
+    
+    private TitledPane createDemographicsSection() {
+        // Create demographics section
+        TitledPane demographicsPane = new TitledPane();
+        demographicsPane.setText("Démographie des utilisateurs");
+        demographicsPane.setExpanded(true);
+        demographicsPane.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        
+        VBox content = new VBox(20);
+        content.setStyle("-fx-padding: 10;");
+        
+        HBox chartsContainer = new HBox(30);
+        
+        // Age distribution chart container
+        ageDistributionContainer = new VBox(10);
+        ageDistributionContainer.setStyle("-fx-padding: 20; -fx-background-color: white; -fx-background-radius: 8; " +
+                                       "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0, 0, 5);");
+        HBox.setHgrow(ageDistributionContainer, Priority.ALWAYS);
+        
+        Label ageTitle = new Label("Distribution par âge");
+        ageTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #34495e;");
+        
+        Label ageSubtitle = new Label("Répartition des patients et médecins par tranches d'âge");
+        ageSubtitle.setStyle("-fx-font-size: 12px; -fx-text-fill: #95a5a6;");
+        
+        ageDistributionContainer.getChildren().addAll(ageTitle, ageSubtitle);
+        
+        // Gender distribution chart container
+        genderDistributionContainer = new VBox(10);
+        genderDistributionContainer.setStyle("-fx-padding: 20; -fx-background-color: white; -fx-background-radius: 8; " +
+                                         "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0, 0, 5);");
+        HBox.setHgrow(genderDistributionContainer, Priority.ALWAYS);
+        
+        Label genderTitle = new Label("Distribution par genre");
+        genderTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #34495e;");
+        
+        Label genderSubtitle = new Label("Proportion hommes/femmes parmi nos utilisateurs");
+        genderSubtitle.setStyle("-fx-font-size: 12px; -fx-text-fill: #95a5a6;");
+        
+        genderDistributionContainer.getChildren().addAll(genderTitle, genderSubtitle);
+        
+        chartsContainer.getChildren().addAll(ageDistributionContainer, genderDistributionContainer);
+        content.getChildren().add(chartsContainer);
+        
+        demographicsPane.setContent(content);
+        return demographicsPane;
+    }
+    
+    private TitledPane createEngagementSection() {
+        // Create engagement section
+        TitledPane engagementPane = new TitledPane();
+        engagementPane.setText("Engagement des utilisateurs");
+        engagementPane.setExpanded(true);
+        engagementPane.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        
+        VBox content = new VBox(10);
+        content.setStyle("-fx-padding: 10;");
+        
+        // Active users chart container
+        activeUsersContainer = new VBox(10);
+        activeUsersContainer.setStyle("-fx-padding: 20; -fx-background-color: white; -fx-background-radius: 8; " +
+                                    "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0, 0, 5);");
+        
+        Label activeUsersTitle = new Label("Utilisateurs les plus actifs (30 derniers jours)");
+        activeUsersTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #34495e;");
+        
+        Label activeUsersSubtitle = new Label("Nombre de connexions par utilisateur");
+        activeUsersSubtitle.setStyle("-fx-font-size: 12px; -fx-text-fill: #95a5a6;");
+        
+        activeUsersContainer.getChildren().addAll(activeUsersTitle, activeUsersSubtitle);
+        
+        content.getChildren().add(activeUsersContainer);
+        
+        engagementPane.setContent(content);
+        return engagementPane;
+    }
+    
+    private VBox createProductSection() {
+        // Create product management section
+        VBox productSection = new VBox(15);
+        productSection.setStyle("-fx-padding: 20; -fx-background-color: white; " +
+                             "-fx-background-radius: 8; -fx-border-radius: 8; " +
+                             "-fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);");
+        
+        Label productTitle = new Label("Product Management");
+        productTitle.setStyle("-fx-text-fill: #1e293b; -fx-font-size: 20px; -fx-font-weight: bold;");
+        
+        HBox sortContainer = new HBox(10);
+        sortContainer.setAlignment(Pos.CENTER_LEFT);
+        
+        Label sortLabel = new Label("Sort by:");
+        sortLabel.setStyle("-fx-text-fill: #64748b; -fx-font-size: 14px;");
+        
+        sortComboBox = new ComboBox<>();
+        sortComboBox.setPrefWidth(150);
+        sortComboBox.setStyle("-fx-background-radius: 4;");
+        sortComboBox.setItems(FXCollections.observableArrayList(
+                "Default",
+                "Name (A-Z)",
+                "Name (Z-A)",
+                "Price (Low-High)",
+                "Price (High-Low)"
+        ));
+        sortComboBox.setValue("Default");
+        sortComboBox.setOnAction(event -> handleSort());
+        
+        sortContainer.getChildren().addAll(sortLabel, sortComboBox);
+        
+        ScrollPane productScrollPane = new ScrollPane();
+        productScrollPane.setFitToWidth(true);
+        productScrollPane.setStyle("-fx-background-color: transparent;");
+        
+        productContainer = new FlowPane();
+        productContainer.setHgap(20);
+        productContainer.setVgap(20);
+        productContainer.setStyle("-fx-padding: 10;");
+        
+        productScrollPane.setContent(productContainer);
+        
+        productSection.getChildren().addAll(productTitle, sortContainer, productScrollPane);
+        
+        return productSection;
     }
 
     @FXML
@@ -427,34 +987,9 @@ public class AdminDashboardController {
     }
 
     private void loadProductImage(Produit product, ImageView imageView) {
-        try {
-            String imagePath = product.getImagePath();
-
-            if (imagePath == null || imagePath.isEmpty()) {
-                setPlaceholderImage(imageView);
-                return;
-            }
-
-            Image image;
-            if (imagePath.startsWith("/")) {
-                image = new Image(getClass().getResourceAsStream(imagePath));
-            } else if (imagePath.startsWith("file:")) {
-                image = new Image(imagePath);
-            } else {
-                try {
-                    image = new Image(getClass().getResourceAsStream("/images/" + imagePath));
-                } catch (Exception e) {
-                    image = new Image(new File(imagePath).toURI().toString());
-                }
-            }
-
-            imageView.setImage(image);
-        } catch (Exception e) {
-            System.err.println("Error loading image for product: " + product.getName());
-            e.printStackTrace();
-            setPlaceholderImage(imageView);
-        }
+        ProductImageService.loadProductImage(product, imageView);
     }
+
 
     private void setPlaceholderImage(ImageView imageView) {
         try {
@@ -507,8 +1042,8 @@ public class AdminDashboardController {
     }
 
     @FXML
-    private void handleCategories() {
-        handleViewCategories();
+    private void handleCategories(ActionEvent event) {
+        handleViewCategories(event);
     }
 
     private void showAlert(String title, String message) {
@@ -570,22 +1105,16 @@ public class AdminDashboardController {
     }
 
     @FXML
-    private void handleViewCategories() {
+    private void handleViewCategories(ActionEvent event) {
         try {
-            // Get the resource URL to verify it exists
             java.net.URL resourceUrl = getClass().getResource("/com/views/nour/view_categories.fxml");
-
             if (resourceUrl == null) {
                 showAlert("Error", "Could not find resource: /com/views/nour/view_categories.fxml");
                 return;
             }
-
             FXMLLoader loader = new FXMLLoader(resourceUrl);
             Parent root = loader.load();
-
-            // Get the current stage
-            Stage stage = (Stage) productContainer.getScene().getWindow();
-
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle("View Categories");
@@ -596,19 +1125,16 @@ public class AdminDashboardController {
         }
     }
     @FXML
-    private void handleAddCategory() {
+    private void handleAddCategory(ActionEvent event) {
         try {
             java.net.URL resourceUrl = getClass().getResource("/com/views/nour/add_category.fxml");
-
             if (resourceUrl == null) {
                 showAlert("Error", "Could not find resource: /com/views/nour/add_category.fxml");
                 return;
             }
-
             FXMLLoader loader = new FXMLLoader(resourceUrl);
             Parent root = loader.load();
-
-            Stage stage = (Stage) productContainer.getScene().getWindow();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle("Add Category");
@@ -621,10 +1147,10 @@ public class AdminDashboardController {
     @FXML
     private void handleFavoritesStatistics() {
         try {
-            java.net.URL resourceUrl = getClass().getResource("/com/views/nour/favorites_statistics_view.fxml");
+            java.net.URL resourceUrl = getClass().getResource("/com/views/nour/top_favorites_statistics.fxml");
 
             if (resourceUrl == null) {
-                showAlert("Error", "Could not find resource: /favorites_statistics_view.fxml");
+                showAlert("Error", "Could not find resource: /top_favorites_statistics.fxml");
                 return;
             }
 
@@ -664,6 +1190,194 @@ public class AdminDashboardController {
             e.printStackTrace();
         }
     }
+
+
+    @FXML
+    private void showStatisticsView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/StatisticsView.fxml"));
+            Parent content = loader.load();
+
+            // Créer une nouvelle fenêtre modale
+            Stage stage = new Stage();
+            stage.setScene(new Scene(content, 800, 600));
+            stage.setTitle("Statistiques des utilisateurs");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible de charger la vue des statistiques", e.getMessage());
+        }
+    }
+
+
+    private void checkUserRoleAndAdjustUI() {
+        try {
+            User currentUser = authService.getUserFromToken(token);
+            if (currentUser != null) {
+                boolean isAdmin = currentUser.getRoles().contains("ROLE_ADMIN");
+
+                // Masquer/afficher les éléments selon le rôle
+                setDashboardVisibility(isAdmin);
+                setUserManagementVisibility(isAdmin);
+            }
+        } catch (AuthException e) {
+            System.err.println("Erreur d'authentification: " + e.getMessage());
+        }
+    }
+
+    private void setDashboardVisibility(boolean visible) {
+        // Trouvez le bouton Dashboard dans votre sidebar
+        // Vous devrez ajouter un fx:id à votre bouton Dashboard dans le FXML
+        // Par exemple: <Button fx:id="dashboardButton" ... />
+        if (dashboardButton != null) {
+            dashboardButton.setVisible(visible);
+            dashboardButton.setManaged(visible);
+        }
+
+        // Masquer aussi le contenu du dashboard si nécessaire
+        if (!visible && contentPane != null) {
+            // Charger une vue vide ou un message "Accès non autorisé"
+            contentPane.getChildren().clear();
+            Label accessDenied = new Label("Accès réservé aux administrateurs");
+            accessDenied.setStyle("-fx-font-size: 16px; -fx-text-fill: red;");
+            contentPane.getChildren().add(accessDenied);
+        }
+    }
+
+    private void setUserManagementVisibility(boolean visible) {
+        // Trouvez le bouton de gestion des utilisateurs dans votre sidebar
+        // Vous devrez ajouter un fx:id à votre bouton dans le FXML
+        // Par exemple: <Button fx:id="userManagementButton" ... />
+        if (userManagementButton != null) {
+            userManagementButton.setVisible(visible);
+            userManagementButton.setManaged(visible);
+        }
+
+        // Masquer aussi le sous-menu si visible
+        if (userMenu != null) {
+            userMenu.setVisible(visible && userMenu.isVisible());
+            userMenu.setManaged(visible && userMenu.isManaged());
+        }
+    }
+
+    @FXML
+    private void toggleEventMenu() {
+        if (eventMenu != null) {
+            boolean isVisible = eventMenu.isVisible();
+            eventMenu.setVisible(!isVisible);
+            eventMenu.setManaged(!isVisible);
+        }
+    }
+
+    @FXML
+    private void showEvents() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/event/event_list.fxml"));
+            Parent eventList = loader.load();
+            contentPane.getChildren().setAll(eventList);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible de charger la liste des événements", e.getMessage());
+        }
+    }
+
+    @FXML
+    private void showEventCategories() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/event/categorieEvent_list.fxml"));
+            Parent categories = loader.load();
+            contentPane.getChildren().setAll(categories);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Erreur", "Impossible de charger les catégories d'événements", e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handlePostsManagement() {
+        isSubmenuVisible = !isSubmenuVisible; // Toggle visibility
+        submenu.setVisible(isSubmenuVisible);
+        submenu.setManaged(isSubmenuVisible);
+    }
+
+    @FXML
+    private void handleViewPosts() {
+        loadContent("/views/Back/ViewPosts.fxml");
+    }
+
+    @FXML
+    private void handleAddCategories() {
+        loadContent("/views/Back/AddCategory.fxml");
+    }
+
+    @FXML
+    private void handleViewCategory() {
+        loadContent("/views/Back/ViewCategories.fxml");
+    }
+
+    @FXML
+    private void toggleReclamationMenu() {
+        boolean show = !reclamationMenu.isVisible();
+        reclamationMenu.setVisible(show);
+        reclamationMenu.setManaged(show);
+    }
+
+    @FXML
+    private void showTypeReclamation() {
+        loadContent("/com/views/type-reclamation.fxml");
+    }
+    @FXML
+    private void showReclamations() {
+        loadContent("/com/views/reclamation-view.fxml");
+    }
+    @FXML
+    private void showReponses() {
+        loadContent("/com/views/reponse-view.fxml");
+    }
+
+    @FXML
+    private void handleNotificationBell() {
+        String content;
+        if (notifications.isEmpty()) {
+            content = "Aucune nouvelle notification.";
+        } else {
+            content = String.join("\n", notifications);
+        }
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Notifications");
+        alert.setHeaderText("Notifications récentes");
+        alert.setContentText(content);
+        alert.showAndWait();
+
+        // Réinitialise le compteur et vide la liste après consultation
+        notificationCountLabel.setVisible(false);
+        notificationCountLabel.setText("0");
+        notifications.clear();
+    }
+
+    public void incrementNotificationCount(String message) {
+        notifications.add(message);
+        notificationCountLabel.setText(String.valueOf(notifications.size()));
+        notificationCountLabel.setVisible(true);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }

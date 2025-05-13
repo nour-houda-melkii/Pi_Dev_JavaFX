@@ -1,0 +1,110 @@
+/* Main container */
+.main-container {
+    -fx-background-color: #f5f7fa;
+    -fx-font-family: 'Segoe UI', sans-serif;
+}
+
+/* Modern Navbar */
+.modern-navbar {
+    -fx-background-color: #e6e9ed;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #d1d5db;
+}
+
+/* Logo styling */
+.logo-circle {
+    -fx-fill: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 1);
+}
+
+.logo-container {
+    -fx-padding: 0 10 0 0;
+}
+
+/* Navigation buttons */
+.nav-btn, .nav-menu-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #4a5568;
+    -fx-font-size: 14px;
+    -fx-padding: 8 12;
+    -fx-cursor: hand;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.nav-btn:hover, .nav-menu-btn:hover {
+    -fx-background-color: #d1d5db;
+    -fx-text-fill: #2d3748;
+}
+
+/* User info section */
+.user-info {
+    -fx-background-color: rgba(255, 255, 255, 0.5);
+    -fx-background-radius: 20;
+    -fx-padding: 5 15;
+}
+
+.username-label {
+    -fx-text-fill: #2d3748;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.user-avatar {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 1);
+}
+
+/* Logout button */
+.logout-btn {
+    -fx-background-color: #edf2f7;
+    -fx-text-fill: #e53e3e;
+    -fx-font-size: 14px;
+    -fx-padding: 8 15;
+    -fx-cursor: hand;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.logout-btn:hover {
+    -fx-background-color: #fed7d7;
+    -fx-text-fill: #c53030;
+}
+
+/* Content area */
+.content-area {
+    -fx-background-color: white;
+    -fx-padding: 20;
+}
+
+/* Welcome message */
+.welcome-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2d3748;
+}
+
+.welcome-subtitle {
+    -fx-font-size: 16px;
+    -fx-text-fill: #718096;
+}
+
+/* Menu items */
+.menu-item {
+    -fx-padding: 5 15;
+}
+
+.menu-item:hover {
+    -fx-background-color: #e2e8f0;
+}
+
+.menu-item .label {
+    -fx-text-fill: #4a5568;
+}
+
+/* Menu */
+.context-menu {
+    -fx-background-color: white;
+    -fx-border-color: #e2e8f0;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}

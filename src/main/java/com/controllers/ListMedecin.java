@@ -17,14 +17,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.ResourceBundle;
-
-import static com.demo.enums.Specialite.Gynécologie;
+import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class ListMedecin implements Initializable {
 
@@ -34,18 +35,36 @@ public class ListMedecin implements Initializable {
     @FXML private Button searchButton;
     @FXML private Button resetButton;
     @FXML private Button addButton;
+    @FXML private Button unverifiedButton;
     @FXML private Label titleLabel;
     @FXML private Label subtitleLabel;
     @FXML private VBox mainContainer;
+    @FXML private HBox paginationContainer;
+    @FXML private Button prevPageButton;
+    @FXML private Button nextPageButton;
+    @FXML private Label pageInfoLabel;
 
     private final UserService userService = new UserService();
     private final ObservableList<User> medecinList = FXCollections.observableArrayList();
+    private final ObservableList<User> filteredList = FXCollections.observableArrayList();
+    private final Executor executor = Executors.newCachedThreadPool(runnable -> {
+        Thread t = new Thread(runnable);
+        t.setDaemon(true);
+        return t;
+    });
+
+    // Variables pour la pagination
+    private int currentPage = 0;
+    private final int itemsPerPage = 5;
+    private int totalPages = 0;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         setupStyles();
         setupListView();
         setupSpecialityComboBox();
+        setupDynamicSearch();
+        setupPaginationControls();
         loadMedecins();
     }
 
@@ -69,12 +88,31 @@ public class ListMedecin implements Initializable {
         searchButton.setStyle("-fx-background-color: #00B4D8; -fx-text-fill: white; -fx-font-family: 'Poppins';");
         resetButton.setStyle("-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-family: 'Poppins';");
         addButton.setStyle("-fx-background-color: #00B4D8; -fx-text-fill: white; -fx-font-family: 'Poppins'; -fx-font-weight: bold;");
+        unverifiedButton.setStyle("-fx-background-color: #00B4D8; -fx-text-fill: white; -fx-font-family: 'Poppins'; -fx-font-weight: bold;");
+
+        // Style des boutons de pagination
+        prevPageButton.setStyle("-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-family: 'Poppins';");
+        nextPageButton.setStyle("-fx-background-color: #6c757d; -fx-text-fill: white; -fx-font-family: 'Poppins';");
+        pageInfoLabel.setStyle("-fx-font-family: 'Poppins'; -fx-font-size: 14px;");
+    }
+
+    private void setupPaginationControls() {
+        prevPageButton.setOnAction(e -> {
+            if (currentPage > 0) {
+                currentPage--;
+                updateMedecinsView();
+            }
+        });
+
+        nextPageButton.setOnAction(e -> {
+            if (currentPage < totalPages - 1) {
+                currentPage++;
+                updateMedecinsView();
+            }
+        });
     }
 
     private void setupSpecialityComboBox() {
-        // Get all specialities from your application
-        // This is a placeholder - replace with actual specialities from your system
-        // You might need to fetch these from a service or use an enum
         ObservableList<String> specialities = FXCollections.observableArrayList(
                 "All Specialities",
                 "Cardiologie",
@@ -102,6 +140,21 @@ public class ListMedecin implements Initializable {
 
         specialityComboBox.setItems(specialities);
         specialityComboBox.getSelectionModel().selectFirst();
+
+        specialityComboBox.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    filterMedecins();
+                    currentPage = 0;
+                    updateMedecinsView();
+                });
+    }
+
+    private void setupDynamicSearch() {
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filterMedecins();
+            currentPage = 0;
+            updateMedecinsView();
+        });
     }
 
     private void setupListView() {
@@ -118,32 +171,28 @@ public class ListMedecin implements Initializable {
             private final Button deleteButton = new Button();
 
             {
-                // Configuration du GridPane
                 gridPane.setHgap(10);
                 gridPane.setVgap(5);
                 gridPane.setPadding(new Insets(10));
 
-                // Style des textes
                 nameText.setFont(Font.font("Poppins", FontWeight.BOLD, 14));
                 emailText.setFont(Font.font("Poppins", 12));
                 phoneText.setFont(Font.font("Poppins", 12));
                 specialiteText.setFont(Font.font("Poppins", 12));
                 licenceText.setFont(Font.font("Poppins", 12));
 
-                // Configuration des boutons d'action
-                viewButton.setGraphic(new Text("\uD83D\uDC41")); // Icône œil
+                viewButton.setGraphic(new Text("\uD83D\uDC41"));
                 viewButton.setStyle("-fx-background-color: #17a2b8; -fx-text-fill: white;");
 
-                editButton.setGraphic(new Text("\u270E")); // Icône crayon
+                editButton.setGraphic(new Text("\u270E"));
                 editButton.setStyle("-fx-background-color: #ffc107; -fx-text-fill: white;");
 
-                deleteButton.setGraphic(new Text("\uD83D\uDDD1")); // Icône poubelle
+                deleteButton.setGraphic(new Text("\uD83D\uDDD1"));
                 deleteButton.setStyle("-fx-background-color: #dc3545; -fx-text-fill: white;");
 
                 actionBox.setAlignment(Pos.CENTER_RIGHT);
                 actionBox.getChildren().addAll(viewButton, editButton, deleteButton);
 
-                // Ajout des éléments au GridPane
                 gridPane.add(nameText, 0, 0, 2, 1);
                 gridPane.add(new Text("Email:"), 0, 1);
                 gridPane.add(emailText, 1, 1);
@@ -155,7 +204,6 @@ public class ListMedecin implements Initializable {
                 gridPane.add(licenceText, 1, 4);
                 gridPane.add(actionBox, 2, 0, 1, 5);
 
-                // Configuration des contraintes de colonne
                 ColumnConstraints col1 = new ColumnConstraints();
                 col1.setHgrow(Priority.NEVER);
                 ColumnConstraints col2 = new ColumnConstraints();
@@ -164,7 +212,6 @@ public class ListMedecin implements Initializable {
                 col3.setHgrow(Priority.NEVER);
                 gridPane.getColumnConstraints().addAll(col1, col2, col3);
 
-                // Style de la cellule
                 setStyle("-fx-background-color: white; -fx-border-color: #e9ecef; -fx-border-width: 1px; -fx-border-radius: 5px; -fx-background-radius: 5px;");
                 setPadding(new Insets(5));
             }
@@ -183,7 +230,6 @@ public class ListMedecin implements Initializable {
                     specialiteText.setText(medecin.getSpecialite() != null ? medecin.getSpecialite().toString() : "Not specified");
                     licenceText.setText(medecin.getNumeroLicence() != null ? medecin.getNumeroLicence() : "Not specified");
 
-                    // Gestion des événements des boutons
                     viewButton.setOnAction(event -> handleViewMedecin(medecin));
                     editButton.setOnAction(event -> handleEditMedecin(medecin));
                     deleteButton.setOnAction(event -> handleDeleteMedecin(medecin));
@@ -195,17 +241,27 @@ public class ListMedecin implements Initializable {
     }
 
     private void loadMedecins() {
-        medecinList.clear();
-        medecinList.addAll(userService.rechercherTousMedecins());
-        medecinListView.setItems(medecinList);
+        executor.execute(() -> {
+            try {
+                List<User> allMedecins = userService.rechercherTousMedecins();
+
+                javafx.application.Platform.runLater(() -> {
+                    medecinList.setAll(allMedecins);
+                    filterMedecins();
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                javafx.application.Platform.runLater(() ->
+                        showAlert("Error", "Failed to load doctors: " + e.getMessage()));
+            }
+        });
     }
 
-    @FXML
-    private void handleSearch() {
+    private void filterMedecins() {
         String keyword = searchField.getText().toLowerCase();
         String selectedSpeciality = specialityComboBox.getSelectionModel().getSelectedItem();
 
-        ObservableList<User> filteredList = FXCollections.observableArrayList();
+        filteredList.clear();
 
         for (User medecin : medecinList) {
             boolean matchesKeyword = keyword.isEmpty() ||
@@ -224,32 +280,63 @@ public class ListMedecin implements Initializable {
             }
         }
 
-        medecinListView.setItems(filteredList);
+        totalPages = (int) Math.ceil((double) filteredList.size() / itemsPerPage);
+        updateMedecinsView();
+
+        if (filteredList.isEmpty()) {
+            Label noResultsLabel = new Label("No doctors found matching your criteria");
+            noResultsLabel.setStyle("-fx-text-fill: #6c757d; -fx-font-family: 'Poppins';");
+            medecinListView.setPlaceholder(noResultsLabel);
+        }
+    }
+
+    private void updateMedecinsView() {
+        int fromIndex = currentPage * itemsPerPage;
+        int toIndex = Math.min(fromIndex + itemsPerPage, filteredList.size());
+
+        List<User> pageMedecins = filteredList.subList(fromIndex, toIndex);
+        medecinListView.setItems(FXCollections.observableArrayList(pageMedecins));
+
+        updatePaginationInfo();
+    }
+
+    private void updatePaginationInfo() {
+        pageInfoLabel.setText(String.format("Page %d of %d", currentPage + 1, totalPages));
+
+        prevPageButton.setDisable(currentPage <= 0);
+        nextPageButton.setDisable(currentPage >= totalPages - 1 || totalPages == 0);
+    }
+
+    @FXML
+    private void handleSearch() {
+        filterMedecins();
     }
 
     @FXML
     private void handleReset() {
         searchField.clear();
         specialityComboBox.getSelectionModel().selectFirst();
-        medecinListView.setItems(medecinList);
+        currentPage = 0;
+        filterMedecins();
     }
 
     @FXML
     private void handleAddMedecin() {
         try {
-            // Charger le fichier FXML de la page AjouterMedecin
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/AjouterMedecin.fxml"));
             Parent root = loader.load();
 
-            // Créer une nouvelle scène
-            Scene scene = new Scene(root);
-
-            // Obtenir la fenêtre actuelle
-            Stage stage = (Stage) addButton.getScene().getWindow();
-
-            // Changer la scène
-            stage.setScene(scene);
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
             stage.setTitle("Add Doctor");
+            stage.initOwner(addButton.getScene().getWindow());
+            stage.initModality(Modality.WINDOW_MODAL);
+
+            AjouterMedecin controller = loader.getController();
+            controller.setOnMedecinAddedCallback(() -> {
+                refreshMedecinList();
+            });
+
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -257,17 +344,24 @@ public class ListMedecin implements Initializable {
         }
     }
 
+    private void refreshMedecinList() {
+        executor.execute(() -> {
+            List<User> medecins = userService.rechercherTousMedecins();
+            javafx.application.Platform.runLater(() -> {
+                medecinList.setAll(medecins);
+                filterMedecins();
+            });
+        });
+    }
+
     private void handleViewMedecin(User medecin) {
         try {
-            // Charger la vue des détails
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/DetailsMedecin.fxml"));
             Parent root = loader.load();
 
-            // Passer les données au contrôleur
             DetailsMedecinController controller = loader.getController();
             controller.initData(medecin.getId());
 
-            // Créer une nouvelle scène
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.setTitle("Doctor Details - " + medecin.getFirstName());
@@ -281,27 +375,24 @@ public class ListMedecin implements Initializable {
 
     private void handleEditMedecin(User medecin) {
         try {
-            // Charger le fichier FXML de la page de modification
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/UpdateMedecin.fxml"));
             Parent root = loader.load();
 
-            // Obtenir le contrôleur et initialiser les données du médecin
             UpdateMedecinController controller = loader.getController();
             controller.initData(medecin);
+            controller.setOnMedecinUpdatedCallback(() -> {
+                refreshMedecinList();
+            });
 
-            // Créer une nouvelle scène
-            Scene scene = new Scene(root);
-
-            // Obtenir la fenêtre actuelle
-            Stage stage = (Stage) medecinListView.getScene().getWindow();
-
-            // Changer la scène
-            stage.setScene(scene);
-            stage.setTitle("Edit Doctor");
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(medecinListView.getScene().getWindow());
+            stage.setScene(new Scene(root));
+            stage.setTitle("Edit Doctor - " + medecin.getFirstName());
             stage.show();
+
         } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Unable to open the doctor edit page.");
+            showAlert("Error", "Unable to open edit window: " + e.getMessage());
         }
     }
 
@@ -314,9 +405,19 @@ public class ListMedecin implements Initializable {
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                userService.supprimerMedecin(medecin.getId());
-                medecinList.remove(medecin);
-                showAlert("Success", "Doctor successfully deleted.");
+                executor.execute(() -> {
+                    try {
+                        userService.supprimerMedecin(medecin.getId());
+                        javafx.application.Platform.runLater(() -> {
+                            medecinList.remove(medecin);
+                            filterMedecins();
+                            showAlert("Success", "Doctor successfully deleted.");
+                        });
+                    } catch (Exception e) {
+                        javafx.application.Platform.runLater(() ->
+                                showAlert("Error", "Failed to delete doctor: " + e.getMessage()));
+                    }
+                });
             }
         });
     }
@@ -324,6 +425,32 @@ public class ListMedecin implements Initializable {
     @FXML
     private void handleRefresh() {
         loadMedecins();
+    }
+
+    @FXML
+    private void handleShowUnverified() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/UnverifiedDoctors.fxml"));
+            Parent root = loader.load();
+
+            UnverifiedDoctorsController controller = loader.getController();
+            controller.setOnVerificationCallback(() -> {
+                refreshMedecinList();
+            });
+            controller.setOnDeletionCallback(() -> {
+                refreshMedecinList();
+            });
+
+            Stage stage = new Stage();
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.initOwner(addButton.getScene().getWindow());
+            stage.setScene(new Scene(root));
+            stage.setTitle("Unverified Doctors");
+            stage.show();
+
+        } catch (IOException e) {
+            showAlert("Error", "Could not open unverified doctors: " + e.getMessage());
+        }
     }
 
     private void showAlert(String title, String message) {
@@ -336,28 +463,6 @@ public class ListMedecin implements Initializable {
     }
 
     public void setUserService(UserService userService) {
-    }
-
-    @FXML
-    private void handleShowUnverified() {
-        try {
-            // Charger le fichier FXML de la page des médecins non vérifiés
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/views/UnverifiedDoctors.fxml"));
-            Parent root = loader.load();
-
-            // Créer une nouvelle scène
-            Scene scene = new Scene(root);
-
-            // Obtenir la fenêtre actuelle
-            Stage stage = (Stage) addButton.getScene().getWindow();
-
-            // Changer la scène
-            stage.setScene(scene);
-            stage.setTitle("Unverified Doctors");
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Unable to open the unverified doctors page.");
-        }
+        // Pour l'injection de dépendance si nécessaire
     }
 }

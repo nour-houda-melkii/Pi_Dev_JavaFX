@@ -10,60 +10,109 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.nour.ProductFrontController">
-    <!-- Top Navigation Bar - Now uses AnchorPane constraints -->
-    <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="800.0" spacing="20.0" style="-fx-background-color: white; -fx-padding: 0 20; -fx-border-color: #f0f0f0; -fx-border-width: 0 0 1 0;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-
-        <!-- Navigation Menu -->
-        <HBox alignment="CENTER" prefHeight="59.0" prefWidth="376.0" spacing="10.0">
-            <Label style="-fx-font-size: 16px; -fx-text-fill: #666666;" />
-         <Label alignment="TOP_LEFT" prefHeight="26.0" prefWidth="218.0" style="-fx-font-size: 16px; -fx-text-fill: #33ccff; -fx-font-weight: bold;" text="SAHATECH" />
-         <Label alignment="TOP_CENTER" style="-fx-font-size: 16px; -fx-text-fill: #666666;" text="Events" />
-         <Label alignment="TOP_CENTER" prefHeight="26.0" prefWidth="81.0" style="-fx-font-size: 16px; -fx-text-fill: #33ccff; -fx-font-weight: bold;" text="Products" />
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" style="-fx-background-color: #f8f9fa;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.nour.ProductFrontController">
+    <!-- Top Navigation Bar with Medical-themed colors -->
+    <HBox alignment="CENTER_LEFT" prefHeight="70.0" prefWidth="1000.0" spacing="20.0" style="-fx-background-color: #00BCD4; -fx-padding: 0 20;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <!-- Application Logo and Name -->
+        <HBox alignment="CENTER_LEFT" spacing="15.0">
+            <Label style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;">
+                <font>
+                    <Font name="System Bold" size="24.0" />
+                </font>
+            </Label>
         </HBox>
 
-        <!-- Spacer to push icons to the right -->
-        <HBox HBox.hgrow="ALWAYS" />
-        <Button onAction="#handleBackToAdmin" style="-fx-background-color: #33ccff; -fx-text-fill: white; -fx-background-radius: 20;" text="Admin Dashboard" />
-        <!-- Cart Icon with Counter -->
-        <HBox alignment="CENTER" spacing="10.0">
+        <!-- Navigation Content -->
+        <HBox HBox.hgrow="ALWAYS">
+            <children>
+                <Label alignment="BOTTOM_CENTER" prefHeight="66.0" prefWidth="550.0" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Medical Products">
+                    <font>
+                        <Font name="System Bold" size="22.0" />
+                    </font>
+                </Label>
+
+                <!-- Admin Dashboard Return Button -->
+                <Button text="Admin Dashboard"
+                        onAction="#handleBackToAdmin"
+                        prefHeight="36.0"
+                        prefWidth="144.0"
+                        style="-fx-background-color: #2ecc71;
+                               -fx-text-fill: white;
+                               -fx-background-radius: 4;
+                               -fx-padding: 8 15;">
+                    <graphic>
+                        <HBox alignment="CENTER" spacing="8.0">
+                            <Label text="🏠" style="-fx-font-size: 16px;"/>
+                        </HBox>
+                    </graphic>
+                </Button>
+            </children>
+        </HBox>
+
+        <!-- Cart and Favorites with professional icons -->
+        <HBox alignment="CENTER" spacing="15.0">
             <StackPane onMouseClicked="#handleViewCart" style="-fx-cursor: hand;">
-                <Label style="-fx-font-size: 20px; -fx-text-fill: #666666;" text="🛒" />
-                <StackPane alignment="TOP_RIGHT">
-                    <Label fx:id="cartCountLabel" style="-fx-background-color: #cccccc; -fx-text-fill: white; -fx-background-radius: 15; -fx-min-width: 20; -fx-min-height: 20; -fx-alignment: center; -fx-font-weight: bold;" text="0" />
+                <Label style="-fx-font-size: 18px; -fx-text-fill: white;" text="🛒" />
+                <StackPane alignment="TOP_RIGHT" translateX="8" translateY="-8">
+                    <Label fx:id="cartCountLabel" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 10; -fx-min-width: 20; -fx-min-height: 20; -fx-alignment: center; -fx-font-weight: bold; -fx-font-size: 12px;" text="0" />
                 </StackPane>
             </StackPane>
-            <!-- Favorites Icon with Counter -->
-            <StackPane onMouseClicked="#handleBackToAdmin" style="-fx-cursor: hand;" />
 
             <StackPane onMouseClicked="#handleViewFavorites" style="-fx-cursor: hand;">
-                <Label style="-fx-font-size: 20px; -fx-text-fill: #ff3366;" text="♥" />
-                <StackPane alignment="TOP_RIGHT">
-                    <Label fx:id="favoritesCountLabel" style="-fx-background-color: #cccccc; -fx-text-fill: white; -fx-background-radius: 15; -fx-min-width: 20; -fx-min-height: 20; -fx-alignment: center; -fx-font-weight: bold;" text="0" />
+                <Label style="-fx-font-size: 18px; -fx-text-fill: white;" text="♥" />
+                <StackPane alignment="TOP_RIGHT" translateX="8" translateY="-8">
+                    <Label fx:id="favoritesCountLabel" style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 10; -fx-min-width: 20; -fx-min-height: 20; -fx-alignment: center; -fx-font-weight: bold; -fx-font-size: 12px;" text="0" />
                 </StackPane>
             </StackPane>
+
+            <!-- User profile icon -->
+            <Button style="-fx-background-color: transparent; -fx-text-fill: white;">
+                <graphic>
+                    <Label style="-fx-font-size: 18px; -fx-text-fill: white;" text="👤" />
+                </graphic>
+            </Button>
         </HBox>
-
-        <!-- Login/Inscription Buttons -->
-
-
-
     </HBox>
 
-    <!-- Search, Sort and Title Section - Now uses AnchorPane constraints -->
-    <VBox spacing="10.0" style="-fx-padding: 10 20;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
-        <!-- Search Bar -->
-        <HBox alignment="CENTER_RIGHT" spacing="10.0">
-            <TextField fx:id="searchField" prefHeight="35.0" promptText="Search..." style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-padding: 0 15;" HBox.hgrow="ALWAYS" />
+    <!-- Breadcrumb Navigation -->
+    <HBox alignment="CENTER_LEFT" spacing="5.0" style="-fx-padding: 10 20; -fx-background-color: #f1f2f6;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0" />
 
-            <Label style="-fx-font-size: 14px; -fx-text-fill: #666666;" text="Sort by:" />
-            <ComboBox fx:id="sortComboBox" prefHeight="26.0" prefWidth="126.0" />
+    <!-- Title and Filter Section -->
+    <VBox prefHeight="100.0" prefWidth="1000.0" spacing="15.0" style="-fx-padding: 20 20 10 20;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="110.0">
+        <!-- Subtitle with description -->
+        <Label alignment="TOP_CENTER" prefHeight="20.0" prefWidth="781.0" style="-fx-text-fill: #7f8c8d; -fx-font-size: 14px;" text="Browse our catalog of high-quality medical supplies and equipment" />
+
+        <!-- Search and Filter Bar -->
+        <HBox alignment="CENTER" prefHeight="29.0" prefWidth="960.0" spacing="15.0" style="-fx-padding: 10 0;">
+            <!-- Spacer -->
+            <HBox HBox.hgrow="ALWAYS" />
+
+            <!-- Search Field with icon -->
+            <HBox alignment="TOP_CENTER" maxWidth="584.0" prefHeight="26.0" prefWidth="584.0" spacing="5.0" style="-fx-background-color: white; -fx-background-radius: 4; -fx-border-color: #e6e6e6; -fx-border-radius: 4; -fx-padding: 0 10;" HBox.hgrow="ALWAYS">
+                <Label prefHeight="18.0" prefWidth="79.0" style="-fx-text-fill: #95a5a6;" text="🔍" />
+                <TextField fx:id="searchField" alignment="TOP_CENTER" prefHeight="24.0" prefWidth="442.0" promptText="Search products..." style="-fx-background-color: transparent; -fx-padding: 0 5; -fx-font-size: 14px;" HBox.hgrow="ALWAYS" />
+            </HBox>
+
+            <!-- Sort Options -->
+            <Label style="-fx-font-size: 14px; -fx-text-fill: #2c3e50;" text="Sort by:" />
+            <ComboBox fx:id="sortComboBox" prefHeight="35.0" prefWidth="150.0" promptText="Relevance" />
         </HBox>
+
+        <!-- Filter chips/tags container -->
+        <HBox fx:id="filterTagsContainer" spacing="10.0" style="-fx-padding: 5 0;" />
     </VBox>
 
-    <!-- Product Container with styled scrollpane - Now uses AnchorPane constraints -->
-    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: #f0f0f0; -fx-border-radius: 5;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="120.0">
-        <FlowPane fx:id="productContainer" hgap="20" style="-fx-padding: 20;" vgap="20" />
+    <!-- Product Container with styled scrollpane -->
+    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent;" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="220.0">
+        <FlowPane fx:id="productContainer" hgap="20" style="-fx-padding: 10;" vgap="20" />
     </ScrollPane>
+
+    <!-- Status bar at bottom -->
+    <HBox alignment="CENTER_LEFT" prefHeight="30.0" spacing="10.0" style="-fx-background-color: #ecf0f1; -fx-padding: 0 20;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <Label fx:id="statusLabel" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;" text="Showing all products" />
+        <HBox HBox.hgrow="ALWAYS" />
+        <Label style="-fx-text-fill: #7f8c8d; -fx-font-size: 12px;" text="© 2025 MediCare Solutions" />
+    </HBox>
 </AnchorPane>

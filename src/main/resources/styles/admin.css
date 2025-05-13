@@ -90,3 +90,255 @@
     -fx-text-fill: #64748b;
     -fx-font-size: 14px;
 }
+
+
+
+
+/* Styles généraux */
+.root {
+    -fx-font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    -fx-background-color: #f5f7fa;
+}
+
+/* Style des TitledPane */
+.titled-pane {
+    -fx-text-fill: #2c3e50;
+}
+
+.titled-pane > .title {
+    -fx-background-color: white;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-padding: 12 15;
+}
+
+.titled-pane > .title > .arrow-button .arrow {
+    -fx-background-color: #3498db;
+}
+
+.titled-pane > .content {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 15 0 0 0;
+}
+
+/* Style des graphiques */
+.chart {
+    -fx-padding: 10;
+    -fx-background-color: transparent;
+}
+
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.chart-vertical-grid-lines {
+    -fx-stroke: #ecf0f1;
+    -fx-stroke-dash-array: 3 3;
+}
+
+.chart-horizontal-grid-lines {
+    -fx-stroke: #ecf0f1;
+    -fx-stroke-dash-array: 3 3;
+}
+
+.chart-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.axis {
+    -fx-tick-label-fill: #7f8c8d;
+    -fx-font-size: 11px;
+}
+
+.axis-label {
+    -fx-text-fill: #7f8c8d;
+    -fx-font-size: 12px;
+}
+
+/* Style spécifique pour le graphique d'âge */
+.age-chart .chart-bar {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5, 0, 0, 2);
+}
+
+.age-chart .series0 .chart-bar {
+    -fx-bar-fill: #2ecc71; /* Vert pour patients (series0) */
+}
+
+.age-chart .series1 .chart-bar {
+    -fx-bar-fill: #3498db; /* Bleu pour médecins (series1) */
+}
+
+/* Style spécifique pour le graphique de genre */
+.gender-chart .chart-pie {
+    -fx-border-color: derive(-fx-pie-color, -10%);
+    -fx-border-width: 1px;
+}
+
+.gender-chart .chart-pie-label {
+    -fx-fill: #2c3e50;
+    -fx-font-size: 11px;
+}
+
+.gender-chart .chart-legend {
+    -fx-background-color: transparent;
+    -fx-padding: 10px;
+}
+
+/* Style spécifique pour le graphique d'utilisateurs actifs */
+.active-users-chart .chart-bar {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5, 0, 0, 2);
+}
+
+.active-users-chart .series0 .chart-bar {
+    -fx-bar-fill: linear-gradient(to right, #2ecc71, #27ae60);
+}
+
+.active-users-chart .series1 .chart-bar {
+    -fx-bar-fill: linear-gradient(to right, #3498db, #2980b9);
+}
+
+/* Style des légendes */
+.chart-legend {
+    -fx-background-color: transparent;
+    -fx-padding: 10px;
+}
+
+.chart-legend-item {
+    -fx-text-fill: #34495e;
+}
+
+.chart-legend-item-symbol {
+    -fx-background-radius: 4px;
+}
+
+/* Style des tooltip */
+.tooltip {
+    -fx-background-color: rgba(44, 62, 80, 0.9);
+    -fx-text-fill: white;
+    -fx-background-radius: 4px;
+    -fx-font-size: 12px;
+    -fx-padding: 7px;
+}
+
+/* Styles pour ScrollPane */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 12;
+}
+
+.scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-pref-height: 12;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #bdc3c7;
+    -fx-background-radius: 10;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0 0 10 0;
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-background-color: transparent;
+}
+
+/* Transitions d'animation */
+.chart-bar, .chart-pie {
+    -fx-opacity: 0.9;
+    -fx-transition: -fx-opacity 0.2s, -fx-scale-x 0.2s, -fx-scale-y 0.2s;
+}
+
+.chart-bar:hover, .chart-pie:hover {
+    -fx-opacity: 0.8;
+}
+
+/* ========== SIDEBAR ULTRA-MODERNE ========== */
+.sidebar-button.ultra-modern {
+    -fx-background-color: transparent;
+    -fx-text-fill: #1e293b;
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-padding: 16 28 16 28;
+    -fx-background-radius: 12px;
+    -fx-border-radius: 12px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s ease;
+}
+
+.sidebar-button.ultra-modern:hover {
+    -fx-background-color: derive(#0ea5e9, 85%);
+    -fx-text-fill: #0ea5e9;
+    -fx-translate-x: 3;
+}
+
+.sidebar-button.ultra-modern:focused, .sidebar-button.ultra-modern.active {
+    -fx-background-color: #0ea5e9;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(14, 165, 233, 0.6), 10, 0, 0, 0);
+}
+
+.sidebar-button.ultra-modern > .graphic {
+    -fx-min-width: 28px;
+}
+
+.sidebar-submenu.ultra-modern-submenu {
+    -fx-background-color: derive(#f1f5f9, -2%);
+    -fx-background-radius: 12px;
+    -fx-padding: 8 5 8 5;
+    -fx-spacing: 2;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 3, 0, 0, 1);
+    -fx-opacity: 0.97;
+    -fx-margin: 5 15 5 15;
+}
+
+.sidebar-sub-button.ultra-modern-sub {
+    -fx-background-color: transparent;
+    -fx-text-fill: #475569;
+    -fx-font-size: 14px;
+    -fx-padding: 10 10 10 35;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+}
+
+.sidebar-sub-button.ultra-modern-sub:hover {
+    -fx-background-color: derive(#0ea5e9, 90%);
+    -fx-text-fill: #0ea5e9;
+}
+
+.sidebar-sub-button.ultra-modern-sub:focused, .sidebar-sub-button.ultra-modern-sub.active {
+    -fx-background-color: derive(#0ea5e9, 80%);
+    -fx-text-fill: #0ea5e9;
+    -fx-font-weight: bold;
+}
+
+/* Pour les séparateurs dans la sidebar */
+.separator {
+    -fx-opacity: 0.4;
+}
+
+/* Pour la section de profil en bas */
+#profileSection {
+    -fx-background-color: transparent;
+    -fx-border-width: 0;
+    -fx-border-color: transparent;
+}

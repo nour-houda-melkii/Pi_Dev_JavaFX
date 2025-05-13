@@ -2,6 +2,7 @@ package com.controllers;
 
 import com.models.User;
 import com.services.UserService;
+import com.utils.AlertUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -27,6 +28,8 @@ public class UnverifiedDoctorsController implements Initializable {
 
     @FXML private ListView<User> unverifiedDoctorsListView;
     @FXML private VBox mainContainer;
+    private Runnable onVerificationCallback;
+    private Runnable onDeletionCallback;
 
     private final UserService userService = new UserService();
     private final ObservableList<User> unverifiedDoctorsList = FXCollections.observableArrayList();
@@ -48,7 +51,6 @@ public class UnverifiedDoctorsController implements Initializable {
             private final Text specialiteText = new Text();
             private final Text licenceText = new Text();
             private final HBox actionBox = new HBox(5);
-            private final Button viewButton = new Button();
             private final Button verifyButton = new Button();
             private final Button deleteButton = new Button();
 
@@ -80,17 +82,15 @@ public class UnverifiedDoctorsController implements Initializable {
                 licenceText.setFill(Color.web("#64748b"));
 
                 // Configuration des boutons d'action
-                viewButton.setStyle("-fx-background-color: #0ea5e9; -fx-text-fill: white; -fx-min-width: 32; -fx-min-height: 32; -fx-background-radius: 8;");
                 verifyButton.setStyle("-fx-background-color: #10b981; -fx-text-fill: white; -fx-min-width: 32; -fx-min-height: 32; -fx-background-radius: 8;");
                 deleteButton.setStyle("-fx-background-color: #ef4444; -fx-text-fill: white; -fx-min-width: 32; -fx-min-height: 32; -fx-background-radius: 8;");
 
                 // Icônes des boutons (remplacer par vos propres icônes)
-                viewButton.setGraphic(new Text("👁"));
                 verifyButton.setGraphic(new Text("✓"));
                 deleteButton.setGraphic(new Text("✕"));
 
                 actionBox.setAlignment(Pos.CENTER_RIGHT);
-                actionBox.getChildren().addAll(viewButton, verifyButton, deleteButton);
+                actionBox.getChildren().addAll(verifyButton, deleteButton);
 
                 // Ajout des éléments au GridPane
                 gridPane.add(headerBox, 0, 0, 2, 1);
@@ -129,7 +129,6 @@ public class UnverifiedDoctorsController implements Initializable {
                     licenceText.setText(medecin.getNumeroLicence() != null ? medecin.getNumeroLicence() : "Not specified");
 
                     // Gestion des événements des boutons
-                    viewButton.setOnAction(event -> handleViewDoctor(medecin));
                     verifyButton.setOnAction(event -> handleVerifyDoctor(medecin));
                     deleteButton.setOnAction(event -> handleDeleteDoctor(medecin));
 
@@ -168,13 +167,27 @@ public class UnverifiedDoctorsController implements Initializable {
 
         confirmAlert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                boolean success = userService.verifierMedecin(medecin.getId());
+                try {
+                    boolean success = userService.verifierMedecin(medecin.getId());
 
-                if (success) {
-                    unverifiedDoctorsList.remove(medecin);
-                    showAlert("Success", "Doctor successfully verified and added to the system.");
-                } else {
-                    showAlert("Error", "Failed to verify doctor. Please try again.");
+                    if (success) {
+                        unverifiedDoctorsList.remove(medecin);
+                        AlertUtils.showSuccessAlert("Success", "Doctor successfully verified.");
+
+                        // Fermer la fenêtre modale
+                        Stage stage = (Stage) unverifiedDoctorsListView.getScene().getWindow();
+                        stage.close();
+
+                        // Notifier le callback pour rafraîchir
+                        if (onVerificationCallback != null) {
+                            onVerificationCallback.run();
+                        }
+                    } else {
+                        AlertUtils.showErrorAlert("Error", "Failed to verify doctor.");
+                    }
+                } catch (Exception e) {
+                    AlertUtils.showErrorAlert("Error", "Verification failed: " + e.getMessage());
+                    e.printStackTrace();
                 }
             }
         });
@@ -189,9 +202,23 @@ public class UnverifiedDoctorsController implements Initializable {
 
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                userService.supprimerMedecin(medecin.getId());
-                unverifiedDoctorsList.remove(medecin);
-                showAlert("Success", "Doctor successfully deleted.");
+                try {
+                    userService.supprimerMedecin(medecin.getId());
+                    unverifiedDoctorsList.remove(medecin);
+                    AlertUtils.showSuccessAlert("Success", "Doctor successfully deleted.");
+
+                    // Fermer la fenêtre modale
+                    Stage stage = (Stage) unverifiedDoctorsListView.getScene().getWindow();
+                    stage.close();
+
+                    // Notifier le callback pour rafraîchir
+                    if (onDeletionCallback != null) {
+                        onDeletionCallback.run();
+                    }
+                } catch (Exception e) {
+                    AlertUtils.showErrorAlert("Error", "Deletion failed: " + e.getMessage());
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -220,5 +247,13 @@ public class UnverifiedDoctorsController implements Initializable {
         alert.setContentText(message);
         alert.getDialogPane().setStyle("-fx-font-family: 'Poppins'");
         alert.showAndWait();
+    }
+
+    public void setOnVerificationCallback(Runnable callback) {
+        this.onVerificationCallback = callback;
+    }
+
+    public void setOnDeletionCallback(Runnable callback) {
+        this.onDeletionCallback = callback;
     }
 }

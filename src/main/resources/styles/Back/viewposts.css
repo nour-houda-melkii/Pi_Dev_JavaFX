@@ -1,0 +1,270 @@
+/* Main Container */
+.transparent-scroll {
+    -fx-background: #f8f9fa;
+}
+
+.posts-container {
+    -fx-padding: 20px;
+    -fx-spacing: 15px;
+}
+
+/* Header */
+.section-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.count-badge {
+    -fx-font-size: 14px;
+    -fx-text-fill: #7f8c8d;
+    -fx-padding: 3px 8px;
+    -fx-background-color: #ecf0f1;
+    -fx-background-radius: 10px;
+}
+
+.filter-combo {
+    -fx-min-width: 150px;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: #bdc3c7;
+    -fx-border-width: 1;
+    -fx-padding: 5 10;
+    -fx-font-size: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 3, 0.2, 0, 1);
+}
+
+.filter-combo .list-cell {
+    -fx-padding: 5 10;
+}
+
+.filter-combo .arrow-button {
+    -fx-background-radius: 0 20 20 0;
+}
+
+/* Posts List */
+.posts-list {
+    -fx-spacing: 15px;
+}
+
+.category-header {
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 10;
+}
+
+.category-name {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a237e;
+}
+
+
+.post-type-offre {
+    -fx-font-size: 12px;
+    -fx-text-fill: white;
+    -fx-background-color: #27ae60;
+    -fx-background-radius: 12px;
+    -fx-padding: 3px 10px;
+}
+
+.post-type-demande {
+    -fx-font-size: 12px;
+    -fx-text-fill: white;
+    -fx-background-color: #e74c3c;
+    -fx-background-radius: 12px;
+    -fx-padding: 3px 10px;
+}
+
+.post-type {
+    -fx-font-size: 13px;
+    -fx-text-fill: white;
+    -fx-padding: 2 8;
+    -fx-background-color: #2ecc71;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+
+.post-meta-row {
+    -fx-spacing: 15px;
+    -fx-alignment: center-left;
+}
+
+.post-category {
+    -fx-font-size: 12px;
+    -fx-text-fill: white;
+    -fx-background-color: #3498db;
+    -fx-background-radius: 12px;
+    -fx-padding: 3px 10px;
+}
+
+.post-author {
+    -fx-font-size: 12px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.post-meta {
+    -fx-font-size: 13px;
+    -fx-text-fill: #718096;
+}
+
+.category-description {
+    -fx-font-size: 14px;
+    -fx-text-fill: #424242;
+    -fx-padding: 0 0 0 5;
+}
+
+.post-bottom-row {
+    -fx-alignment: center-right;
+}
+
+.category-date {
+    -fx-font-size: 12px;
+    -fx-text-fill: #757575;
+}
+
+/* Action Buttons */
+.action-buttons {
+    -fx-spacing: 10px;
+    -fx-padding: 10px 0;
+}
+
+.action-btn {
+    -fx-background-color: #3498db;
+    -fx-text-fill: white;
+    -fx-background-radius: 4px;
+    -fx-padding: 5px 15px;
+}
+
+.action-btn:hover {
+    -fx-background-color: #2980b9;
+}
+
+.edit-button {
+    -fx-background-color: #4299e1;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 5 15;
+    -fx-background-radius: 4;
+}
+
+.edit-button:hover {
+    -fx-background-color: #3182ce;
+}
+
+.delete-button {
+    -fx-background-color: #e53e3e;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 5 15;
+    -fx-background-radius: 4;
+}
+
+.delete-button:hover {
+    -fx-background-color: #c53030;
+}
+
+.delete-btn {
+    -fx-background-color: #e53e3e;
+    -fx-text-fill: white;
+    -fx-padding: 5 15;
+    -fx-background-radius: 4;
+}
+
+.delete-btn:hover {
+    -fx-background-color: #c53030;
+}
+
+.visibility-btn {
+    -fx-background-color: #89c9ff;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 5 15;
+    -fx-background-radius: 4;
+}
+.visibility-btn:hover {
+    -fx-background-color: #9dd0fb;
+}
+
+/* Toggle Button */
+.toggle-button {
+    -fx-background-color: #e2e8f0;
+    -fx-text-fill: #2d3748;
+    -fx-padding: 5 15;
+    -fx-background-radius: 4;
+}
+
+.toggle-button:hover {
+    -fx-background-color: #cbd5e0;
+}
+
+/* Post Actions Row */
+.post-actions {
+    -fx-padding: 10 0 0 0;
+    -fx-alignment: center-right;
+}
+
+/* Image Styling */
+.image-container {
+    -fx-padding: 10;
+    -fx-alignment: center;
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 4;
+}
+
+.post-image {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 5, 0, 0, 2);
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+}
+
+.post-image:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 8, 0, 0, 3);
+}
+
+.post-card {
+    -fx-background-color: #f8f9fa;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 1;
+    -fx-padding: 15;
+    -fx-spacing: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 5, 0, 0, 2);
+}
+
+
+/* Count label style */
+.count-label {
+    -fx-background-color: #e2e8f0;
+    -fx-padding: 3 8;
+    -fx-background-radius: 10;
+    -fx-font-size: 12px;
+}
+
+/* Filter labels */
+.filter-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #4a5568;
+    -fx-font-weight: bold;
+}
+
+/* Filter layout */
+.posts-container > VBox > HBox > VBox {
+    -fx-spacing: 5;
+    -fx-alignment: top-left;
+}
+
+/* Labels */
+.error-label, .no-image-label {
+    -fx-font-style: italic;
+    -fx-text-fill: #718096;
+}
+
+.error-message {
+    -fx-text-fill: #e74c3c;
+}
+
+.empty-message {
+    -fx-text-fill: #7f8c8d;
+    -fx-font-style: italic;
+}

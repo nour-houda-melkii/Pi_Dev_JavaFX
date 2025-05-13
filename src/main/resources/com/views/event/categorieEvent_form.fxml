@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.event.controllers.CategorieEventFormController"
+            styleClass="form-container" stylesheets="/com/styles/event/style.css">
+    <VBox spacing="20" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+          AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <padding>
+            <Insets top="30" right="40" bottom="30" left="40"/>
+        </padding>
+
+        <!-- En-tête -->
+        <Label text="Nouvelle Catégorie" styleClass="form-title"/>
+        <Separator/>
+
+        <!-- Formulaire -->
+        <VBox spacing="15">
+            <!-- Champ Nom -->
+            <VBox spacing="5">
+                <Label text="Nom *" styleClass="field-label"/>
+                <TextField fx:id="fieldNom" promptText="Entrez un nom" styleClass="form-field"/>
+                <Label fx:id="nomError" text="Le nom est obligatoire" styleClass="error-message" visible="false" managed="true"/>
+            </VBox>
+
+            <!-- Champ Description -->
+            <VBox spacing="5">
+                <Label text="Description" styleClass="field-label"/>
+                <TextArea fx:id="fieldDescription" promptText="Entrez une description" 
+                         wrapText="true" prefRowCount="4" styleClass="form-field"/>
+                <Label fx:id="descriptionError" text="" styleClass="error-message" visible="false" managed="true"/>
+            </VBox>
+        </VBox>
+
+        <!-- Boutons -->
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button fx:id="btnCancel" text="Annuler" onAction="#handleCancel" 
+                    styleClass="button-secondary"/>
+            <Button fx:id="btnSave" text="Enregistrer" onAction="#handleSave" 
+                    styleClass="primary-button"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

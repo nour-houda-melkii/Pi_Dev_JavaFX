@@ -10,7 +10,11 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.controllers.ListMedecin"
       spacing="15"
-      fx:id="mainContainer">
+      fx:id="mainContainer"
+      prefWidth="1200" maxWidth="Infinity"
+      prefHeight="700" maxHeight="Infinity"
+      VBox.vgrow="ALWAYS"
+>
 
     <!-- Titre et sous-titre -->
     <VBox spacing="5">
@@ -22,11 +26,11 @@
     <HBox spacing="10" alignment="CENTER_LEFT">
         <TextField fx:id="searchField" prefWidth="300" promptText="Search by name, email, phone..."/>
         <ComboBox fx:id="specialityComboBox" prefWidth="200" promptText="Select a speciality"/>
-        <Button fx:id="searchButton" text="Search" onAction="#handleSearch"/>
         <Button fx:id="resetButton" text="Reset" onAction="#handleReset"/>
         <Region HBox.hgrow="ALWAYS"/>
-        <Button fx:id="unverifiedButton" text="Unverified Doctors" onAction="#handleShowUnverified" style="-fx-background-color: #00B4D8; -fx-text-fill: white; -fx-font-family: 'Poppins'; -fx-font-weight: bold;"/>
-        <Button fx:id="addButton" text="+ Add a Doctor" onAction="#handleAddMedecin"/>
+        <Button fx:id="unverifiedButton" text="Unverified Doctors" onAction="#handleShowUnverified"/>
+        <Button fx:id="addButton" text="Add a Doctor" onAction="#handleAddMedecin"/>
+        <Button fx:id="searchButton" text="Search" onAction="#handleSearch"/>
     </HBox>
 
     <!-- ListView des médecins -->
@@ -36,8 +40,14 @@
         </placeholder>
     </ListView>
 
-    <!-- Pagination (à implémenter) -->
-    <HBox alignment="CENTER" spacing="5">
-        <!-- Ici vous pouvez ajouter votre pagination -->
+    <!-- Contrôles de pagination -->
+    <HBox fx:id="paginationContainer" alignment="CENTER" spacing="10">
+        <Button fx:id="prevPageButton" text="Previous" style="-fx-min-width: 80;"/>
+        <Label fx:id="pageInfoLabel" text="Page 1 of 1"/>
+        <Button fx:id="nextPageButton" text="Next" style="-fx-min-width: 80;"/>
     </HBox>
+
+    <stylesheets>
+        <URL value="@/styles/styleListePatient/styles.css"/>
+    </stylesheets>
 </VBox>
